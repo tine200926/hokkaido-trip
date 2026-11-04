@@ -1,3 +1,7 @@
+<!doctype html>
+<html lang="zh-Hant">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>北海道星玩法五日</title>
 <style>
   /* Layout: single column; flight summary + 5 day timetables (time column + route) + snack/tips appendix */
@@ -41,7 +45,7 @@
   .flight .time{font-size:13px;color:var(--muted);margin-top:4px}
   .flight .meta{font-size:12px;color:var(--muted);margin-top:9px;border-top:1px dashed var(--hair);padding-top:8px}
 
-  .section-h{display:flex;align-items:baseline;gap:12px;margin:50px 0 2px}
+  .section-h{scroll-margin-top:72px;display:flex;align-items:baseline;gap:12px;margin:50px 0 2px}
   .section-h h2{font-size:23px}
   .section-h .en{font-size:12px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
 
@@ -98,6 +102,38 @@
   .tip b{color:var(--crab)}
   .foot{margin-top:44px;padding-top:18px;border-top:1px solid var(--hair);font-size:12px;color:var(--muted)}
 
+  /* glance additions */
+  .back{display:inline-block;font-size:12.5px;color:var(--muted);text-decoration:none;margin-bottom:18px}
+  .daynav{position:sticky;top:0;z-index:30;margin:22px -20px 0;padding:10px 20px;
+    background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--hair);display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+  .daynav::-webkit-scrollbar{display:none}
+  .daynav a{flex:none;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--hair);
+    border-radius:999px;padding:6px 13px;font-size:12.5px;font-weight:700;line-height:1.2;text-align:center}
+  .daynav a small{display:block;font-size:10px;font-weight:500;color:var(--muted)}
+  .daynav a.today{background:var(--crab);border-color:var(--crab);color:#fff}
+  .daynav a.today small{color:#fff;opacity:.85}
+  .day{scroll-margin-top:72px}
+  .day.today{border-color:var(--crab);box-shadow:0 0 0 2px color-mix(in srgb,var(--crab) 25%,transparent)}
+  .day.today .daynum{background:var(--crab)}
+  .todaybadge{font-size:11px;font-weight:700;color:#fff;background:var(--crab);border-radius:999px;padding:2px 9px;margin-left:6px;vertical-align:middle;font-family:var(--sans)}
+  .route-strip{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;margin-top:14px;padding:10px 12px;
+    background:var(--surface-2);border:1px solid var(--hair);border-radius:10px;font-size:12.5px;font-weight:700}
+  .route-strip span{white-space:nowrap}
+  .route-strip i{font-style:normal;color:var(--onsen)}
+  .pin{float:right;margin:0 0 4px 10px;display:inline-flex;align-items:center;gap:3px;font-size:11.5px;font-weight:700;
+    color:var(--onsen);background:color-mix(in srgb,var(--onsen) 12%,transparent);border:1px solid color-mix(in srgb,var(--onsen) 30%,transparent);
+    border-radius:999px;padding:3px 10px;text-decoration:none;white-space:nowrap;line-height:1.4}
+  .pin:active{transform:scale(.96)}
+  .lede .pin{float:none;margin:0 2px}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:16px;font-size:12px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:11px;height:11px;border-radius:50%;border:2px solid var(--onsen);display:inline-block}
+  .legend i.pk{background:var(--crab);border-color:var(--crab)}
+  .legend i.fl{background:var(--navy);border-color:var(--navy)}
+  .slot .c{min-height:34px}
+  .slot.pick .c{background:linear-gradient(90deg,color-mix(in srgb,var(--crab) 7%,transparent),transparent 70%);border-radius:0 10px 10px 0;padding-top:4px;margin-bottom:6px;padding-bottom:12px}
+
   @media (max-width:560px){
     .flights{grid-template-columns:1fr}
     .snacks{grid-template-columns:1fr}
@@ -111,10 +147,23 @@
 <div class="wrap">
 
   <header>
+    <a class="back" href="index.html">← 回首頁</a>
     <div class="eyebrow">星宇直飛 · 每日時刻表 · 最佳路線</div>
     <h1>北海道星玩法五日</h1>
-    <p class="lede">11/16–11/20 出發。每日以最省回頭路的順序排好時間，每早約 09:00 出發；標 ★ 為自理餐／自由活動，Day 3、Day 4 附一鍵 Google Maps 路線。時間為估抓，實際以導遊當日說明為準。</p>
+    <p class="lede">11/16–11/20 出發。每日以最省回頭路的順序排好時間，每早約 09:00 出發；標 ★ 為自理餐／自由活動，每個地點右側 <b>📍地圖</b> 一鍵開 Google Maps，每日上方有路線總覽。時間為估抓，實際以導遊當日說明為準。</p>
+    <div class="legend"><span><i></i>景點／行程</span><span><i class="pk"></i>★ 自理・必去</span><span><i class="fl"></i>航班／機場</span></div>
   </header>
+
+
+  <nav class="daynav" aria-label="跳到某天">
+    <a href="#d1">D1<small>11/16 一</small></a>
+    <a href="#d2">D2<small>11/17 二</small></a>
+    <a href="#d3">D3<small>11/18 三</small></a>
+    <a href="#d4">D4<small>11/19 四</small></a>
+    <a href="#d5">D5<small>11/20 五</small></a>
+    <a href="#snacks">零食<small>機場</small></a>
+    <a href="#tips">提醒<small>Notes</small></a>
+  </nav>
 
   <div class="flights">
     <div class="flight">
@@ -134,34 +183,38 @@
   <div class="section-h"><h2>每日時刻表</h2><span class="en">Daily schedule</span></div>
 
   <!-- DAY 1 -->
-  <div class="day">
+  <div class="day" id="d1" data-date="2026-11-16">
     <div class="day-head">
       <div class="daynum"><small>DAY</small><b>1</b></div>
       <h3>桃園 → 新千歲 → 登別溫泉</h3>
       <div class="date">11/16（一）· 登別 馬可波羅溫泉飯店</div>
+      <a class="maplink" href="https://www.google.com/maps/dir/%E6%96%B0%E5%8D%83%E6%AD%B3%E7%A9%BA%E6%B8%AF/%E7%99%BB%E5%88%A5%E6%B8%A9%E6%B3%89/?travelmode=driving" target="_blank" rel="noopener">全日路線</a>
     </div>
+    <div class="route-strip"><span>新千歲機場</span><i>›</i><span>登別溫泉</span></div>
     <div class="meals">
       <div class="meal"><b>早</b>溫暖的家</div>
       <div class="meal"><b>午 <span class="tag air">機上</span></b>精緻簡餐</div>
       <div class="meal"><b>晚 <span class="tag inc">含</span></b>自助餐＋螃蟹吃到飽</div>
     </div>
     <div class="sched">
-      <div class="slot fly"><div class="t">06:45</div><div class="c"><div class="nm">桃園機場 第一航廈集合</div><div class="sub">辦理出境、託運，起飛前約 2.5 小時到。</div></div></div>
+      <div class="slot fly"><div class="t">06:45</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E5%8F%B0%E7%81%A3%E6%A1%83%E5%9C%92%E5%9C%8B%E9%9A%9B%E6%A9%9F%E5%A0%B4%20%E7%AC%AC%E4%B8%80%E8%88%AA%E5%BB%88" target="_blank" rel="noopener">📍地圖</a><div class="nm">桃園機場 第一航廈集合</div><div class="sub">辦理出境、託運，起飛前約 2.5 小時到。</div></div></div>
       <div class="slot fly"><div class="t">09:15</div><div class="c"><div class="nm"><span class="fl">✈</span> TPE 起飛　星宇 JX850</div><div class="hop">飛行 3h50m</div></div></div>
-      <div class="slot fly"><div class="t">14:05</div><div class="c"><div class="nm"><span class="fl">✈</span> 抵新千歲 CTS（日本時間）</div><div class="sub">出關、領行李、上專車。</div><div class="hop">專車往登別 <span class="km">72.6km · 約1h</span></div></div></div>
-      <div class="slot"><div class="t">16:30</div><div class="c"><div class="nm">入住 登別 馬可波羅溫泉飯店</div><div class="sub">放行李、泡湯。</div></div></div>
+      <div class="slot fly"><div class="t">14:05</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%96%B0%E5%8D%83%E6%AD%B3%E7%A9%BA%E6%B8%AF%20%E5%9B%BD%E9%9A%9B%E7%B7%9A%E3%82%BF%E3%83%BC%E3%83%9F%E3%83%8A%E3%83%AB" target="_blank" rel="noopener">📍地圖</a><div class="nm"><span class="fl">✈</span> 抵新千歲 CTS（日本時間）</div><div class="sub">出關、領行李、上專車。</div><div class="hop">專車往登別 <span class="km">72.6km · 約1h</span></div></div></div>
+      <div class="slot"><div class="t">16:30</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E7%99%BB%E5%88%A5%20%E9%A6%AC%E5%8F%AF%E6%B3%A2%E7%BE%85%E6%BA%AB%E6%B3%89%E9%A3%AF%E5%BA%97" target="_blank" rel="noopener">📍地圖</a><div class="nm">入住 登別 馬可波羅溫泉飯店</div><div class="sub">放行李、泡湯。</div></div></div>
       <div class="slot"><div class="t">18:30</div><div class="c"><div class="nm">晚餐：飯店自助餐＋螃蟹吃到飽</div></div></div>
-      <div class="slot"><div class="t">20:00</div><div class="c"><div class="nm">自由：登別溫泉街・閻魔堂變臉秀</div><div class="sub">極樂通散步，變臉秀整點前後；天候不佳可能停演。</div></div></div>
+      <div class="slot"><div class="t">20:00</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E7%99%BB%E5%88%A5%E6%B8%A9%E6%B3%89%20%E9%96%BB%E9%AD%94%E5%A0%82" target="_blank" rel="noopener">📍地圖</a><div class="nm">自由：登別溫泉街・閻魔堂變臉秀</div><div class="sub">極樂通散步，變臉秀整點前後；天候不佳可能停演。</div></div></div>
     </div>
   </div>
 
   <!-- DAY 2 -->
-  <div class="day">
+  <div class="day" id="d2" data-date="2026-11-17">
     <div class="day-head">
       <div class="daynum"><small>DAY</small><b>2</b></div>
       <h3>地獄谷 · 企鵝遊行 · 洞爺湖</h3>
       <div class="date">11/17（二）· 登別 馬可波羅溫泉飯店（三餐已含）</div>
+      <a class="maplink" href="https://www.google.com/maps/dir/%E7%99%BB%E5%88%A5%E5%9C%B0%E7%8D%84%E8%B0%B7/%E7%99%BB%E5%88%A5%E3%83%9E%E3%83%AA%E3%83%B3%E3%83%91%E3%83%BC%E3%82%AF%E3%83%8B%E3%82%AF%E3%82%B9/%E4%BA%AC%E6%A5%B5%20%E3%81%B5%E3%81%8D%E3%81%A0%E3%81%97%E5%85%AC%E5%9C%92/%E6%B4%9E%E7%88%BA%E6%B9%96%20%E3%82%B5%E3%82%A4%E3%83%AD%E5%B1%95%E6%9C%9B%E5%8F%B0/%E6%98%AD%E5%92%8C%E6%96%B0%E5%B1%B1/?travelmode=driving" target="_blank" rel="noopener">全日路線</a>
     </div>
+    <div class="route-strip"><span>地獄谷</span><i>›</i><span>尼克斯企鵝</span><i>›</i><span>名水公園</span><i>›</i><span>洞爺湖</span><i>›</i><span>昭和新山</span></div>
     <div class="meals">
       <div class="meal"><b>早 <span class="tag inc">含</span></b>飯店內</div>
       <div class="meal"><b>午 <span class="tag inc">含</span></b>日式壽喜燒吃到飽</div>
@@ -169,24 +222,25 @@
     </div>
     <div class="sched">
       <div class="slot"><div class="t">09:00</div><div class="c"><div class="nm">飯店出發</div><div class="hop">登別地獄谷 <span class="km">1km</span></div></div></div>
-      <div class="slot"><div class="t">09:10</div><div class="c"><div class="nm">登別地獄谷</div><div class="sub">火山融岩地形、600m 步道，約 40 分。</div><div class="hop">尼克斯海洋公園 <span class="km">7.8km</span></div></div></div>
-      <div class="slot"><div class="t">10:00</div><div class="c"><div class="nm">登別尼克斯海洋公園</div><div class="sub">國王企鵝大遊行、水中隧道水族館，約 1.5 小時（遊行場次以當日公告為準）。</div><div class="hop">往羊蹄山方向 <span class="km">86.7km · 約1h40</span></div></div></div>
+      <div class="slot"><div class="t">09:10</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E7%99%BB%E5%88%A5%E5%9C%B0%E7%8D%84%E8%B0%B7" target="_blank" rel="noopener">📍地圖</a><div class="nm">登別地獄谷</div><div class="sub">火山融岩地形、600m 步道，約 40 分。</div><div class="hop">尼克斯海洋公園 <span class="km">7.8km</span></div></div></div>
+      <div class="slot"><div class="t">10:00</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E7%99%BB%E5%88%A5%E3%83%9E%E3%83%AA%E3%83%B3%E3%83%91%E3%83%BC%E3%82%AF%E3%83%8B%E3%82%AF%E3%82%B9" target="_blank" rel="noopener">📍地圖</a><div class="nm">登別尼克斯海洋公園</div><div class="sub">國王企鵝大遊行、水中隧道水族館，約 1.5 小時（遊行場次以當日公告為準）。</div><div class="hop">往羊蹄山方向 <span class="km">86.7km · 約1h40</span></div></div></div>
       <div class="slot"><div class="t">13:00</div><div class="c"><div class="nm">午餐：日式壽喜燒吃到飽</div></div></div>
-      <div class="slot"><div class="t">14:00</div><div class="c"><div class="nm">羊蹄山名水公園</div><div class="sub">日本百選名水，約 20 分。</div><div class="hop">洞爺湖展望台 <span class="km">25km</span></div></div></div>
-      <div class="slot"><div class="t">15:00</div><div class="c"><div class="nm">洞爺湖展望台</div><div class="sub">眺望火口湖，約 30 分。</div><div class="hop">昭和新山 <span class="km">17km</span></div></div></div>
-      <div class="slot"><div class="t">16:00</div><div class="c"><div class="nm">昭和新山</div><div class="sub">火山奇景、熊牧場，約 40 分。</div><div class="hop">回登別飯店 <span class="km">約1h</span></div></div></div>
+      <div class="slot"><div class="t">14:00</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E4%BA%AC%E6%A5%B5%20%E3%81%B5%E3%81%8D%E3%81%A0%E3%81%97%E5%85%AC%E5%9C%92" target="_blank" rel="noopener">📍地圖</a><div class="nm">羊蹄山名水公園</div><div class="sub">日本百選名水，約 20 分。</div><div class="hop">洞爺湖展望台 <span class="km">25km</span></div></div></div>
+      <div class="slot"><div class="t">15:00</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%B4%9E%E7%88%BA%E6%B9%96%20%E3%82%B5%E3%82%A4%E3%83%AD%E5%B1%95%E6%9C%9B%E5%8F%B0" target="_blank" rel="noopener">📍地圖</a><div class="nm">洞爺湖展望台</div><div class="sub">眺望火口湖，約 30 分。</div><div class="hop">昭和新山 <span class="km">17km</span></div></div></div>
+      <div class="slot"><div class="t">16:00</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%98%AD%E5%92%8C%E6%96%B0%E5%B1%B1" target="_blank" rel="noopener">📍地圖</a><div class="nm">昭和新山</div><div class="sub">火山奇景、熊牧場，約 40 分。</div><div class="hop">回登別飯店 <span class="km">約1h</span></div></div></div>
       <div class="slot"><div class="t">18:30</div><div class="c"><div class="nm">晚餐：飯店自助餐＋螃蟹吃到飽</div></div></div>
     </div>
   </div>
 
   <!-- DAY 3 -->
-  <div class="day">
+  <div class="day" id="d3" data-date="2026-11-18">
     <div class="day-head">
       <div class="daynum"><small>DAY</small><b>3</b></div>
       <h3>支笏湖 · 札幌市區</h3>
       <div class="date">11/18（三）· 札幌 Mystays Premier Sapporo Park</div>
       <a class="maplink" href="https://www.google.com/maps/dir/43.0608,141.3544/43.0586,141.3532/43.0572,141.3527/43.0639,141.3527/43.0642,141.3516/?travelmode=walking" target="_blank" rel="noopener">傍晚自助路線</a>
     </div>
+    <div class="route-strip"><span>支笏湖</span><i>›</i><span>北海道神宮</span><i>›</i><span>大通</span><i>›</i><span>PARCO</span><i>›</i><span>狸小路</span><i>›</i><span>雪印</span><i>›</i><span>GARAKU</span></div>
     <div class="meals">
       <div class="meal"><b>早 <span class="tag inc">含</span></b>飯店內</div>
       <div class="meal"><b>午 <span class="tag inc">含</span></b>日式套餐</div>
@@ -194,27 +248,28 @@
     </div>
     <div class="sched">
       <div class="slot"><div class="t">09:00</div><div class="c"><div class="nm">飯店退房出發</div><div class="hop">支笏湖 <span class="km">81km · 約1h20</span></div></div></div>
-      <div class="slot"><div class="t">10:20</div><div class="c"><div class="nm">支笏湖</div><div class="sub">日本第二深、透明度 25m 不凍湖，約 30 分。</div><div class="hop">往札幌 <span class="km">43.9km · 約1h</span></div></div></div>
+      <div class="slot"><div class="t">10:20</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%94%AF%E7%AC%8F%E6%B9%96%20%E3%83%93%E3%82%B8%E3%82%BF%E3%83%BC%E3%82%BB%E3%83%B3%E3%82%BF%E3%83%BC" target="_blank" rel="noopener">📍地圖</a><div class="nm">支笏湖</div><div class="sub">日本第二深、透明度 25m 不凍湖，約 30 分。</div><div class="hop">往札幌 <span class="km">43.9km · 約1h</span></div></div></div>
       <div class="slot"><div class="t">12:00</div><div class="c"><div class="nm">午餐：日式套餐</div></div></div>
-      <div class="slot"><div class="t">13:30</div><div class="c"><div class="nm">北海道神宮</div><div class="sub">守護神・開拓之神，參拜約 40 分。</div><div class="hop">免稅店 <span class="km">3.7km</span></div></div></div>
-      <div class="slot"><div class="t">14:30</div><div class="c"><div class="nm">札幌免稅店</div><div class="sub">北海道物產，約 1 小時。</div><div class="hop">大通公園 <span class="km">2.4km</span></div></div></div>
-      <div class="slot"><div class="t">15:40</div><div class="c"><div class="nm">大通公園</div><div class="sub">電視塔、拍照。</div><div class="hop">札幌 PARCO <span class="km">步行約3分</span></div></div></div>
-      <div class="slot pick"><div class="t">16:00</div><div class="c"><div class="nm"><span class="pk">★</span> CHIIKAWA LAND 札幌PARCO店</div><div class="sub">南1西3 · PARCO B2F · 10–20 時 · 平日多可自由入場；人多時店頭發整理券或 LivePocket 事前預約。</div><div class="chk">查當日整理券：<a href="https://x.com/chiikawa_land" target="_blank" rel="noopener">官方 X @chiikawa_land</a> · <a href="https://chiikawa-info.jp/" target="_blank" rel="noopener">商品情報站</a></div><div class="hop">狸小路 <span class="km">步行約5分</span></div></div></div>
-      <div class="slot"><div class="t">16:40</div><div class="c"><div class="nm">狸小路商店街　自由購物</div><div class="sub">藥妝、伴手禮；唐吉訶德 24 小時。</div><div class="hop">往北2西3 <span class="km">步行約8分</span></div></div></div>
-      <div class="slot pick"><div class="t">17:30</div><div class="c"><div class="nm"><span class="pk">★</span> 雪印パーラー 本店</div><div class="sub">北2西3 · –19 時 · Snow Royal 聖代，趁打烊前吃。</div><div class="hop">隔壁 sitatte sapporo <span class="km">步行約2分</span></div></div></div>
-      <div class="slot pick"><div class="t">18:00</div><div class="c"><div class="nm"><span class="pk">★</span> Soup Curry GARAKU sitatte sapporo店</div><div class="sub">北2西3 · B1F · 晚餐湯咖哩；不接受訂位、現場排隊（週三營業至 20:30）。想吃壽司可改 根室花まる miredo（北3西3，現場抽電子號）。</div><div class="hop">南北線 大通→中島公園 <span class="km">約10分</span></div></div></div>
-      <div class="slot"><div class="t">19:40</div><div class="c"><div class="nm">回飯店 Mystays Premier Sapporo Park</div><div class="sub">南9西2，近中島公園／幌平橋駅。</div></div></div>
+      <div class="slot"><div class="t">13:30</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E5%8C%97%E6%B5%B7%E9%81%93%E7%A5%9E%E5%AE%AE" target="_blank" rel="noopener">📍地圖</a><div class="nm">北海道神宮</div><div class="sub">守護神・開拓之神，參拜約 40 分。</div><div class="hop">免稅店 <span class="km">3.7km</span></div></div></div>
+      <div class="slot"><div class="t">14:30</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%9C%AD%E5%B9%8C%20%E5%85%8D%E7%A8%8E%E5%BA%97" target="_blank" rel="noopener">📍地圖</a><div class="nm">札幌免稅店</div><div class="sub">北海道物產，約 1 小時。</div><div class="hop">大通公園 <span class="km">2.4km</span></div></div></div>
+      <div class="slot"><div class="t">15:40</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E3%81%95%E3%81%A3%E3%81%BD%E3%82%8D%E3%83%86%E3%83%AC%E3%83%93%E5%A1%94" target="_blank" rel="noopener">📍地圖</a><div class="nm">大通公園</div><div class="sub">電視塔、拍照。</div><div class="hop">札幌 PARCO <span class="km">步行約3分</span></div></div></div>
+      <div class="slot pick"><div class="t">16:00</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E3%81%A1%E3%81%84%E3%81%8B%E3%82%8F%E3%82%89%E3%82%93%E3%81%A9%20%E6%9C%AD%E5%B9%8CPARCO" target="_blank" rel="noopener">📍地圖</a><div class="nm"><span class="pk">★</span> CHIIKAWA LAND 札幌PARCO店</div><div class="sub">南1西3 · PARCO B2F · 10–20 時 · 平日多可自由入場；人多時店頭發整理券或 LivePocket 事前預約。</div><div class="chk">查當日整理券：<a href="https://x.com/chiikawa_land" target="_blank" rel="noopener">官方 X @chiikawa_land</a> · <a href="https://chiikawa-info.jp/" target="_blank" rel="noopener">商品情報站</a></div><div class="hop">狸小路 <span class="km">步行約5分</span></div></div></div>
+      <div class="slot"><div class="t">16:40</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E7%8B%B8%E5%B0%8F%E8%B7%AF%E5%95%86%E5%BA%97%E8%A1%97" target="_blank" rel="noopener">📍地圖</a><div class="nm">狸小路商店街　自由購物</div><div class="sub">藥妝、伴手禮；唐吉訶德 24 小時。</div><div class="hop">往北2西3 <span class="km">步行約8分</span></div></div></div>
+      <div class="slot pick"><div class="t">17:30</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E9%9B%AA%E5%8D%B0%E3%83%91%E3%83%BC%E3%83%A9%E3%83%BC%20%E6%9C%AD%E5%B9%8C%E6%9C%AC%E5%BA%97" target="_blank" rel="noopener">📍地圖</a><div class="nm"><span class="pk">★</span> 雪印パーラー 本店</div><div class="sub">北2西3 · –19 時 · Snow Royal 聖代，趁打烊前吃。</div><div class="hop">隔壁 sitatte sapporo <span class="km">步行約2分</span></div></div></div>
+      <div class="slot pick"><div class="t">18:00</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E3%82%B9%E3%83%BC%E3%83%97%E3%82%AB%E3%83%AC%E3%83%BC%20GARAKU%20sitatte%20sapporo" target="_blank" rel="noopener">📍地圖</a><div class="nm"><span class="pk">★</span> Soup Curry GARAKU sitatte sapporo店</div><div class="sub">北2西3 · B1F · 晚餐湯咖哩；不接受訂位、現場排隊（週三營業至 20:30）。想吃壽司可改 根室花まる miredo（北3西3，現場抽電子號）。</div><div class="hop">南北線 大通→中島公園 <span class="km">約10分</span></div></div></div>
+      <div class="slot"><div class="t">19:40</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E3%83%9B%E3%83%86%E3%83%AB%E3%83%9E%E3%82%A4%E3%82%B9%E3%83%86%E3%82%A4%E3%82%BA%E3%83%97%E3%83%AC%E3%83%9F%E3%82%A2%E6%9C%AD%E5%B9%8C%E3%83%91%E3%83%BC%E3%82%AF" target="_blank" rel="noopener">📍地圖</a><div class="nm">回飯店 Mystays Premier Sapporo Park</div><div class="sub">南9西2，近中島公園／幌平橋駅。</div></div></div>
     </div>
   </div>
 
   <!-- DAY 4 -->
-  <div class="day">
+  <div class="day" id="d4" data-date="2026-11-19">
     <div class="day-head">
       <div class="daynum"><small>DAY</small><b>4</b></div>
       <h3>小樽漫遊 · 拉麵橫丁</h3>
       <div class="date">11/19（四）· 札幌 Mystays Premier Sapporo Park</div>
       <a class="maplink" href="https://www.google.com/maps/dir/43.1977,140.9937/43.199,141.0021/43.1927,141.0068/43.1923,141.0073/43.1913,141.0074/43.1905,141.008/43.1993,140.9942/?travelmode=walking" target="_blank" rel="noopener">小樽步行路線</a>
     </div>
+    <div class="route-strip"><span>小樽運河</span><i>›</i><span>もぐもぐ本舗</span><i>›</i><span>北一硝子</span><i>›</i><span>LeTAO</span><i>›</i><span>BAAL</span><i>›</i><span>三角市場</span><i>›</i><span>拉麵橫丁</span></div>
     <div class="meals">
       <div class="meal"><b>早 <span class="tag inc">含</span></b>飯店內</div>
       <div class="meal"><b>午 <span class="tag self">自理</span></b>cafe BAAL 牛排丼</div>
@@ -222,25 +277,27 @@
     </div>
     <div class="sched">
       <div class="slot"><div class="t">09:00</div><div class="c"><div class="nm">飯店出發</div><div class="hop">小樽 <span class="km">39.4km · 約50分</span></div></div></div>
-      <div class="slot"><div class="t">09:50</div><div class="c"><div class="nm">小樽運河</div><div class="sub">紅磚倉庫、淺草橋拍照，約 25 分。</div><div class="hop">沿堺町通往南 <span class="km">步行約10分</span></div></div></div>
-      <div class="slot pick"><div class="t">10:20</div><div class="c"><div class="nm"><span class="pk">★</span> ちいかわもぐもぐ本舗 小樽店</div><div class="sub">堺町6-1 · 9:30–17:30 · 平日通常可直接入場；連休／人多時需 LINE 時間指定預約或現場整理券。小樽限定商品、現烤雞蛋糕。</div><div class="chk">查當日入店／預約：<a href="https://www.chiikawamogumogu.jp/" target="_blank" rel="noopener">官方網站</a> · <a href="https://x.com/chiikawamgmg" target="_blank" rel="noopener">X @chiikawamgmg</a></div><div class="hop">北一硝子三號館 <span class="km">步行約1分</span></div></div></div>
-      <div class="slot"><div class="t">10:45</div><div class="c"><div class="nm">北一硝子三號館・歐風蒸氣鐘</div><div class="sub">玻璃工藝、星空喫茶、整點蒸氣鐘；9–18 時。</div></div></div>
-      <div class="slot"><div class="t">11:10</div><div class="c"><div class="nm">LeTAO 本店・小樽音樂盒堂</div><div class="sub">雙層起司蛋糕、頂樓觀景；堺町南端。</div><div class="hop">走回站前 <span class="km">約15分</span></div></div></div>
-      <div class="slot pick"><div class="t">11:40</div><div class="c"><div class="nm"><span class="pk">★</span> cafe BAAL　午餐</div><div class="sub">稲穂3-8-10 · 11:30–14:30 · 現金 · 名物牛排丼；座位少，一開門就到。</div></div></div>
-      <div class="slot"><div class="t">13:00</div><div class="c"><div class="nm">自由：三角市場／站前</div><div class="sub">三角市場就在小樽駅旁，可吃海鮮、買伴手禮。</div><div class="hop">小樽駅集合，回札幌 <span class="km">35.8km · 約50分</span></div></div></div>
-      <div class="slot"><div class="t">15:30</div><div class="c"><div class="nm">札幌自由活動</div><div class="sub">狸小路、大丸、JR Tower 補貨。</div></div></div>
-      <div class="slot pick"><div class="t">17:30</div><div class="c"><div class="nm"><span class="pk">★</span> 元祖札幌拉麵橫丁　晚餐</div><div class="sub">南5西3（薄野）· 梅光軒／龍鳳／一粒庵；飯店南北線 1 站到すすきの或步行 10 分。</div></div></div>
+      <div class="slot"><div class="t">09:50</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E5%B0%8F%E6%A8%BD%E9%81%8B%E6%B2%B3%20%E6%B5%85%E8%8D%89%E6%A9%8B" target="_blank" rel="noopener">📍地圖</a><div class="nm">小樽運河</div><div class="sub">紅磚倉庫、淺草橋拍照，約 25 分。</div><div class="hop">沿堺町通往南 <span class="km">步行約10分</span></div></div></div>
+      <div class="slot pick"><div class="t">10:20</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E3%81%A1%E3%81%84%E3%81%8B%E3%82%8F%E3%82%82%E3%81%90%E3%82%82%E3%81%90%E6%9C%AC%E8%88%97%20%E5%B0%8F%E6%A8%BD%E5%BA%97" target="_blank" rel="noopener">📍地圖</a><div class="nm"><span class="pk">★</span> ちいかわもぐもぐ本舗 小樽店</div><div class="sub">堺町6-1 · 9:30–17:30 · 平日通常可直接入場；連休／人多時需 LINE 時間指定預約或現場整理券。小樽限定商品、現烤雞蛋糕。</div><div class="chk">查當日入店／預約：<a href="https://www.chiikawamogumogu.jp/" target="_blank" rel="noopener">官方網站</a> · <a href="https://x.com/chiikawamgmg" target="_blank" rel="noopener">X @chiikawamgmg</a></div><div class="hop">北一硝子三號館 <span class="km">步行約1分</span></div></div></div>
+      <div class="slot"><div class="t">10:45</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E5%8C%97%E4%B8%80%E7%A1%9D%E5%AD%90%20%E4%B8%89%E5%8F%B7%E9%A4%A8" target="_blank" rel="noopener">📍地圖</a><div class="nm">北一硝子三號館・歐風蒸氣鐘</div><div class="sub">玻璃工藝、星空喫茶、整點蒸氣鐘；9–18 時。</div></div></div>
+      <div class="slot"><div class="t">11:10</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E3%83%AB%E3%82%BF%E3%82%AA%E6%9C%AC%E5%BA%97%20%E5%B0%8F%E6%A8%BD" target="_blank" rel="noopener">📍地圖</a><div class="nm">LeTAO 本店・小樽音樂盒堂</div><div class="sub">雙層起司蛋糕、頂樓觀景；堺町南端。</div><div class="hop">走回站前 <span class="km">約15分</span></div></div></div>
+      <div class="slot pick"><div class="t">11:40</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=cafe%20BAAL%20%E5%B0%8F%E6%A8%BD" target="_blank" rel="noopener">📍地圖</a><div class="nm"><span class="pk">★</span> cafe BAAL　午餐</div><div class="sub">稲穂3-8-10 · 11:30–14:30 · 現金 · 名物牛排丼；座位少，一開門就到。</div></div></div>
+      <div class="slot"><div class="t">13:00</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E5%B0%8F%E6%A8%BD%20%E4%B8%89%E8%A7%92%E5%B8%82%E5%A0%B4" target="_blank" rel="noopener">📍地圖</a><div class="nm">自由：三角市場／站前</div><div class="sub">三角市場就在小樽駅旁，可吃海鮮、買伴手禮。</div><div class="hop">小樽駅集合，回札幌 <span class="km">35.8km · 約50分</span></div></div></div>
+      <div class="slot"><div class="t">15:30</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%9C%AD%E5%B9%8C%20%E7%8B%B8%E5%B0%8F%E8%B7%AF%20%E5%A4%A7%E4%B8%B8%E6%9C%AD%E5%B9%8C%E5%BA%97" target="_blank" rel="noopener">📍地圖</a><div class="nm">札幌自由活動</div><div class="sub">狸小路、大丸、JR Tower 補貨。</div></div></div>
+      <div class="slot pick"><div class="t">17:30</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E5%85%83%E7%A5%96%E3%81%95%E3%81%A3%E3%81%BD%E3%82%8D%E3%83%A9%E3%83%BC%E3%83%A1%E3%83%B3%E6%A8%AA%E4%B8%81" target="_blank" rel="noopener">📍地圖</a><div class="nm"><span class="pk">★</span> 元祖札幌拉麵橫丁　晚餐</div><div class="sub">南5西3（薄野）· 梅光軒／龍鳳／一粒庵；飯店南北線 1 站到すすきの或步行 10 分。</div></div></div>
       <div class="slot"><div class="t">19:00</div><div class="c"><div class="nm">回飯店</div></div></div>
     </div>
   </div>
 
   <!-- DAY 5 -->
-  <div class="day">
+  <div class="day" id="d5" data-date="2026-11-20">
     <div class="day-head">
       <div class="daynum"><small>DAY</small><b>5</b></div>
       <h3>三井 Outlet → 新千歲 → 台北</h3>
       <div class="date">11/20（五）· 回程</div>
+      <a class="maplink" href="https://www.google.com/maps/dir/%E3%83%9B%E3%83%86%E3%83%AB%E3%83%9E%E3%82%A4%E3%82%B9%E3%83%86%E3%82%A4%E3%82%BA%E3%83%97%E3%83%AC%E3%83%9F%E3%82%A2%E6%9C%AD%E5%B9%8C%E3%83%91%E3%83%BC%E3%82%AF/%E4%B8%89%E4%BA%95%E3%82%A2%E3%82%A6%E3%83%88%E3%83%AC%E3%83%83%E3%83%88%E3%83%91%E3%83%BC%E3%82%AF%E6%9C%AD%E5%B9%8C%E5%8C%97%E5%BA%83%E5%B3%B6/%E6%96%B0%E5%8D%83%E6%AD%B3%E7%A9%BA%E6%B8%AF/?travelmode=driving" target="_blank" rel="noopener">全日路線</a>
     </div>
+    <div class="route-strip"><span>三井 Outlet</span><i>›</i><span>新千歲</span><i>›</i><span>桃園</span></div>
     <div class="meals">
       <div class="meal"><b>早 <span class="tag inc">含</span></b>飯店內</div>
       <div class="meal"><b>午 <span class="tag self">自理</span></b>Outlet 美食街</div>
@@ -248,16 +305,16 @@
     </div>
     <div class="sched">
       <div class="slot"><div class="t">09:00</div><div class="c"><div class="nm">飯店退房出發</div><div class="hop">三井 Outlet 北廣島 <span class="km">14.6km · 約30分</span></div></div></div>
-      <div class="slot"><div class="t">09:30</div><div class="c"><div class="nm">三井 Outlet Park 札幌北廣島</div><div class="sub">近 130 品牌＋美食街，購物並在此解決午餐。</div><div class="hop">往新千歲機場 <span class="km">33km · 約45分</span></div></div></div>
-      <div class="slot fly"><div class="t">13:15</div><div class="c"><div class="nm">抵新千歲機場</div><div class="sub">辦登機、託運，2F 商店街補零食（見下方清單）。</div></div></div>
+      <div class="slot"><div class="t">09:30</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E4%B8%89%E4%BA%95%E3%82%A2%E3%82%A6%E3%83%88%E3%83%AC%E3%83%83%E3%83%88%E3%83%91%E3%83%BC%E3%82%AF%E6%9C%AD%E5%B9%8C%E5%8C%97%E5%BA%83%E5%B3%B6" target="_blank" rel="noopener">📍地圖</a><div class="nm">三井 Outlet Park 札幌北廣島</div><div class="sub">近 130 品牌＋美食街，購物並在此解決午餐。</div><div class="hop">往新千歲機場 <span class="km">33km · 約45分</span></div></div></div>
+      <div class="slot fly"><div class="t">13:15</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%96%B0%E5%8D%83%E6%AD%B3%E7%A9%BA%E6%B8%AF%20%E5%9B%BD%E5%86%85%E7%B7%9A%E3%82%BF%E3%83%BC%E3%83%9F%E3%83%8A%E3%83%AB" target="_blank" rel="noopener">📍地圖</a><div class="nm">抵新千歲機場</div><div class="sub">辦登機、託運，2F 商店街補零食（見下方清單）。</div></div></div>
       <div class="slot fly"><div class="t">15:20</div><div class="c"><div class="nm"><span class="fl">✈</span> CTS 起飛　星宇 JX851</div><div class="hop">飛行 4h45m</div></div></div>
-      <div class="slot fly"><div class="t">19:05</div><div class="c"><div class="nm"><span class="fl">✈</span> 抵 TPE 桃園機場（台灣時間）</div></div></div>
+      <div class="slot fly"><div class="t">19:05</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E5%8F%B0%E7%81%A3%E6%A1%83%E5%9C%92%E5%9C%8B%E9%9A%9B%E6%A9%9F%E5%A0%B4" target="_blank" rel="noopener">📍地圖</a><div class="nm"><span class="fl">✈</span> 抵 TPE 桃園機場（台灣時間）</div></div></div>
     </div>
   </div>
 
   <!-- airport snacks -->
-  <div class="section-h"><h2>新千歲機場必買零食</h2><span class="en">Must-buy</span></div>
-  <p class="lede" style="margin-top:14px">國內線 2F 商店街；需冷藏的巧克力、生起司蛋糕留到登機前最後再買，並索取保冷袋。</p>
+  <div class="section-h" id="snacks"><h2>新千歲機場必買零食</h2><span class="en">Must-buy</span></div>
+  <p class="lede" style="margin-top:14px"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%96%B0%E5%8D%83%E6%AD%B3%E7%A9%BA%E6%B8%AF%20%E5%9B%BD%E5%86%85%E7%B7%9A%E3%82%BF%E3%83%BC%E3%83%9F%E3%83%8A%E3%83%AB%202F%20%E3%82%B7%E3%83%A7%E3%83%83%E3%83%94%E3%83%B3%E3%82%B0%E3%83%AF%E3%83%BC%E3%83%AB%E3%83%89" target="_blank" rel="noopener">📍國內線 2F 商店街</a>　國內線 2F 商店街；需冷藏的巧克力、生起司蛋糕留到登機前最後再買，並索取保冷袋。</p>
   <div class="snacks">
     <div class="snack"><div class="snm">白色戀人</div><div class="br">石屋製菓</div><div class="ds">薄片奶油夾心餅乾，北海道第一伴手禮。</div></div>
     <div class="snack"><div class="snm">生巧克力</div><div class="br">Royce’</div><div class="ds">生巧、洋芋片巧克力；需冷藏、最後再買。</div></div>
@@ -270,7 +327,7 @@
   </div>
 
   <!-- tips -->
-  <div class="section-h"><h2>實用提醒</h2><span class="en">Notes</span></div>
+  <div class="section-h" id="tips"><h2>實用提醒</h2><span class="en">Notes</span></div>
   <div class="tips">
     <div class="tip"><b>時間</b>　表定為估抓並含交通，實際發車與景點順序以導遊當日說明為準；日本比台灣快 1 小時。</div>
     <div class="tip"><b>訂位／排隊</b>　GARAKU、cafe BAAL、拉麵橫丁皆不接受訂位、現場排隊；根室花まる miredo 為現場抽電子號（可離開逛街等叫號）。cafe BAAL 週一公休（Day4 是週四 OK）、只收現金。</div>
@@ -285,3 +342,15 @@
   </div>
 
 </div>
+
+<script>
+(function(){
+  try{
+    var t=new Date(Date.now()+9*3600e3).toISOString().slice(0,10); // Japan date
+    var day=document.querySelector('.day[data-date="'+t+'"]'); if(!day)return;
+    day.classList.add('today');
+    var h=day.querySelector('h3'); var b=document.createElement('span'); b.className='todaybadge'; b.textContent='今天'; h.appendChild(b);
+    var a=document.querySelector('.daynav a[href="#'+day.id+'"]'); if(a){a.classList.add('today'); a.scrollIntoView({inline:'center',block:'nearest'});}
+  }catch(e){}
+})();
+</script>

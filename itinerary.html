@@ -134,8 +134,19 @@
   .slot .c{min-height:34px}
   .slot.pick .c{background:linear-gradient(90deg,color-mix(in srgb,var(--crab) 7%,transparent),transparent 70%);border-radius:0 10px 10px 0;padding-top:4px;margin-bottom:6px;padding-bottom:12px}
 
+  .hotels{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+  .hotel{background:var(--surface);border:1px solid var(--hair);border-radius:14px;padding:16px 18px}
+  .hotel .hd{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .hotel .hd .pin{float:none;margin:0}
+  .hotel .nights{font-size:12px;letter-spacing:.08em;color:var(--crab);font-weight:700}
+  .hotel .hn{font-family:var(--serif);font-weight:700;font-size:17px;line-height:1.3;margin-top:8px}
+  .hotel .hj{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .hotel .ha{font-size:12.5px;margin-top:9px;padding-top:9px;border-top:1px dashed var(--hair)}
+  .tel{display:inline-block;margin-top:8px;font-size:13px;font-weight:700;color:var(--navy);text-decoration:none}
+  .sub a[href^="tel"]{color:var(--navy)}
+
   @media (max-width:560px){
-    .flights{grid-template-columns:1fr}
+    .flights,.hotels{grid-template-columns:1fr}
     .snacks{grid-template-columns:1fr}
     .slot{grid-template-columns:46px 1fr;gap:10px}
     .wrap{padding-block:36px 56px}
@@ -156,6 +167,7 @@
 
 
   <nav class="daynav" aria-label="跳到某天">
+    <a href="#hotels">住宿<small>Hotel</small></a>
     <a href="#d1">D1<small>11/16 一</small></a>
     <a href="#d2">D2<small>11/17 二</small></a>
     <a href="#d3">D3<small>11/18 三</small></a>
@@ -180,6 +192,24 @@
     </div>
   </div>
 
+  <div class="section-h" id="hotels"><h2>住宿</h2><span class="en">Hotels</span></div>
+  <div class="hotels">
+    <div class="hotel">
+      <div class="hd"><span class="nights">11/16–17 · 2 晚</span><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E3%83%9B%E3%83%86%E3%83%AB%E3%81%BE%E3%81%BB%E3%82%8D%E3%81%B0%20%E5%8C%97%E6%B5%B7%E9%81%93%E7%99%BB%E5%88%A5%E5%B8%82%E7%99%BB%E5%88%A5%E6%B8%A9%E6%B3%89%E7%94%BA65" target="_blank" rel="noopener">📍地圖</a></div>
+      <div class="hn">HOTEL MAHOROBA</div>
+      <div class="hj">ホテルまほろば · 登別温泉</div>
+      <div class="ha">〒059-0551 北海道登別市登別温泉町65</div>
+      <a class="tel" href="tel:+81143842211">☎ 0143-84-2211</a>
+    </div>
+    <div class="hotel">
+      <div class="hd"><span class="nights">11/18–19 · 2 晚</span><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E3%83%9B%E3%83%86%E3%83%AB%E3%83%9E%E3%82%A4%E3%82%B9%E3%83%86%E3%82%A4%E3%82%BA%E3%83%97%E3%83%AC%E3%83%9F%E3%82%A2%E6%9C%AD%E5%B9%8C%E3%83%91%E3%83%BC%E3%82%AF%20%E5%8C%97%E6%B5%B7%E9%81%93%E6%9C%AD%E5%B9%8C%E5%B8%82%E4%B8%AD%E5%A4%AE%E5%8C%BA%E5%8D%979%E6%9D%A1%E8%A5%BF2-2-10" target="_blank" rel="noopener">📍地圖</a></div>
+      <div class="hn">HOTEL MYSTAYS PREMIER SAPPORO PARK</div>
+      <div class="hj">ホテルマイステイズプレミア札幌パーク · 中島公園</div>
+      <div class="ha">〒064-0809 北海道札幌市中央区南9条西2-2-10</div>
+      <a class="tel" href="tel:+81115123456">☎ 011-512-3456</a>
+    </div>
+  </div>
+
   <div class="section-h"><h2>每日時刻表</h2><span class="en">Daily schedule</span></div>
 
   <!-- DAY 1 -->
@@ -187,7 +217,7 @@
     <div class="day-head">
       <div class="daynum"><small>DAY</small><b>1</b></div>
       <h3>桃園 → 新千歲 → 登別溫泉</h3>
-      <div class="date">11/16（一）· 登別 馬可波羅溫泉飯店</div>
+      <div class="date">11/16（一）· 登別 HOTEL MAHOROBA ホテルまほろば</div>
       <a class="maplink" href="https://www.google.com/maps/dir/%E6%96%B0%E5%8D%83%E6%AD%B3%E7%A9%BA%E6%B8%AF/%E7%99%BB%E5%88%A5%E6%B8%A9%E6%B3%89/?travelmode=driving" target="_blank" rel="noopener">全日路線</a>
     </div>
     <div class="route-strip"><span>新千歲機場</span><i>›</i><span>登別溫泉</span></div>
@@ -200,7 +230,7 @@
       <div class="slot fly"><div class="t">06:45</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E5%8F%B0%E7%81%A3%E6%A1%83%E5%9C%92%E5%9C%8B%E9%9A%9B%E6%A9%9F%E5%A0%B4%20%E7%AC%AC%E4%B8%80%E8%88%AA%E5%BB%88" target="_blank" rel="noopener">📍地圖</a><div class="nm">桃園機場 第一航廈集合</div><div class="sub">辦理出境、託運，起飛前約 2.5 小時到。</div></div></div>
       <div class="slot fly"><div class="t">09:15</div><div class="c"><div class="nm"><span class="fl">✈</span> TPE 起飛　星宇 JX850</div><div class="hop">飛行 3h50m</div></div></div>
       <div class="slot fly"><div class="t">14:05</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%96%B0%E5%8D%83%E6%AD%B3%E7%A9%BA%E6%B8%AF%20%E5%9B%BD%E9%9A%9B%E7%B7%9A%E3%82%BF%E3%83%BC%E3%83%9F%E3%83%8A%E3%83%AB" target="_blank" rel="noopener">📍地圖</a><div class="nm"><span class="fl">✈</span> 抵新千歲 CTS（日本時間）</div><div class="sub">出關、領行李、上專車。</div><div class="hop">專車往登別 <span class="km">72.6km · 約1h</span></div></div></div>
-      <div class="slot"><div class="t">16:30</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E7%99%BB%E5%88%A5%20%E9%A6%AC%E5%8F%AF%E6%B3%A2%E7%BE%85%E6%BA%AB%E6%B3%89%E9%A3%AF%E5%BA%97" target="_blank" rel="noopener">📍地圖</a><div class="nm">入住 登別 馬可波羅溫泉飯店</div><div class="sub">放行李、泡湯。</div></div></div>
+      <div class="slot"><div class="t">16:30</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E3%83%9B%E3%83%86%E3%83%AB%E3%81%BE%E3%81%BB%E3%82%8D%E3%81%B0%20%E5%8C%97%E6%B5%B7%E9%81%93%E7%99%BB%E5%88%A5%E5%B8%82%E7%99%BB%E5%88%A5%E6%B8%A9%E6%B3%89%E7%94%BA65" target="_blank" rel="noopener">📍地圖</a><div class="nm">入住 登別 HOTEL MAHOROBA ホテルまほろば</div><div class="sub">登別温泉町65 · ☎ <a href="tel:+81143842211">0143-84-2211</a> · 放行李、泡湯。</div></div></div>
       <div class="slot"><div class="t">18:30</div><div class="c"><div class="nm">晚餐：飯店自助餐＋螃蟹吃到飽</div></div></div>
       <div class="slot"><div class="t">20:00</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E7%99%BB%E5%88%A5%E6%B8%A9%E6%B3%89%20%E9%96%BB%E9%AD%94%E5%A0%82" target="_blank" rel="noopener">📍地圖</a><div class="nm">自由：登別溫泉街・閻魔堂變臉秀</div><div class="sub">極樂通散步，變臉秀整點前後；天候不佳可能停演。</div></div></div>
     </div>
@@ -211,7 +241,7 @@
     <div class="day-head">
       <div class="daynum"><small>DAY</small><b>2</b></div>
       <h3>地獄谷 · 企鵝遊行 · 洞爺湖</h3>
-      <div class="date">11/17（二）· 登別 馬可波羅溫泉飯店（三餐已含）</div>
+      <div class="date">11/17（二）· 登別 HOTEL MAHOROBA（三餐已含）</div>
       <a class="maplink" href="https://www.google.com/maps/dir/%E7%99%BB%E5%88%A5%E5%9C%B0%E7%8D%84%E8%B0%B7/%E7%99%BB%E5%88%A5%E3%83%9E%E3%83%AA%E3%83%B3%E3%83%91%E3%83%BC%E3%82%AF%E3%83%8B%E3%82%AF%E3%82%B9/%E4%BA%AC%E6%A5%B5%20%E3%81%B5%E3%81%8D%E3%81%A0%E3%81%97%E5%85%AC%E5%9C%92/%E6%B4%9E%E7%88%BA%E6%B9%96%20%E3%82%B5%E3%82%A4%E3%83%AD%E5%B1%95%E6%9C%9B%E5%8F%B0/%E6%98%AD%E5%92%8C%E6%96%B0%E5%B1%B1/?travelmode=driving" target="_blank" rel="noopener">全日路線</a>
     </div>
     <div class="route-strip"><span>地獄谷</span><i>›</i><span>尼克斯企鵝</span><i>›</i><span>名水公園</span><i>›</i><span>洞爺湖</span><i>›</i><span>昭和新山</span></div>
@@ -257,7 +287,7 @@
       <div class="slot"><div class="t">16:40</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E7%8B%B8%E5%B0%8F%E8%B7%AF%E5%95%86%E5%BA%97%E8%A1%97" target="_blank" rel="noopener">📍地圖</a><div class="nm">狸小路商店街　自由購物</div><div class="sub">藥妝、伴手禮；唐吉訶德 24 小時。</div><div class="hop">往北2西3 <span class="km">步行約8分</span></div></div></div>
       <div class="slot pick"><div class="t">17:30</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E9%9B%AA%E5%8D%B0%E3%83%91%E3%83%BC%E3%83%A9%E3%83%BC%20%E6%9C%AD%E5%B9%8C%E6%9C%AC%E5%BA%97" target="_blank" rel="noopener">📍地圖</a><div class="nm"><span class="pk">★</span> 雪印パーラー 本店</div><div class="sub">北2西3 · –19 時 · Snow Royal 聖代，趁打烊前吃。</div><div class="hop">隔壁 sitatte sapporo <span class="km">步行約2分</span></div></div></div>
       <div class="slot pick"><div class="t">18:00</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E3%82%B9%E3%83%BC%E3%83%97%E3%82%AB%E3%83%AC%E3%83%BC%20GARAKU%20sitatte%20sapporo" target="_blank" rel="noopener">📍地圖</a><div class="nm"><span class="pk">★</span> Soup Curry GARAKU sitatte sapporo店</div><div class="sub">北2西3 · B1F · 晚餐湯咖哩；不接受訂位、現場排隊（週三營業至 20:30）。想吃壽司可改 根室花まる miredo（北3西3，現場抽電子號）。</div><div class="hop">南北線 大通→中島公園 <span class="km">約10分</span></div></div></div>
-      <div class="slot"><div class="t">19:40</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E3%83%9B%E3%83%86%E3%83%AB%E3%83%9E%E3%82%A4%E3%82%B9%E3%83%86%E3%82%A4%E3%82%BA%E3%83%97%E3%83%AC%E3%83%9F%E3%82%A2%E6%9C%AD%E5%B9%8C%E3%83%91%E3%83%BC%E3%82%AF" target="_blank" rel="noopener">📍地圖</a><div class="nm">回飯店 Mystays Premier Sapporo Park</div><div class="sub">南9西2，近中島公園／幌平橋駅。</div></div></div>
+      <div class="slot"><div class="t">19:40</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E3%83%9B%E3%83%86%E3%83%AB%E3%83%9E%E3%82%A4%E3%82%B9%E3%83%86%E3%82%A4%E3%82%BA%E3%83%97%E3%83%AC%E3%83%9F%E3%82%A2%E6%9C%AD%E5%B9%8C%E3%83%91%E3%83%BC%E3%82%AF%20%E5%8C%97%E6%B5%B7%E9%81%93%E6%9C%AD%E5%B9%8C%E5%B8%82%E4%B8%AD%E5%A4%AE%E5%8C%BA%E5%8D%979%E6%9D%A1%E8%A5%BF2-2-10" target="_blank" rel="noopener">📍地圖</a><div class="nm">回飯店 Mystays Premier Sapporo Park</div><div class="sub">南9条西2-2-10，近中島公園／幌平橋駅 · ☎ <a href="tel:+81115123456">011-512-3456</a></div></div></div>
     </div>
   </div>
 
@@ -285,7 +315,7 @@
       <div class="slot"><div class="t">13:00</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E5%B0%8F%E6%A8%BD%20%E4%B8%89%E8%A7%92%E5%B8%82%E5%A0%B4" target="_blank" rel="noopener">📍地圖</a><div class="nm">自由：三角市場／站前</div><div class="sub">三角市場就在小樽駅旁，可吃海鮮、買伴手禮。</div><div class="hop">小樽駅集合，回札幌 <span class="km">35.8km · 約50分</span></div></div></div>
       <div class="slot"><div class="t">15:30</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%9C%AD%E5%B9%8C%20%E7%8B%B8%E5%B0%8F%E8%B7%AF%20%E5%A4%A7%E4%B8%B8%E6%9C%AD%E5%B9%8C%E5%BA%97" target="_blank" rel="noopener">📍地圖</a><div class="nm">札幌自由活動</div><div class="sub">狸小路、大丸、JR Tower 補貨。</div></div></div>
       <div class="slot pick"><div class="t">17:30</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E5%85%83%E7%A5%96%E3%81%95%E3%81%A3%E3%81%BD%E3%82%8D%E3%83%A9%E3%83%BC%E3%83%A1%E3%83%B3%E6%A8%AA%E4%B8%81" target="_blank" rel="noopener">📍地圖</a><div class="nm"><span class="pk">★</span> 元祖札幌拉麵橫丁　晚餐</div><div class="sub">南5西3（薄野）· 梅光軒／龍鳳／一粒庵；飯店南北線 1 站到すすきの或步行 10 分。</div></div></div>
-      <div class="slot"><div class="t">19:00</div><div class="c"><div class="nm">回飯店</div></div></div>
+      <div class="slot"><div class="t">19:00</div><div class="c"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E3%83%9B%E3%83%86%E3%83%AB%E3%83%9E%E3%82%A4%E3%82%B9%E3%83%86%E3%82%A4%E3%82%BA%E3%83%97%E3%83%AC%E3%83%9F%E3%82%A2%E6%9C%AD%E5%B9%8C%E3%83%91%E3%83%BC%E3%82%AF%20%E5%8C%97%E6%B5%B7%E9%81%93%E6%9C%AD%E5%B9%8C%E5%B8%82%E4%B8%AD%E5%A4%AE%E5%8C%BA%E5%8D%979%E6%9D%A1%E8%A5%BF2-2-10" target="_blank" rel="noopener">📍地圖</a><div class="nm">回飯店 Mystays Premier Sapporo Park</div></div></div>
     </div>
   </div>
 
@@ -295,7 +325,7 @@
       <div class="daynum"><small>DAY</small><b>5</b></div>
       <h3>三井 Outlet → 新千歲 → 台北</h3>
       <div class="date">11/20（五）· 回程</div>
-      <a class="maplink" href="https://www.google.com/maps/dir/%E3%83%9B%E3%83%86%E3%83%AB%E3%83%9E%E3%82%A4%E3%82%B9%E3%83%86%E3%82%A4%E3%82%BA%E3%83%97%E3%83%AC%E3%83%9F%E3%82%A2%E6%9C%AD%E5%B9%8C%E3%83%91%E3%83%BC%E3%82%AF/%E4%B8%89%E4%BA%95%E3%82%A2%E3%82%A6%E3%83%88%E3%83%AC%E3%83%83%E3%83%88%E3%83%91%E3%83%BC%E3%82%AF%E6%9C%AD%E5%B9%8C%E5%8C%97%E5%BA%83%E5%B3%B6/%E6%96%B0%E5%8D%83%E6%AD%B3%E7%A9%BA%E6%B8%AF/?travelmode=driving" target="_blank" rel="noopener">全日路線</a>
+      <a class="maplink" href="https://www.google.com/maps/dir/%E3%83%9B%E3%83%86%E3%83%AB%E3%83%9E%E3%82%A4%E3%82%B9%E3%83%86%E3%82%A4%E3%82%BA%E3%83%97%E3%83%AC%E3%83%9F%E3%82%A2%E6%9C%AD%E5%B9%8C%E3%83%91%E3%83%BC%E3%82%AF%20%E5%8C%97%E6%B5%B7%E9%81%93%E6%9C%AD%E5%B9%8C%E5%B8%82%E4%B8%AD%E5%A4%AE%E5%8C%BA%E5%8D%979%E6%9D%A1%E8%A5%BF2-2-10/%E4%B8%89%E4%BA%95%E3%82%A2%E3%82%A6%E3%83%88%E3%83%AC%E3%83%83%E3%83%88%E3%83%91%E3%83%BC%E3%82%AF%E6%9C%AD%E5%B9%8C%E5%8C%97%E5%BA%83%E5%B3%B6/%E6%96%B0%E5%8D%83%E6%AD%B3%E7%A9%BA%E6%B8%AF/?travelmode=driving" target="_blank" rel="noopener">全日路線</a>
     </div>
     <div class="route-strip"><span>三井 Outlet</span><i>›</i><span>新千歲</span><i>›</i><span>桃園</span></div>
     <div class="meals">

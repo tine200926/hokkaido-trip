@@ -120,7 +120,7 @@
   <a class="back" href="index.html">← 回旅行資料</a>
   <div class="eyebrow">2026 Q4 · 日本刷卡</div>
   <h1>刷卡回饋試算</h1>
-  <p class="lede">輸入各類別預計花費，下面自動算出「每一類該刷哪張」與淨回饋（已扣海外手續費）。數字會記在這支手機上。</p>
+  <p class="lede">輸入各類別預計花費，下面自動算出「每一類該刷哪張」與淨回饋（已扣海外手續費）。數字會記在這支手機上。旅途中實際刷了多少，用 <a href="ledger.html" style="color:var(--onsen)">記帳本</a> 記，回饋會照實際花費算。</p>
 
   <h2>① 預計花費 <small>NT$</small><button class="reset" id="reset" type="button">恢復預設</button></h2>
   <div class="box" id="inputs"></div>
@@ -163,35 +163,8 @@
   </ul>
 </div>
 
+<script src="rewards.js"></script>
 <script>
-const CATS = [
-  {id:'g', name:'一般購物', sub:'百貨／服飾／紀念品（非指定店）', def:20000},
-  {id:'d', name:'藥妝・家電', sub:'指定通路', def:15000},
-  {id:'f', name:'餐飲', sub:'玉山指定店', def:10000},
-  {id:'t', name:'交通卡儲值', sub:'Suica／ICOCA，用 Apple Pay', def:3000},
-];
-const CARDS = [
-  {id:'ctbc', name:'中信 uniopen', short:'中信'},
-  {id:'esun', name:'玉山 熊本熊', short:'玉山'},
-  {id:'fubon', name:'富邦 J卡', short:'富邦 J'},
-];
-// Net reward for one card given amounts assigned to it {g,d,f,t}. Caps are shared within a card.
-function calc(card, a){
-  const S = a.g + a.d + a.f + a.t;
-  if (card === 'ctbc'){
-    const bonus = Math.min(S*0.08, 500);
-    return {net: S*0.03 + bonus - S*0.015, caps:[{label:'8% 加碼', used:bonus, max:500, spend:S, capSpend:6250}]};
-  }
-  if (card === 'esun'){
-    const el = a.d + a.f + a.t, bonus = Math.min(el*0.06, 500);
-    return {net: S*0.025 + bonus - S*0.015, caps:[{label:'6% 加碼', used:bonus, max:500, spend:el, capSpend:8333}]};
-  }
-  const phys = a.g + a.d + a.f;
-  const b1 = Math.min(phys*0.03, 1000), b2 = Math.min(a.t*0.07, 200);
-  return {net: phys*0.03 + b1 + a.t*0.03 + b2, caps:[
-    {label:'實體 3% 加碼', used:b1, max:1000, spend:phys, capSpend:33333},
-    {label:'交通卡 7% 加碼', used:b2, max:200, spend:a.t, capSpend:2857}]};
-}
 function evalPlan(vals, assign){ // assign: cat index -> card id
   const per = {}; CARDS.forEach(c=>per[c.id]={g:0,d:0,f:0,t:0});
   CATS.forEach((c,i)=>{ per[assign[i]][c.id] += vals[c.id]; });

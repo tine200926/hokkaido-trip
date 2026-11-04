@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>刷卡回饋試算</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700;900&display=swap">
+<style>
+  :root{
+    --bg:#f3f2ee; --surface:#ffffff; --surface-2:#faf9f6;
+    --ink:#1b2a38; --muted:#6c7681; --hair:#e4e1d9;
+    --crab:#b23b2e; --onsen:#2f7d7a; --gold:#b9892f; --navy:#20405c; --plum:#8a5080;
+    --c-ctbc:#2f7d7a; --c-esun:#b9892f; --c-fubon:#20405c;
+    --serif:"Noto Serif TC",serif;
+    --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#13181d; --surface:#1b222a; --surface-2:#20282f;
+    --ink:#e8e9e6; --muted:#9aa4ad; --hair:#2c353e;
+    --crab:#e07a6c; --onsen:#5bb4b0; --gold:#d8b062; --navy:#8fb4d3; --plum:#cf93c4;
+    --c-ctbc:#5bb4b0; --c-esun:#d8b062; --c-fubon:#8fb4d3; color-scheme:dark;
+  }}
+  :root[data-theme="dark"]{
+    --bg:#13181d; --surface:#1b222a; --surface-2:#20282f;
+    --ink:#e8e9e6; --muted:#9aa4ad; --hair:#2c353e;
+    --crab:#e07a6c; --onsen:#5bb4b0; --gold:#d8b062; --navy:#8fb4d3; --plum:#cf93c4;
+    --c-ctbc:#5bb4b0; --c-esun:#d8b062; --c-fubon:#8fb4d3; color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:640px;margin:0 auto;padding:36px 16px 72px}
+  .back{display:inline-block;font-size:13px;color:var(--muted);text-decoration:none;margin-bottom:18px}
+  h1,h2{font-family:var(--serif);margin:0;font-weight:700;text-wrap:balance}
+  .eyebrow{font-size:12px;letter-spacing:.2em;color:var(--crab);font-weight:700;margin-bottom:10px}
+  h1{font-size:clamp(26px,6vw,34px);line-height:1.15}
+  .lede{color:var(--muted);font-size:14px;margin:10px 0 0}
+  h2{font-size:18px;margin:34px 0 10px;display:flex;align-items:baseline;gap:8px}
+  h2 small{font-family:var(--sans);font-size:11.5px;color:var(--muted);font-weight:500}
+  .box{background:var(--surface);border:1px solid var(--hair);border-radius:14px;padding:4px 16px}
+  .num{font-variant-numeric:tabular-nums}
+
+  /* inputs */
+  .row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--hair)}
+  .row:last-child{border-bottom:0}
+  .row label{flex:1;min-width:0;font-size:14.5px;font-weight:500}
+  .row label span{display:block;font-size:11.5px;color:var(--muted);font-weight:400}
+  .amt{flex:none;display:flex;align-items:center;gap:4px;background:var(--surface-2);border:1px solid var(--hair);border-radius:10px;padding:0 10px}
+  .amt:focus-within{border-color:var(--onsen)}
+  .amt i{font-style:normal;font-size:12px;color:var(--muted)}
+  .amt input{width:84px;border:0;background:transparent;color:var(--ink);font:inherit;font-size:17px;font-weight:700;text-align:right;padding:9px 0;outline:none;font-variant-numeric:tabular-nums}
+  .total{display:flex;justify-content:space-between;padding:12px 0;font-size:14px;color:var(--muted)}
+  .total b{color:var(--ink);font-size:16px}
+
+  /* hero result */
+  .hero{background:var(--surface);border:1px solid var(--hair);border-radius:16px;padding:18px 16px;margin-top:22px;position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:0 auto 0 0;width:5px;background:var(--crab)}
+  .hero .k{font-size:12px;color:var(--muted);letter-spacing:.06em}
+  .hero .big{font-family:var(--serif);font-size:38px;font-weight:900;line-height:1.1;margin-top:4px;color:var(--crab)}
+  .hero .big small{font-family:var(--sans);font-size:14px;font-weight:700;color:var(--muted);margin-left:6px}
+  .hero .vs{font-size:13px;margin-top:6px;color:var(--muted)}
+  .hero .vs b{color:var(--onsen)}
+
+  /* plan list */
+  .plan{list-style:none;margin:0;padding:0}
+  .plan li{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--hair)}
+  .plan li:last-child{border-bottom:0}
+  .plan .cat{flex:1;min-width:0;font-size:14px}
+  .plan .cat span{display:block;font-size:11.5px;color:var(--muted)}
+  .chip{flex:none;font-size:12.5px;font-weight:700;padding:5px 11px;border-radius:999px;color:#fff;white-space:nowrap}
+  .chip.ctbc{background:var(--c-ctbc)}.chip.esun{background:var(--c-esun)}.chip.fubon{background:var(--c-fubon)}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .chip{color:#13181d}}
+  :root[data-theme="dark"] .chip{color:#13181d}
+  .plan .rw{flex:none;width:66px;text-align:right;font-weight:700;font-size:14px}
+  .plan .rw.zero{color:var(--muted);font-weight:400}
+
+  /* cap meters */
+  .caps{margin-top:10px;display:grid;gap:8px}
+  .cap{background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:10px 14px;font-size:12.5px}
+  .cap .top{display:flex;justify-content:space-between;gap:8px}
+  .cap .top b{font-size:13px}
+  .meter{height:7px;background:var(--surface-2);border:1px solid var(--hair);border-radius:999px;overflow:hidden;margin-top:6px}
+  .meter i{display:block;height:100%;border-radius:999px}
+  .cap .tip{color:var(--muted);margin-top:5px}
+  .cap.full .tip{color:var(--crab)}
+
+  /* single-card compare */
+  .cmp{display:grid;gap:10px}
+  .cc{background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:12px 14px}
+  .cc .top{display:flex;align-items:baseline;gap:8px}
+  .cc .top b{font-size:14.5px;flex:1}
+  .cc .top .v{font-weight:700;font-size:16px}
+  .cc .top .r{font-size:12px;color:var(--muted);width:44px;text-align:right}
+  .cc .bar{height:8px;background:var(--surface-2);border-radius:999px;margin-top:8px;overflow:hidden}
+  .cc .bar i{display:block;height:100%;border-radius:999px;transition:width .25s}
+  .cc .sub{font-size:11.5px;color:var(--muted);margin-top:5px}
+  .cc.best{border-color:var(--onsen)}
+  .cc .tag{font-size:10.5px;font-weight:700;color:var(--onsen);border:1px solid var(--onsen);border-radius:999px;padding:0 7px}
+
+  /* quick ref */
+  .ref{display:grid;gap:10px}
+  .rc{background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:13px 14px;border-left:4px solid var(--muted)}
+  .rc.ctbc{border-left-color:var(--c-ctbc)}.rc.esun{border-left-color:var(--c-esun)}.rc.fubon{border-left-color:var(--c-fubon)}
+  .rc.no{border-left-style:dashed}
+  .rc .h{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .rc .h b{font-family:var(--serif);font-size:16px}
+  .rc .h .pct{margin-left:auto;font-weight:700;color:var(--crab);font-size:15px}
+  .rc .h .own{font-size:10.5px;color:var(--muted);border:1px solid var(--hair);border-radius:999px;padding:0 7px}
+  .rc dl{margin:8px 0 0;display:grid;grid-template-columns:auto 1fr;gap:3px 10px;font-size:12.5px}
+  .rc dt{color:var(--muted)}
+  .rc dd{margin:0}
+
+  .notes{font-size:12.5px;color:var(--muted);padding-left:18px;margin:0}
+  .notes li{margin-bottom:6px}
+  .reset{font:inherit;font-size:12px;color:var(--muted);background:none;border:1px solid var(--hair);border-radius:999px;padding:3px 12px;cursor:pointer;margin-left:auto}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">← 回旅行資料</a>
+  <div class="eyebrow">2026 Q4 · 日本刷卡</div>
+  <h1>刷卡回饋試算</h1>
+  <p class="lede">輸入各類別預計花費，下面自動算出「每一類該刷哪張」與淨回饋（已扣海外手續費）。數字會記在這支手機上。</p>
+
+  <h2>① 預計花費 <small>NT$</small><button class="reset" id="reset" type="button">恢復預設</button></h2>
+  <div class="box" id="inputs"></div>
+
+  <div class="hero">
+    <div class="k">照建議分卡刷，預估淨回饋</div>
+    <div class="big num" id="heroV">—</div>
+    <div class="vs" id="heroVs"></div>
+  </div>
+
+  <h2>② 每一類刷哪張</h2>
+  <div class="box"><ul class="plan" id="plan"></ul></div>
+  <div class="caps" id="caps"></div>
+
+  <h2>③ 只帶一張卡的話 <small>整趟單卡淨回饋</small></h2>
+  <div class="cmp" id="cmp"></div>
+
+  <h2>④ 各卡優惠速查 <small>實際以官網為準</small></h2>
+  <div class="ref">
+    <div class="rc ctbc"><div class="h"><b>中信 uniopen</b><span class="pct">最高 11%</span></div>
+      <dl><dt>加碼</dt><dd>8% 每月上限 NT$500（≈刷 NT$6,250）</dd><dt>期間</dt><dd>9/1–12/31</dd><dt>條件</dt><dd>免登錄；海外另收 1.5% 手續費</dd></dl></div>
+    <div class="rc esun"><div class="h"><b>玉山 熊本熊卡</b><span class="pct">最高 8.5%</span></div>
+      <dl><dt>加碼</dt><dd>6% 每期上限 NT$500（≈刷 NT$8,333）；限藥妝家電／指定餐飲／交通</dd><dt>期間</dt><dd>7/1–12/31</dd><dt>條件</dt><dd>須登錄；海外另收 1.5% 手續費</dd></dl></div>
+    <div class="rc fubon"><div class="h"><b>富邦 J卡</b><span class="pct">實體 6%／交通卡 10%</span></div>
+      <dl><dt>加碼</dt><dd>實體加碼季上限 NT$1,000；交通卡 7% 季上限 NT$200</dd><dt>期間</dt><dd>10/1–12/31</dd><dt>條件</dt><dd>須登錄；基本 3% 須綁自動扣款</dd></dl></div>
+    <div class="rc no"><div class="h"><b>聯邦 吉鶴卡</b><span class="own">未持有</span><span class="pct">最高 11%</span></div>
+      <dl><dt>加碼</dt><dd>11 大熱門店加碼上限 NT$600</dd><dt>期間</dt><dd>7/1–12/31</dd><dt>條件</dt><dd>日幣請款；值得考慮加辦</dd></dl></div>
+    <div class="rc no"><div class="h"><b>第一 iLEO</b><span class="own">未持有</span><span class="pct">新戶 13%</span></div>
+      <dl><dt>加碼</dt><dd>每期上限 NT$500</dd><dt>期間</dt><dd>7/1–12/31</dd><dt>條件</dt><dd>新戶限定；須數位帳戶扣繳</dd></dl></div>
+  </div>
+
+  <h2>⑤ 說明與假設</h2>
+  <ul class="notes">
+    <li>回饋率、加碼與上限為 2026 Q4 公開活動整理；名額／條件可能調整，以各發卡行官網公告為準。</li>
+    <li>淨回饋已扣海外手續費：中信、玉山各扣 1.5%；富邦 J卡手續費官方未明示，暫以 0 計（實際可能仍有約 1.5%）。</li>
+    <li>建議刷法已把「同一張卡被分到好幾類時，加碼上限共用」算進去，所以是實際可拿到的數字。</li>
+    <li>上限計算基準不同：中信＝每月、玉山＝每期帳單、富邦 J卡＝每季；這裡以單趟一次估算。</li>
+    <li>餐飲以「玉山指定店」計算，部分餐廳不適用；玉山、富邦加碼都須先登錄。</li>
+    <li>公開優惠整理與試算工具，非個人理財建議。</li>
+  </ul>
+</div>
+
+<script>
+const CATS = [
+  {id:'g', name:'一般購物', sub:'百貨／服飾／紀念品（非指定店）', def:20000},
+  {id:'d', name:'藥妝・家電', sub:'指定通路', def:15000},
+  {id:'f', name:'餐飲', sub:'玉山指定店', def:10000},
+  {id:'t', name:'交通卡儲值', sub:'Suica／ICOCA，用 Apple Pay', def:3000},
+];
+const CARDS = [
+  {id:'ctbc', name:'中信 uniopen', short:'中信'},
+  {id:'esun', name:'玉山 熊本熊', short:'玉山'},
+  {id:'fubon', name:'富邦 J卡', short:'富邦 J'},
+];
+// Net reward for one card given amounts assigned to it {g,d,f,t}. Caps are shared within a card.
+function calc(card, a){
+  const S = a.g + a.d + a.f + a.t;
+  if (card === 'ctbc'){
+    const bonus = Math.min(S*0.08, 500);
+    return {net: S*0.03 + bonus - S*0.015, caps:[{label:'8% 加碼', used:bonus, max:500, spend:S, capSpend:6250}]};
+  }
+  if (card === 'esun'){
+    const el = a.d + a.f + a.t, bonus = Math.min(el*0.06, 500);
+    return {net: S*0.025 + bonus - S*0.015, caps:[{label:'6% 加碼', used:bonus, max:500, spend:el, capSpend:8333}]};
+  }
+  const phys = a.g + a.d + a.f;
+  const b1 = Math.min(phys*0.03, 1000), b2 = Math.min(a.t*0.07, 200);
+  return {net: phys*0.03 + b1 + a.t*0.03 + b2, caps:[
+    {label:'實體 3% 加碼', used:b1, max:1000, spend:phys, capSpend:33333},
+    {label:'交通卡 7% 加碼', used:b2, max:200, spend:a.t, capSpend:2857}]};
+}
+function evalPlan(vals, assign){ // assign: cat index -> card id
+  const per = {}; CARDS.forEach(c=>per[c.id]={g:0,d:0,f:0,t:0});
+  CATS.forEach((c,i)=>{ per[assign[i]][c.id] += vals[c.id]; });
+  let total = 0; const res = {};
+  CARDS.forEach(c=>{ res[c.id] = calc(c.id, per[c.id]); total += res[c.id].net; });
+  return {total, res, per};
+}
+function best(vals){
+  let top = null;
+  const n = CATS.length, k = CARDS.length;
+  for (let m = 0; m < Math.pow(k,n); m++){
+    const assign = []; let x = m;
+    for (let i=0;i<n;i++){ assign.push(CARDS[x%k].id); x = Math.floor(x/k); }
+    const r = evalPlan(vals, assign);
+    if (!top || r.total > top.total + 0.5) top = {...r, assign};
+  }
+  return top;
+}
+const fmt = n => 'NT$' + Math.round(n).toLocaleString('en-US');
+const pct = n => (n*100).toFixed(1) + '%';
+const KEY = 'hk-card-rewards-v1';
+function load(){ try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e){ return {}; } }
+function save(v){ try { localStorage.setItem(KEY, JSON.stringify(v)); } catch(e){} }
+
+const inputs = document.getElementById('inputs');
+const saved = load();
+CATS.forEach(c=>{
+  const row = document.createElement('div'); row.className = 'row';
+  row.innerHTML = `<label for="in-${c.id}">${c.name}<span>${c.sub}</span></label>
+    <div class="amt"><i>NT$</i><input id="in-${c.id}" type="text" inputmode="numeric" autocomplete="off"></div>`;
+  inputs.appendChild(row);
+  const inp = row.querySelector('input');
+  inp.value = (saved[c.id] ?? c.def).toLocaleString('en-US');
+  inp.addEventListener('input', ()=>{
+    const raw = inp.value.replace(/[^\d]/g,'');
+    inp.value = raw ? Number(raw).toLocaleString('en-US') : '';
+    render();
+  });
+  inp.addEventListener('focus', ()=> setTimeout(()=>inp.select(), 0));
+});
+const tot = document.createElement('div'); tot.className = 'total';
+tot.innerHTML = '<span>合計</span><b class="num" id="sum"></b>';
+inputs.appendChild(tot);
+document.getElementById('reset').addEventListener('click', ()=>{
+  CATS.forEach(c=> document.getElementById('in-'+c.id).value = c.def.toLocaleString('en-US'));
+  render();
+});
+
+function read(){
+  const v = {};
+  CATS.forEach(c=> v[c.id] = Number(document.getElementById('in-'+c.id).value.replace(/[^\d]/g,'')) || 0);
+  return v;
+}
+
+function render(){
+  const vals = read(); save(vals);
+  const S = CATS.reduce((s,c)=>s+vals[c.id],0);
+  document.getElementById('sum').textContent = fmt(S);
+
+  const plan = best(vals);
+  const singles = CARDS.map(c=>{
+    const a = {...vals};
+    return {card:c, net: calc(c.id, a).net};
+  });
+  const bestSingle = singles.reduce((a,b)=> b.net > a.net ? b : a);
+
+  document.getElementById('heroV').innerHTML = fmt(plan.total) + `<small>${S ? pct(plan.total/S) : '0%'}</small>`;
+  const gain = plan.total - bestSingle.net;
+  document.getElementById('heroVs').innerHTML = S
+    ? (gain > 0.5 ? `比整趟只刷最好的單卡（${bestSingle.card.short}）多 <b>${fmt(gain)}</b>` : `整趟只刷 <b>${bestSingle.card.name}</b> 就是最佳`)
+    : '先在上面輸入金額';
+
+  // plan list
+  const ul = document.getElementById('plan'); ul.innerHTML = '';
+  CATS.forEach((c,i)=>{
+    const card = CARDS.find(x=>x.id===plan.assign[i]);
+    const li = document.createElement('li');
+    li.innerHTML = `<div class="cat">${c.name}<span class="num">${fmt(vals[c.id])}</span></div>
+      ${vals[c.id] ? `<span class="chip ${card.id}">${card.short}</span>` : '<span class="rw zero">—</span>'}`;
+    ul.appendChild(li);
+  });
+
+  // cap meters for cards used in plan
+  const caps = document.getElementById('caps'); caps.innerHTML = '';
+  CARDS.forEach(c=>{
+    const used = plan.assign.some((id,i)=> id===c.id && vals[CATS[i].id] > 0);
+    if (!used) return;
+    plan.res[c.id].caps.forEach(cp=>{
+      if (cp.spend <= 0) return;
+      const ratio = Math.min(cp.used/cp.max, 1), full = ratio >= 0.999;
+      const el = document.createElement('div'); el.className = 'cap' + (full ? ' full' : '');
+      el.innerHTML = `<div class="top"><b>${c.short}・${cp.label}</b><span class="num">${fmt(cp.used)} / ${fmt(cp.max)}</span></div>
+        <div class="meter"><i style="width:${ratio*100}%;background:var(--c-${c.id})"></i></div>
+        <div class="tip">${full
+          ? `已封頂：這張刷到約 ${fmt(cp.capSpend)} 加碼就沒了，超過的部分只剩基本回饋`
+          : `還可再刷約 ${fmt(cp.capSpend - cp.spend)} 才會封頂`}</div>`;
+      caps.appendChild(el);
+    });
+  });
+
+  // single-card compare
+  const cmp = document.getElementById('cmp'); cmp.innerHTML = '';
+  const maxNet = Math.max(1, ...singles.map(s=>s.net));
+  singles.forEach(s=>{
+    const isBest = s === bestSingle && S > 0;
+    const el = document.createElement('div'); el.className = 'cc' + (isBest ? ' best' : '');
+    const fee = s.card.id === 'fubon' ? '手續費以 0 計' : `已扣手續費 ${fmt(S*0.015)}`;
+    el.innerHTML = `<div class="top"><b>${s.card.name}</b>${isBest ? '<span class="tag">單卡最佳</span>' : ''}
+        <span class="v num">${fmt(s.net)}</span><span class="r num">${S ? pct(s.net/S) : '—'}</span></div>
+      <div class="bar"><i style="width:${Math.max(0,s.net)/maxNet*100}%;background:var(--c-${s.card.id})"></i></div>
+      <div class="sub">${fee}</div>`;
+    cmp.appendChild(el);
+  });
+}
+render();
+</script>
+</body>
+</html>

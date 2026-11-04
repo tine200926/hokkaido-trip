@@ -146,6 +146,32 @@
   .row2{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
   .msg{font-size:12.5px;margin-top:8px;min-height:1em}
   .msg.ok{color:var(--onsen)}.msg.bad{color:var(--crab)}
+  /* payment breakdown */
+  .pays{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+  .pays .tile{padding:9px 12px}
+  .pays .v{font-size:17px}
+  .pays .tile.cash{border-color:color-mix(in srgb,var(--c-cash) 45%,var(--hair))}
+  .pays .tile.cash .v{color:var(--c-cash)}
+  .dh .cs{color:var(--c-cash);font-weight:500;margin-right:6px}
+
+  /* receipt line items */
+  .rcpt{margin-top:12px;background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:10px 12px}
+  .rcpt .rh{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700}
+  .rcpt .rh span{color:var(--muted);font-weight:500;font-size:12px}
+  .ri{display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px dashed var(--hair)}
+  .ri:last-child{border-bottom:0}
+  .ri input[type=checkbox]{width:20px;height:20px;flex:none;accent-color:var(--onsen);margin:0}
+  .ri .nm{flex:1;min-width:0;font:inherit;font-size:16px;border:0;border-bottom:1px solid transparent;background:transparent;color:var(--ink);padding:6px 0;outline:none}
+  .ri .nm:focus{border-bottom-color:var(--onsen)}
+  .ri .pr{width:92px;flex:none;font:inherit;font-size:16px;font-weight:700;text-align:right;border:1px solid var(--hair);border-radius:8px;background:var(--surface-2);color:var(--ink);padding:5px 8px;outline:none;font-variant-numeric:tabular-nums}
+  .ri.off .nm,.ri.off .pr{opacity:.4;text-decoration:line-through}
+  .rsum{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.7}
+  .rsum b{color:var(--ink)}
+  .seg{display:flex;background:var(--surface-2);border:1px solid var(--hair);border-radius:10px;padding:3px;margin-top:10px}
+  .seg button{flex:1;border:0;background:transparent;border-radius:8px;padding:8px 6px;font-size:13.5px;cursor:pointer;color:var(--muted)}
+  .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+  .linkbtn{border:0;background:none;color:var(--onsen);font-size:12.5px;cursor:pointer;padding:4px 0;margin-left:auto}
+
   .toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:999px;font-size:13px;z-index:50;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
   .toast.on{opacity:1}
 </style>
@@ -161,6 +187,11 @@
   <div class="sum">
     <div class="tile"><div class="k">總花費</div><div class="v num" id="sJpy">¥0</div><div class="s num" id="sNtd">≈ NT$0</div></div>
     <div class="tile rw"><div class="k">刷卡淨回饋（已扣手續費）</div><div class="v num" id="sRw">NT$0</div><div class="s num" id="sRate">—</div></div>
+  </div>
+  <div class="pays">
+    <div class="tile cash"><div class="k">💴 現金</div><div class="v num" id="pCash">¥0</div><div class="s num" id="pCashS">0 筆</div></div>
+    <div class="tile"><div class="k">💳 刷卡</div><div class="v num" id="pCard">¥0</div><div class="s num" id="pCardS">0 筆</div></div>
+    <div class="tile"><div class="k">其他卡</div><div class="v num" id="pOther">¥0</div><div class="s num" id="pOtherS">0 筆</div></div>
   </div>
 
   <h2>💳 各卡已刷 <small>加碼額度用到哪裡</small></h2>
@@ -216,6 +247,17 @@
     </div>
     <div class="prog" id="prog"><i></i></div>
     <div class="chips cands" id="cands"></div>
+    <div class="rcpt" id="rcpt" hidden>
+      <div class="rh">📄 收據明細 <span id="rcptN"></span><button type="button" class="linkbtn" id="rcptAdd">＋ 加一項</button></div>
+      <div id="rcptList"></div>
+      <div class="rsum" id="rcptSum"></div>
+      <div class="seg" role="group" aria-label="記帳方式">
+        <button type="button" id="modeOne" aria-pressed="true">合併成 1 筆</button>
+        <button type="button" id="modeSplit" aria-pressed="false">拆成每項 1 筆</button>
+      </div>
+      <div class="tip" id="modeTip"></div>
+    </div>
+    <button type="button" class="linkbtn" id="rcptOpen" style="margin-top:8px">📄 有多個品項？手動加明細</button>
 
     <div class="fld">
       <label for="fJpy">金額</label>
@@ -352,7 +394,10 @@ window.addEventListener('hashchange', ()=>{
 
 // ---------- helpers ----------
 const $ = id => document.getElementById(id);
-const yen = n => '¥' + Math.round(n).toLocaleString('en-US');
+const yen = n => (n < 0 ? '-' : '') + '¥' + Math.abs(Math.round(n)).toLocaleString('en-US');
+const parseJ = v => { v = String(v ?? ''); const n = Number(v.replace(/[^\d]/g,'')) || 0; return /^\s*[-−]/.test(v) ? -n : n; };
+const fmtJ = n => (n < 0 ? '-' : '') + Math.abs(n).toLocaleString('en-US');
+const curJpy = () => parseJ($('fJpy').value);
 const nt = n => 'NT$' + Math.round(n).toLocaleString('en-US');
 const today = () => { const d = new Date(); return new Date(d - d.getTimezoneOffset()*60000).toISOString().slice(0,10); };
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
@@ -383,6 +428,14 @@ function render(){
   $('sRw').textContent = nt(rw);
   $('sRate').textContent = cardJ ? `刷卡 ${yen(cardJ)}・平均 ${(rw/(cardJ*cfg.rate)*100).toFixed(1)}%` : '還沒有刷卡紀錄';
 
+  // cash / card / other-card totals
+  const grp = {cash:[0,0], card:[0,0], other:[0,0]};
+  L.forEach(e=>{ const k = e.card === 'cash' ? 'cash' : per[e.card] ? 'card' : 'other'; grp[k][0] += e.jpy; grp[k][1]++; });
+  [['cash','pCash'],['card','pCard'],['other','pOther']].forEach(([k,id])=>{
+    $(id).textContent = yen(grp[k][0]);
+    $(id+'S').innerHTML = `≈${nt(grp[k][0]*cfg.rate)}<br>${grp[k][1]} 筆`;
+  });
+
   // per card
   const cw = $('cards'); cw.innerHTML = '';
   CARDS.forEach(c=>{
@@ -411,7 +464,8 @@ function render(){
     const dt = new Date(d + 'T00:00');
     const wd = isNaN(dt) ? '' : '（' + '日一二三四五六'[dt.getDay()] + '）';
     const box = document.createElement('div'); box.className = 'day';
-    box.innerHTML = `<div class="dh"><span>${esc(d.slice(5).replace('-','/'))}${wd}</span><span class="num">${yen(items.reduce((s,e)=>s+e.jpy,0))}</span></div><div class="list"></div>`;
+    const dayCash = items.filter(e=>e.card === 'cash').reduce((s,e)=>s+e.jpy,0);
+    box.innerHTML = `<div class="dh"><span>${esc(d.slice(5).replace('-','/'))}${wd}</span><span class="num">${dayCash ? `<span class="cs">💴 現金 ${yen(dayCash)}</span>` : ''}${yen(items.reduce((s,e)=>s+e.jpy,0))}</span></div><div class="list"></div>`;
     const list = box.querySelector('.list');
     items.forEach(e=>{
       const c = catOf(e.cat), p = payOf(e.card);
@@ -503,8 +557,8 @@ function buildChips(){
   });
 }
 function refreshForm(){
-  const jpy = Number($('fJpy').value.replace(/[^\d]/g,'')) || 0;
-  const ntd = jpy * cfg.rate;
+  const jpy = curJpy();
+  const ntd = Math.max(0, jpy) * cfg.rate;
   $('fNtd').textContent = '≈ ' + nt(ntd);
   document.querySelectorAll('#fCat .chip').forEach(b=> b.setAttribute('aria-pressed', b.dataset.id === fCat));
 
@@ -537,7 +591,7 @@ function refreshForm(){
 function openForm(e){
   editing = e || null;
   $('dlgTitle').textContent = e ? '編輯' : '記一筆';
-  $('fJpy').value = e ? e.jpy.toLocaleString('en-US') : '';
+  $('fJpy').value = e ? fmtJ(e.jpy) : '';
   $('fItem').value = e ? e.item : '';
   $('fDate').value = e ? e.date : today();
   $('fNote').value = e ? e.note : '';
@@ -545,26 +599,41 @@ function openForm(e){
   fPay = e ? e.card : null; payTouched = !!e;
   $('fDel').hidden = !e;
   resetPhoto();
+  rc = null; $('rcpt').hidden = true; $('rcptOpen').hidden = !!e;
   refreshForm();
   dlg.showModal();
 }
 $('dlgClose').addEventListener('click', ()=> dlg.close());
 dlg.addEventListener('click', ev=>{ if (ev.target === dlg) dlg.close(); });
 $('fJpy').addEventListener('input', ()=>{
-  const raw = $('fJpy').value.replace(/[^\d]/g,'');
-  $('fJpy').value = raw ? Number(raw).toLocaleString('en-US') : '';
-  refreshForm();
+  const v = $('fJpy').value, n = parseJ(v);
+  $('fJpy').value = n ? fmtJ(n) : (/^\s*[-−]/.test(v) ? '-' : '');
+  refreshForm(); renderRcptSum();
 });
 $('form').addEventListener('submit', ev=>{
   ev.preventDefault();
-  const jpy = Number($('fJpy').value.replace(/[^\d]/g,'')) || 0;
+  const on = rcOn(), sumOn = on.reduce((s,i)=>s+i.jpy,0);
+  const jpy = curJpy() || sumOn;
   if (!jpy){ $('fJpy').focus(); toast('請輸入金額'); return; }
-  const rec = {
-    id: editing ? editing.id : uid(),
-    date: $('fDate').value || today(), item: $('fItem').value.trim(),
-    cat: fCat, jpy, card: fPay || 'cash', note: $('fNote').value.trim(),
-    updated: new Date().toISOString(), dirty: true,
-  };
+  const base = { date: $('fDate').value || today(), cat: fCat, card: fPay || 'cash',
+    updated: new Date().toISOString(), dirty: true };
+  const userNote = $('fNote').value.trim(), title = $('fItem').value.trim();
+
+  if (rc && rc.mode === 'split' && on.length && !editing){
+    const tag = `同一張收據：${title || rc.store || '收據'} 共 ${yen(jpy)}` + (userNote ? '｜' + userNote : '');
+    const recs = on.map(i=>({...base, id: uid(), item: i.name || '品項', jpy: i.jpy, note: tag}));
+    const diff = jpy - sumOn;
+    if (diff) recs.push({...base, id: uid(), item: '稅金／折扣（明細差額）', jpy: diff, note: tag});
+    entries.push(...recs);
+    persist(); dlg.close(); render(); badge();
+    toast(`已拆成 ${recs.length} 筆，共 ${yen(jpy)}`);
+    sync();
+    return;
+  }
+
+  let note = userNote;
+  if (rc && on.length) note = (userNote ? userNote + '｜' : '') + '明細：' + on.map(i=>`${i.name} ${yen(i.jpy)}`).join('、');
+  const rec = {...base, id: editing ? editing.id : uid(), item: title, jpy, note};
   entries = entries.filter(x=>x.id !== rec.id); entries.push(rec);
   persist(); dlg.close(); render(); badge();
   const g = CARDS.find(c=>c.id===rec.card) ? ' · 回饋 +' + nt(marginal(spendByCard(rec.id), rec.card, catOf(rec.cat).rw, rec.jpy*cfg.rate)) : '';
@@ -619,6 +688,36 @@ function prepImage(file){
     img.src = URL.createObjectURL(file);
   });
 }
+const CJK = '\u3040-\u30ff\u3400-\u9fff\uff66-\uff9f々ー';
+const joinCJK = s => s.replace(new RegExp(`([${CJK}])\\s+(?=[${CJK}])`, 'g'), '$1').replace(/\s{2,}/g, ' ').trim();
+function normReceipt(text){
+  return text
+    .replace(/[０-９]/g, d=>String.fromCharCode(d.charCodeAt(0)-0xFEE0))
+    .replace(/[，､、]/g, ',').replace(/[￥¥\\]/g, '¥')
+    .replace(/(\d)\s*[,.]\s*(\d{3})(?!\d)/g, '$1$2').replace(/(\d)\s*[,.]\s*(\d{3})(?!\d)/g, '$1$2')
+    .split(/\n/).map(l=>l.trim()).filter(Boolean);
+}
+// Line items (name + price) printed above the subtotal/total, plus a guess at the store name.
+function parseItems(text){
+  const lines = normReceipt(text);
+  const END = /小\s*計|合\s*計|会\s*計|総\s*額|お?買\s*上|TOTAL|Total/;
+  const SKIP = /税|釣|預|つり|返品|点数|対象|ポイント|\bpt\b|TEL|電話|No\.|番号|クレジット|カード|現\s*金|領\s*収|レシート|担当|POS|免\s*税|値\s*引|割\s*引|[@＠]|\d\s*[個コ点]\s*[xX×*]|[xX×]\s*\d+\s*[個コ点]?$/i;
+  const DATE = /\d{4}\s*[\/年.-]\s*\d{1,2}|\d{1,2}\s*:\s*\d{2}/;
+  const letters = s => (s.match(new RegExp(`[${CJK}A-Za-z]`, 'g')) || []).length;
+  const items = [];
+  let store = '';
+  for (const l of lines){
+    if (END.test(l)) break;
+    const m = l.match(/^(.*?)\s*¥?\s*(\d{2,6})\s*[※*＊外内軽☆★A-Za-z]?\s*$/);
+    const isItem = m && !DATE.test(l) && !SKIP.test(l);
+    if (isItem){
+      const name = joinCJK(m[1].replace(/^[\d\s#*\-.]+/, '').replace(/[¥:：.\-\s]+$/, ''));
+      if (letters(name) >= 2) { items.push({name: name.slice(0, 40), jpy: +m[2]}); continue; }
+    }
+    if (!store && !items.length && !/\d{3,}/.test(l) && !DATE.test(l) && !SKIP.test(l) && letters(l) >= 3) store = joinCJK(l).slice(0, 30);
+  }
+  return {store, items: items.slice(0, 40)};
+}
 // Pull likely totals out of receipt text, best guess first.
 function parseAmounts(text){
   const norm = text
@@ -660,16 +759,23 @@ async function runOCR(file){
     })]);
     const { data } = await worker.recognize(canvas);
     if (run !== ocrRun) return;
-    const c = parseAmounts(data.text || '');
+    const text = data.text || '';
+    const c = parseAmounts(text), r = parseItems(text);
     $('prog').style.display = 'none';
-    if (!c.length){ $('photoSt').innerHTML = '讀不到金額，請手動輸入'; return; }
-    const cur = Number($('fJpy').value.replace(/[^\d]/g,''));
-    if (!cur){ $('fJpy').value = c[0].toLocaleString('en-US'); refreshForm(); }
-    $('photoSt').innerHTML = `讀到 <b class="num">${yen(c[0])}</b>，不對的話點下面其他數字或直接改`;
+    if (!$('fItem').value.trim()) $('fItem').value = r.store || (r.items.length === 1 ? r.items[0].name : '');
+    if (r.items.length >= 2){
+      rc = {store: r.store, items: r.items.map(i=>({...i, on: true})), mode: 'one'};
+      if (!c.length && !curJpy()) $('fJpy').value = fmtJ(r.items.reduce((s,i)=>s+i.jpy,0));
+      renderRcptList();
+    }
+    if (!c.length){ $('photoSt').innerHTML = rc ? `讀到 <b>${rc.items.length} 項</b>明細，請確認總額` : '讀不到金額，請手動輸入'; refreshForm(); return; }
+    if (!curJpy()) $('fJpy').value = fmtJ(c[0]);
+    refreshForm(); renderRcptSum();
+    $('photoSt').innerHTML = `讀到 <b class="num">${yen(c[0])}</b>` + (rc ? `・明細 <b>${rc.items.length} 項</b>` : '') + `，不對的話點下面數字或直接改`;
     c.forEach(n=>{
       const b = document.createElement('button'); b.type='button'; b.className='chip num'; b.textContent = yen(n);
-      b.setAttribute('aria-pressed', n === (Number($('fJpy').value.replace(/[^\d]/g,'')) || c[0]));
-      b.addEventListener('click', ()=>{ $('fJpy').value = n.toLocaleString('en-US'); refreshForm();
+      b.setAttribute('aria-pressed', n === curJpy());
+      b.addEventListener('click', ()=>{ $('fJpy').value = fmtJ(n); refreshForm(); renderRcptSum();
         $('cands').querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed', x===b)); });
       $('cands').appendChild(b);
     });
@@ -679,6 +785,55 @@ async function runOCR(file){
     $('photoSt').innerHTML = esc(err.message || '辨識失敗') + '，請手動輸入';
   }
 }
+// ---------- receipt line items: combine into one entry or split per item ----------
+let rc = null;
+const box_seg = () => $('rcpt').querySelector('.seg');
+const rcOn = () => rc ? rc.items.filter(i=>i.on && i.jpy) : [];
+function renderRcptList(){
+  const box = $('rcpt'); if (!rc){ box.hidden = true; return; }
+  box.hidden = false; $('rcptOpen').hidden = true;
+  const list = $('rcptList'); list.innerHTML = '';
+  rc.items.forEach((it, idx)=>{
+    const row = document.createElement('div'); row.className = 'ri' + (it.on ? '' : ' off');
+    row.innerHTML = `<input type="checkbox" ${it.on ? 'checked' : ''} aria-label="包含這一項">
+      <input class="nm" value="${esc(it.name)}" placeholder="品名" aria-label="品名">
+      <input class="pr num" inputmode="numeric" value="${it.jpy ? fmtJ(it.jpy) : ''}" placeholder="¥" aria-label="金額">`;
+    const [cb, nm, pr] = row.querySelectorAll('input');
+    cb.addEventListener('change', ()=>{ it.on = cb.checked; row.classList.toggle('off', !it.on); renderRcptSum(); });
+    nm.addEventListener('input', ()=>{ it.name = nm.value.trim(); });
+    pr.addEventListener('input', ()=>{ it.jpy = parseJ(pr.value); pr.value = it.jpy ? fmtJ(it.jpy) : ''; renderRcptSum(); });
+    list.appendChild(row);
+  });
+  renderRcptSum();
+}
+function renderRcptSum(){
+  if (!rc) return;
+  const on = rcOn(), sum = on.reduce((s,i)=>s+i.jpy,0), total = curJpy() || sum, diff = total - sum;
+  $('rcptN').textContent = `已選 ${on.length}／${rc.items.length} 項`;
+  $('rcptSum').innerHTML = `明細合計 <b class="num">${yen(sum)}</b>　收據總額 <b class="num">${yen(total)}</b>` +
+    (diff ? `<br>差額 <b class="num">${diff > 0 ? '+' : ''}${yen(diff)}</b>（稅金、折扣，或沒讀到的品項）` : '');
+  box_seg().style.display = editing ? 'none' : '';
+  $('modeOne').setAttribute('aria-pressed', rc.mode === 'one');
+  $('modeSplit').setAttribute('aria-pressed', rc.mode === 'split');
+  const n = on.length + (diff ? 1 : 0);
+  $('modeSplit').textContent = `拆成 ${n} 筆`;
+  $('modeTip').textContent = editing ? '' : rc.mode === 'one'
+    ? `記成 1 筆 ${yen(total)}，明細寫進備註`
+    : `每項各記 1 筆（同類別、同付款方式）` + (diff ? `，差額 ${yen(diff)} 另記 1 筆「稅金／折扣」` : '');
+}
+$('modeOne').addEventListener('click', ()=>{ if (rc){ rc.mode = 'one'; renderRcptSum(); } });
+$('modeSplit').addEventListener('click', ()=>{ if (rc){ rc.mode = 'split'; renderRcptSum(); } });
+$('rcptOpen').addEventListener('click', ()=>{
+  if (!rc){ rc = {store:'', items:[{name:'', jpy:0, on:true}, {name:'', jpy:0, on:true}], mode:'one'}; }
+  $('rcptOpen').hidden = true; renderRcptList();
+  $('rcptList').querySelector('.nm').focus();
+});
+$('rcptAdd').addEventListener('click', ()=>{
+  if (!rc) return;
+  rc.items.push({name:'', jpy:0, on:true}); renderRcptList();
+  const nms = $('rcptList').querySelectorAll('.nm'); nms[nms.length-1].focus();
+});
+
 let photoForNew = false;
 $('fileIn').addEventListener('change', ()=>{
   const f = $('fileIn').files[0]; $('fileIn').value = '';

@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>日本退稅新制</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700;900&display=swap">
+<style>
+  :root{
+    --bg:#f3f2ee; --surface:#ffffff; --surface-2:#faf9f6;
+    --ink:#1b2a38; --muted:#6c7681; --hair:#e4e1d9;
+    --crab:#b23b2e; --onsen:#2f7d7a; --gold:#b9892f; --navy:#20405c; --plum:#8a5080;
+    --ok:#2e8b57; --stop:#c0392b; --on-accent:#fff;
+    --serif:"Noto Serif TC",serif;
+    --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#13181d; --surface:#1b222a; --surface-2:#20282f;
+    --ink:#e8e9e6; --muted:#9aa4ad; --hair:#2c353e;
+    --crab:#e07a6c; --onsen:#5bb4b0; --gold:#d8b062; --navy:#8fb4d3; --plum:#cf93c4;
+    --ok:#5cc28a; --stop:#e57368; --on-accent:#13181d; color-scheme:dark;
+  }}
+  :root[data-theme="dark"]{
+    --bg:#13181d; --surface:#1b222a; --surface-2:#20282f;
+    --ink:#e8e9e6; --muted:#9aa4ad; --hair:#2c353e;
+    --crab:#e07a6c; --onsen:#5bb4b0; --gold:#d8b062; --navy:#8fb4d3; --plum:#cf93c4;
+    --ok:#5cc28a; --stop:#e57368; --on-accent:#13181d; color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:640px;margin:0 auto;padding:32px 16px 72px}
+  .back{display:inline-block;font-size:13px;color:var(--muted);text-decoration:none;margin-bottom:16px}
+  h1,h2,h3{font-family:var(--serif);margin:0;font-weight:700;text-wrap:balance}
+  .eyebrow{font-size:12px;letter-spacing:.2em;color:var(--crab);font-weight:700;margin-bottom:10px}
+  h1{font-size:clamp(28px,7vw,36px);line-height:1.15}
+  .lede{color:var(--muted);font-size:14.5px;margin:12px 0 0}
+  h2{font-size:20px;margin:40px 0 12px;display:flex;align-items:baseline;gap:10px}
+  h2 .no{font-family:var(--sans);font-size:12px;font-weight:700;color:var(--crab);letter-spacing:.1em}
+  .num{font-variant-numeric:tabular-nums}
+  a{color:var(--onsen)}
+  b.hl{color:var(--crab)}
+
+  /* hero */
+  .hero{margin-top:20px;background:var(--surface);border:1px solid var(--hair);border-radius:16px;padding:18px;position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:0 auto 0 0;width:5px;background:var(--crab)}
+  .hero .big{font-family:var(--serif);font-weight:900;font-size:clamp(22px,6vw,28px);line-height:1.3}
+  .hero .big em{font-style:normal;color:var(--crab)}
+  .hero .you{margin-top:10px;display:flex;gap:8px;align-items:flex-start;font-size:13.5px;background:color-mix(in srgb,var(--crab) 9%,transparent);border-radius:10px;padding:10px 12px}
+
+  /* old vs new mini flows */
+  .vs{display:grid;gap:10px}
+  .flowcard{background:var(--surface);border:1px solid var(--hair);border-radius:14px;padding:12px 14px}
+  .flowcard .t{font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--muted);margin-bottom:8px;display:flex;gap:8px;align-items:center}
+  .flowcard.new{border-color:color-mix(in srgb,var(--crab) 50%,var(--hair))}
+  .flowcard.new .t{color:var(--crab)}
+  .tag{font-size:10.5px;padding:1px 8px;border-radius:999px;background:var(--surface-2);border:1px solid var(--hair)}
+  .flowcard.new .tag{background:var(--crab);color:var(--on-accent);border-color:transparent}
+  .mini{display:flex;align-items:stretch;gap:6px}
+  .mini .s{flex:1;min-width:0;background:var(--surface-2);border:1px solid var(--hair);border-radius:10px;padding:8px 6px;text-align:center;font-size:12px;line-height:1.35}
+  .mini .s .i{display:block;font-size:20px;line-height:1.2;margin-bottom:3px}
+  .mini .s b{display:block;font-size:12.5px}
+  .mini .ar{flex:none;align-self:center;color:var(--muted);font-size:14px}
+  .mini .s.key{background:color-mix(in srgb,var(--crab) 10%,var(--surface));border-color:color-mix(in srgb,var(--crab) 40%,var(--hair))}
+
+  /* money bar */
+  .money{background:var(--surface);border:1px solid var(--hair);border-radius:14px;padding:14px}
+  .bar{display:flex;height:40px;border-radius:10px;overflow:hidden;margin:10px 0 6px;font-size:12.5px;font-weight:700}
+  .bar .p{flex:10;background:var(--navy);color:var(--on-accent);display:flex;align-items:center;justify-content:center}
+  .bar .x{flex:1.6;background:var(--crab);color:var(--on-accent);display:flex;align-items:center;justify-content:center;white-space:nowrap}
+  .money .row{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-top:1px dashed var(--hair)}
+  .money .row b{font-size:15px}
+  .money .row.back b{color:var(--ok)}
+  .money small{display:block;font-size:12px;color:var(--muted);margin-top:6px}
+
+  /* main steps */
+  .steps{position:relative;margin-top:6px}
+  .step{position:relative;display:flex;gap:14px;padding-bottom:18px}
+  .step:not(:last-child)::before{content:"";position:absolute;left:21px;top:46px;bottom:0;width:2px;background:var(--hair)}
+  .step .n{flex:none;width:44px;height:44px;border-radius:50%;background:var(--navy);color:var(--on-accent);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:900;font-size:20px;position:relative;z-index:1}
+  .step.air .n{background:var(--crab)}
+  .step.money-step .n{background:var(--ok)}
+  .step .body{flex:1;min-width:0;background:var(--surface);border:1px solid var(--hair);border-radius:14px;padding:12px 14px}
+  .step .body h3{font-size:16.5px;display:flex;align-items:center;gap:8px}
+  .step .body h3 .i{font-size:20px}
+  .step .where{font-size:11.5px;font-weight:700;color:var(--muted);letter-spacing:.04em;margin-top:2px}
+  .step ul{margin:8px 0 0;padding-left:18px;font-size:13.5px}
+  .step li{margin-bottom:4px}
+  .branch{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+  .lamp{border-radius:12px;padding:10px;font-size:12.5px;line-height:1.45;border:1.5px solid}
+  .lamp .lt{display:flex;align-items:center;gap:6px;font-weight:700;font-size:13.5px;margin-bottom:4px}
+  .lamp .dot{width:14px;height:14px;border-radius:50%;flex:none}
+  .lamp.g{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,var(--surface))}
+  .lamp.g .dot{background:var(--ok)} .lamp.g .lt{color:var(--ok)}
+  .lamp.r{border-color:var(--stop);background:color-mix(in srgb,var(--stop) 9%,var(--surface))}
+  .lamp.r .dot{background:var(--stop)} .lamp.r .lt{color:var(--stop)}
+
+  /* airport order (svg) */
+  .airport{background:var(--surface);border:1px solid var(--hair);border-radius:14px;padding:12px}
+  .ap{display:flex;flex-direction:column;gap:0}
+  .apb{display:flex;gap:10px;align-items:center;background:var(--surface-2);border:1.5px solid var(--hair);border-radius:12px;padding:10px 12px}
+  .apb .i{font-size:22px;flex:none}
+  .apb b{display:block;font-size:14.5px}
+  .apb small{display:block;font-size:12px;color:var(--muted);line-height:1.4}
+  .apb.key{border-color:var(--crab);background:color-mix(in srgb,var(--crab) 7%,var(--surface))}
+  .apsplit{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .apsplit .apb{flex-direction:column;align-items:flex-start;gap:2px}
+  .apb.g{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 8%,var(--surface))}
+  .apb.g b{color:var(--ok)}
+  .apb.r{border-color:var(--stop);background:color-mix(in srgb,var(--stop) 8%,var(--surface))}
+  .apb.r b{color:var(--stop)}
+  .apar{text-align:center;color:var(--muted);font-size:16px;line-height:1;padding:5px 0}
+  .airport .cap{font-size:12.5px;color:var(--muted);margin-top:8px}
+
+  /* compare table */
+  table{width:100%;border-collapse:separate;border-spacing:0;background:var(--surface);border:1px solid var(--hair);border-radius:14px;overflow:hidden;font-size:13px}
+  th,td{padding:9px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--hair)}
+  tr:last-child td{border-bottom:0}
+  th{font-size:12px;color:var(--muted);background:var(--surface-2);font-weight:700}
+  td:first-child{font-weight:700;white-space:nowrap;color:var(--muted);font-size:12.5px}
+  td.new{color:var(--ink);background:color-mix(in srgb,var(--crab) 5%,transparent)}
+  .gone{color:var(--muted);text-decoration:line-through}
+
+  /* checklist */
+  .must{display:grid;gap:8px}
+  .m{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:11px 13px}
+  .m .i{flex:none;font-size:22px;line-height:1.2}
+  .m b{display:block;font-size:14.5px}
+  .m span{font-size:13px;color:var(--muted)}
+  .m.warn{border-color:color-mix(in srgb,var(--stop) 55%,var(--hair));background:color-mix(in srgb,var(--stop) 6%,var(--surface))}
+  .m.warn b{color:var(--stop)}
+
+  /* receipt diagram */
+  .rcpt{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .paper{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:10px 12px;font-size:12.5px;position:relative}
+  .paper .h{font-weight:700;font-size:12px;color:var(--muted);margin-bottom:6px}
+  .paper .li{display:flex;justify-content:space-between;gap:6px;padding:2px 0}
+  .paper .li.used{color:var(--stop)}
+  .paper .res{margin-top:8px;padding-top:6px;border-top:1px dashed var(--hair);font-weight:700}
+  .paper.bad .res{color:var(--stop)} .paper.good .res{color:var(--ok)}
+
+  .tips{display:grid;gap:8px}
+  .tip{background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:11px 13px;font-size:13.5px}
+  .tip > b:first-child{display:block;font-size:14px;margin-bottom:2px}
+  details.faq{background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:0 14px;margin-bottom:8px}
+  details.faq summary{cursor:pointer;padding:12px 0;font-weight:700;font-size:14px;list-style:none;display:flex;gap:8px}
+  details.faq summary::-webkit-details-marker{display:none}
+  details.faq summary::after{content:"＋";margin-left:auto;color:var(--muted)}
+  details.faq[open] summary::after{content:"－"}
+  details.faq p{margin:0 0 12px;font-size:13.5px}
+  .src{font-size:12px;color:var(--muted);margin-top:36px;padding-top:14px;border-top:1px solid var(--hair)}
+  .src ul{padding-left:18px;margin:6px 0}
+  .src li{margin-bottom:3px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">← 回旅行資料</a>
+  <div class="eyebrow">2026/11/1 起 · 圖解懶人包</div>
+  <h1>日本退稅新制</h1>
+  <p class="lede">一句話：<b>買的時候先付含稅價，出境時給海關確認東西有帶走，之後才把稅退給你。</b></p>
+
+  <div class="hero">
+    <div class="big">以前「結帳直接免稅」<br>現在「<em>先付稅，出境再退</em>」</div>
+    <div class="you">✈️<div>我們 <b>11/16–20</b> 出發，買的東西<b>全部適用新制</b>。最後一天在新千歲機場，<b class="hl">托運行李前</b>要先辦好退稅確認。</div></div>
+  </div>
+
+  <!-- 1. old vs new -->
+  <h2><span class="no">01</span>差在哪裡？</h2>
+  <div class="vs">
+    <div class="flowcard">
+      <div class="t"><span class="tag">舊制</span>10/31 以前購買</div>
+      <div class="mini">
+        <div class="s"><span class="i">🛍</span><b>結帳</b>出示護照</div><span class="ar">→</span>
+        <div class="s"><span class="i">💴</span><b>直接免稅</b>付未稅價</div><span class="ar">→</span>
+        <div class="s"><span class="i">✈️</span><b>出境</b>完成</div>
+      </div>
+    </div>
+    <div class="flowcard new">
+      <div class="t"><span class="tag">新制</span>11/1 起購買（我們這趟）</div>
+      <div class="mini">
+        <div class="s"><span class="i">🛍</span><b>結帳</b>付含稅價</div><span class="ar">→</span>
+        <div class="s key"><span class="i">🛂</span><b>機場確認</b>托運前</div><span class="ar">→</span>
+        <div class="s"><span class="i">💰</span><b>退稅</b>店家退給你</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. money -->
+  <h2><span class="no">02</span>錢怎麼算？</h2>
+  <div class="money">
+    <div style="font-size:13.5px">例：商品標價 <b>¥10,000（未稅）</b>，消費稅 10%</div>
+    <div class="bar" role="img" aria-label="結帳付 11000 日圓，其中 1000 日圓是之後會退的消費稅">
+      <span class="p">商品 ¥10,000</span><span class="x">稅 ¥1,000</span>
+    </div>
+    <div class="row"><span>結帳時先付</span><b class="num">¥11,000</b></div>
+    <div class="row back"><span>出境確認後退回</span><b class="num">最多 ¥1,000</b></div>
+    <small>食品等適用 8% 的商品退 8%。退款由店家或退稅公司處理，<b>可能扣手續費</b>，實拿可能比稅額少。</small>
+  </div>
+
+  <!-- 3. steps -->
+  <h2><span class="no">03</span>四個步驟</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="n">1</div>
+      <div class="body">
+        <h3><span class="i">🛍</span>在免稅店結帳</h3>
+        <div class="where">店裡 · TAX FREE 標誌的店</div>
+        <ul>
+          <li><b>同一家店、同一天</b>未稅合計滿 <b>¥5,000</b></li>
+          <li>出示<b>護照</b>（要帶正本）</li>
+          <li>付<b>含稅價</b>，選退款方式（信用卡、電子錢包、機場領現金等，依店家而定）</li>
+        </ul>
+      </div>
+    </div>
+    <div class="step">
+      <div class="n">2</div>
+      <div class="body">
+        <h3><span class="i">🎒</span>東西帶著走、先別用</h3>
+        <div class="where">旅途中</div>
+        <ul>
+          <li>退稅品<b>不要拆開使用</b>（化妝品、食品尤其注意）</li>
+          <li>收好收據，退稅品<b>集中放一袋</b>，海關要看時好拿</li>
+          <li>不能寄回台灣：<b>要隨身帶出境</b>才退得到</li>
+        </ul>
+      </div>
+    </div>
+    <div class="step air">
+      <div class="n">3</div>
+      <div class="body">
+        <h3><span class="i">🛂</span>機場：托運前先確認</h3>
+        <div class="where">新千歲國際線出發大廳 · 購買後 90 天內</div>
+        <ul>
+          <li>到<b>退稅機台（Kiosk）掃護照</b></li>
+          <li>新千歲也可以連出發大廳的<b>專用 Wi-Fi</b>，用 <b>Visit Japan Web</b> 辦</li>
+        </ul>
+        <div class="branch">
+          <div class="lamp g"><div class="lt"><span class="dot"></span>綠燈・不用檢查</div>確認完成，可以去報到、托運行李。</div>
+          <div class="lamp r"><div class="lt"><span class="dot"></span>紅燈・要檢查</div>帶著商品到海關檢查處給人員看，確認後再去托運。</div>
+        </div>
+      </div>
+    </div>
+    <div class="step money-step">
+      <div class="n">4</div>
+      <div class="body">
+        <h3><span class="i">💰</span>收到退稅</h3>
+        <div class="where">出境後 · 店家／退稅公司處理</div>
+        <ul>
+          <li>退到你在店裡選的方式（例如原信用卡）</li>
+          <li>入帳時間、手續費<b>每家店不同</b></li>
+          <li>海關沒確認到 → <b class="hl">不退</b></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. airport order -->
+  <h2><span class="no">04</span>機場順序別搞錯</h2>
+  <div class="airport">
+    <div class="ap" role="img" aria-label="機場順序：先到退稅機台掃護照，綠燈直接去報到托運，紅燈先給海關檢查商品再去報到托運，最後安檢出境">
+      <div class="apb key"><span class="i">🛂</span><div><b>① 退稅機台 掃護照</b><small>或 Visit Japan Web（出發大廳專用 Wi-Fi）</small></div></div>
+      <div class="apar">↓</div>
+      <div class="apsplit">
+        <div class="apb g"><b>● 綠燈</b><small>直接下一步</small></div>
+        <div class="apb r"><b>● 紅燈</b><small>先到海關檢查處<br>拿商品給人員看</small></div>
+      </div>
+      <div class="apar">↓</div>
+      <div class="apb"><span class="i">🧳</span><div><b>② 報到・托運行李</b><small>大瓶液體這時才放進托運</small></div></div>
+      <div class="apar">↓</div>
+      <div class="apb"><span class="i">✈️</span><div><b>③ 安檢・出境</b></div></div>
+    </div>
+    <div class="cap">💡 化妝水、乳液等<b>超過 100ml 的液體不能帶上飛機</b>，一定得托運，所以<b>一定要先過退稅機台，再去托運</b>。紅燈時海關可能要看實品，退稅品請先放在隨身袋。</div>
+  </div>
+
+  <!-- 5. changes -->
+  <h2><span class="no">05</span>新舊規定對照</h2>
+  <table>
+    <thead><tr><th></th><th>舊制（10/31 前）</th><th>新制（11/1 起）</th></tr></thead>
+    <tbody>
+      <tr><td>結帳</td><td>直接付未稅價</td><td class="new">先付<b>含稅價</b></td></tr>
+      <tr><td>退稅時間</td><td>結帳當下</td><td class="new">出境時海關確認後</td></tr>
+      <tr><td>門檻</td><td>同店同日未稅滿 ¥5,000</td><td class="new">一樣：同店同日未稅滿 ¥5,000</td></tr>
+      <tr><td>一般品／消耗品</td><td>分開計算</td><td class="new"><span class="gone">分類</span> 取消，合併計算</td></tr>
+      <tr><td>消耗品上限</td><td>¥500,000</td><td class="new"><span class="gone">上限</span> 取消</td></tr>
+      <tr><td>密封袋</td><td>消耗品要封袋</td><td class="new"><span class="gone">封袋</span> 取消</td></tr>
+      <tr><td>出境期限</td><td>—</td><td class="new">購買後 <b>90 天內</b>出境並完成確認</td></tr>
+      <tr><td>高單價品</td><td>—</td><td class="new">單價未稅 ¥100 萬以上要登記序號等資料</td></tr>
+    </tbody>
+  </table>
+
+  <!-- 6. the one trap -->
+  <h2><span class="no">06</span>最容易踩的雷：先用掉</h2>
+  <p style="font-size:13.5px;margin:0 0 10px">退稅是以<b>「同一次結帳（一張收據）」</b>為單位確認。只要裡面<b>有一樣在日本用掉或吃掉，整張收據都不能退</b>，沒用的也一起被拖累。</p>
+  <div class="rcpt">
+    <div class="paper bad">
+      <div class="h">❌ 一起結帳</div>
+      <div class="li"><span>化妝水</span><span class="num">¥3,000</span></div>
+      <div class="li used"><span>面膜（飯店先用了）</span><span class="num">¥1,500</span></div>
+      <div class="li"><span>眼藥水</span><span class="num">¥1,200</span></div>
+      <div class="res">整張都不能退</div>
+    </div>
+    <div class="paper good">
+      <div class="h">✅ 分開結帳</div>
+      <div class="li"><span>化妝水＋眼藥水…</span><span class="num">¥5,000↑</span></div>
+      <div class="res">這張辦退稅、別拆</div>
+      <div class="li" style="margin-top:8px"><span>想在日本用的</span><span>另外結</span></div>
+      <div class="res" style="color:var(--muted)">不辦退稅</div>
+    </div>
+  </div>
+
+  <!-- 7. checklist -->
+  <h2><span class="no">07</span>出發前記住這 6 件事</h2>
+  <div class="must">
+    <div class="m"><span class="i">🛂</span><div><b>購物帶護照正本</b><span>辦退稅要出示，影本或照片不行。</span></div></div>
+    <div class="m"><span class="i">🧾</span><div><b>同店同日湊滿 ¥5,000（未稅）</b><span>藥妝店可以一次買齊；分好幾天買可能湊不到。</span></div></div>
+    <div class="m warn"><span class="i">🚫</span><div><b>退稅品別拆、別先用</b><span>一用掉，整張收據都不能退。想先用的另外結帳。</span></div></div>
+    <div class="m warn"><span class="i">🧳</span><div><b>托運前先過退稅機台</b><span>先托運就可能來不及給海關看，退不到。</span></div></div>
+    <div class="m"><span class="i">📦</span><div><b>不能寄回台灣</b><span>要自己隨身帶出境。</span></div></div>
+    <div class="m"><span class="i">⏰</span><div><b>最後一天早點到機場</b><span>機台可能排隊，紅燈還要去海關檢查，建議多留 30 分鐘。</span></div></div>
+  </div>
+
+  <!-- 8. with our cards & ledger -->
+  <h2><span class="no">08</span>跟刷卡、記帳的關係</h2>
+  <div class="tips">
+    <div class="tip"><b>💳 刷卡</b>結帳刷的是<b>含稅金額</b>，刷卡回饋照含稅金額算。若退稅退回信用卡，<b>部分銀行可能把那筆退款的回饋扣回</b>，以發卡銀行規定為準。<a href="card-rewards.html">刷卡試算 →</a></div>
+    <div class="tip"><b>🧾 記帳本</b>先照收據記<b>含稅金額</b>。退稅入帳後，再記一筆<b>負數</b>（例如金額打 <code>-1000</code>、品項「退稅」），總花費就會正確。<a href="ledger.html">記帳本 →</a></div>
+  </div>
+
+  <!-- 9. FAQ -->
+  <h2><span class="no">09</span>常見問題</h2>
+  <details class="faq"><summary>退稅多久會到？</summary><p>依店家或退稅公司而定，沒有統一時間。結帳時可以問店員「退款什麼時候入帳、會不會扣手續費」。</p></details>
+  <details class="faq"><summary>會扣手續費嗎？</summary><p>可能會，每家店不同，所以實拿可能比消費稅少。像唐吉訶德表示在店內申請不收手續費，但選機場領現金時，退稅公司另收費；其他店以現場說明為準。</p></details>
+  <details class="faq"><summary>10/31 以前買的東西呢？</summary><p>照舊制（結帳時就免稅）。我們這趟 11/16 才出發，全部都是新制。</p></details>
+  <details class="faq"><summary>沒過退稅機台就出境了會怎樣？</summary><p>海關沒確認到，就<b>不會退稅</b>，等於付了含稅價。</p></details>
+  <details class="faq"><summary>機台在哪裡？</summary><p>在國際線出發大廳，報到托運之前。新千歲機場的實際位置到現場看「Tax Refund」指標，或用 Visit Japan Web 在出發大廳的專用 Wi-Fi 範圍內辦理。</p></details>
+
+  <div class="src">
+    整理日期 2026/11/5。制度剛上路，細節可能調整，以日本官方公告為準。<br>
+    主要資料來源：
+    <ul>
+      <li><a href="https://www.mlit.go.jp/kankocho/tax-free/page01_000001_00021.html" target="_blank" rel="noopener">觀光廳｜旅客專頁（リファンド方式とは）</a></li>
+      <li><a href="https://www.mlit.go.jp/kankocho/tax-free/page01_000001_00019.html" target="_blank" rel="noopener">觀光廳｜消費稅免稅店網站</a></li>
+      <li><a href="https://www.nta.go.jp/publication/pamph/shohi/menzei/201805/format/002.htm" target="_blank" rel="noopener">國稅廳｜輸出物品販賣場制度改為退稅方式</a></li>
+      <li><a href="https://www.customs.go.jp/kaigairyoko/taxrefund/jpn.htm" target="_blank" rel="noopener">日本海關｜外國旅客免稅制度</a></li>
+      <li><a href="https://tokyo-haneda.com/service/facilities/tax_refund.html" target="_blank" rel="noopener">羽田機場｜TAX REFUND（綠燈／紅燈判定說明）</a></li>
+      <li><a href="https://www.japan-guide.com/news/tax-free-shopping.html" target="_blank" rel="noopener">japan-guide｜Tax-free shopping rules change</a></li>
+      <li><a href="https://news.tvbs.com.tw/world/4042460" target="_blank" rel="noopener">TVBS｜2026 日本退稅新制懶人包</a></li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>

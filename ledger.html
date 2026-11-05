@@ -217,13 +217,15 @@
         <li>開 <a href="https://sheets.new" target="_blank" rel="noopener">sheets.new</a> 建一個新的 Google 試算表，取名例如「北海道記帳」。</li>
         <li>上方選單 <b>擴充功能 → Apps Script</b>。</li>
         <li>把編輯器裡原本的程式全部刪掉，貼上下面的程式碼。第 2 行 <code>TOKEN</code> 改成你自己的通關密語，按 💾 儲存。</li>
-        <li>右上 <b>部署 → 新增部署作業</b> → 左邊齒輪選 <b>網頁應用程式</b>。執行身分選「<b>我</b>」，誰可以存取選「<b>所有人</b>」→ 部署。</li>
-        <li>跳出授權時選自己的帳號；看到「Google 尚未驗證這個應用程式」→ <b>進階 → 前往（不安全）</b> → 允許。這是你自己的程式，只會讀寫這一份試算表。</li>
-        <li>複製「網頁應用程式網址」（結尾是 <code>/exec</code>），貼到上面，填通關密語，按「儲存並測試連線」。</li>
+        <li><b>授權：</b>上方工具列的函式選單選 <code>setup</code> → 按 <b>▶ 執行</b> → 審查權限 → 選自己的帳號 → 看到「Google 尚未驗證這個應用程式」按 <b>進階 → 前往（不安全）</b> → 允許。下方執行記錄出現「OK：試算表…」就完成了。這是你自己的程式，只會讀寫這份試算表。</li>
+        <li>右上 <b>部署 → 新增部署作業</b> → 左邊齒輪選 <b>網頁應用程式</b>。執行身分選「<b>我</b>」，誰可以存取選「<b>所有人</b>」→ 部署。<br><small>之後如果改程式：部署 → 管理部署作業 → 鉛筆 → 版本選「新版本」→ 部署（網址不變）。</small></li>
+        <li><b>檢查：</b>用手機或電腦的<b>私密／無痕分頁</b>打開「網頁應用程式網址」（結尾是 <code>/exec</code>），要看到 <code>"ok":true</code> 和「記帳本連線正常」。</li>
+        <li>把網址貼到上面，填通關密語，按「儲存並測試連線」。</li>
         <li>按「複製手機設定連結」，傳到手機（LINE 給自己）打開，手機就連好了。旅伴也可以用同一個連結一起記。</li>
       </ol>
       <div class="row2"><button class="btn sm" id="copyCode" type="button">複製程式碼</button></div>
       <pre class="code" id="gsCode"></pre>
+      <p class="tip">同時登入好幾個 Google 帳號的話，上面步驟請在<b>無痕視窗只登入要用的那個帳號</b>來做，不然授權常會失敗（出現「無法開啟這個檔案」）。</p>
       <p class="tip">沒連試算表也能用：資料會先存在這支手機，連上後自動補上傳。收據照片只在手機上辨識，不會上傳。</p>
     </div>
   </details>
@@ -280,41 +282,69 @@
   </form>
 </dialog>
 
-<script type="text/plain" id="gsSrc">// 北海道記帳本 ↔ Google 試算表
+<script type="text/plain" id="gsSrc">// 北海道記帳本 ↔ Google 試算表（v2）
 const TOKEN = 'hokkaido';          // ← 改成你自己的通關密語（網頁上要填一樣的）
 const SHEET_NAME = '記帳';
 const HEAD = ['id', '日期', '品項', '類別', '金額(¥)', '台幣約', '付款', '備註', '更新時間'];
 
-function doGet() {
-  return out_({ ok: true, msg: '記帳本連線正常，請從網頁使用' });
+// 第一次：上方函式選單選「setup」→ ▶ 執行，完成授權
+function setup() {
+  const sh = sheet_();
+  Logger.log('OK：試算表「' + sh.getParent().getName() + '」 ' + sh.getParent().getUrl());
 }
 
-function doPost(e) {
-  let p = {};
-  try { p = JSON.parse(e.postData.contents); } catch (err) {}
-  if (p.token !== TOKEN) return out_({ ok: false, error: '通關密語不對' });
-  const lock = LockService.getScriptLock();
-  lock.waitLock(20000);
+function doGet() {
   try {
     const sh = sheet_();
-    const last = sh.getLastRow();
-    const ids = last > 1 ? sh.getRange(2, 1, last - 1, 1).getValues().map(r => String(r[0])) : [];
-    (p.upserts || []).forEach(r => {
-      const row = HEAD.map(h => (r[h] === undefined || r[h] === null) ? '' : r[h]);
-      const i = ids.indexOf(String(r.id));
-      if (i >= 0) sh.getRange(i + 2, 1, 1, HEAD.length).setValues([row]);
-      else { sh.appendRow(row); ids.push(String(r.id)); }
-    });
-    (p.deletes || []).map(id => ids.indexOf(String(id))).filter(i => i >= 0)
-      .sort((a, b) => b - a).forEach(i => sh.deleteRow(i + 2));
-    return out_({ ok: true, rows: rows_(sh) });
-  } finally {
-    lock.releaseLock();
+    return out_({ ok: true, msg: '記帳本連線正常，請從網頁使用', file: sh.getParent().getName(), rows: Math.max(0, sh.getLastRow() - 1) });
+  } catch (err) {
+    return out_({ ok: false, error: '試算表程式錯誤：' + (err && err.message || err) });
   }
 }
 
+function doPost(e) {
+  try {
+    let p = {};
+    try { p = JSON.parse(e.postData.contents); } catch (err) {}
+    if (p.token !== TOKEN) return out_({ ok: false, error: '通關密語不對' });
+    const lock = LockService.getScriptLock();
+    lock.waitLock(20000);
+    try {
+      const sh = sheet_();
+      const last = sh.getLastRow();
+      const ids = last > 1 ? sh.getRange(2, 1, last - 1, 1).getValues().map(r => String(r[0])) : [];
+      (p.upserts || []).forEach(r => {
+        const row = HEAD.map(h => (r[h] === undefined || r[h] === null) ? '' : r[h]);
+        const i = ids.indexOf(String(r.id));
+        if (i >= 0) sh.getRange(i + 2, 1, 1, HEAD.length).setValues([row]);
+        else { sh.appendRow(row); ids.push(String(r.id)); }
+      });
+      (p.deletes || []).map(id => ids.indexOf(String(id))).filter(i => i >= 0)
+        .sort((a, b) => b - a).forEach(i => sh.deleteRow(i + 2));
+      return out_({ ok: true, rows: rows_(sh) });
+    } finally {
+      lock.releaseLock();
+    }
+  } catch (err) {
+    return out_({ ok: false, error: '試算表程式錯誤：' + (err && err.message || err) });
+  }
+}
+
+// 從試算表「擴充功能 → Apps Script」建立的會直接用那份試算表；
+// 直接在 script.google.com 建立的，會自動新建一份「北海道記帳」試算表。
+function book_() {
+  const active = SpreadsheetApp.getActiveSpreadsheet();
+  if (active) return active;
+  const props = PropertiesService.getScriptProperties();
+  const id = props.getProperty('SHEET_ID');
+  if (id) return SpreadsheetApp.openById(id);
+  const ss = SpreadsheetApp.create('北海道記帳');
+  props.setProperty('SHEET_ID', ss.getId());
+  return ss;
+}
+
 function sheet_() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss = book_();
   let sh = ss.getSheetByName(SHEET_NAME);
   if (!sh) {
     sh = ss.insertSheet(SHEET_NAME);
@@ -519,7 +549,9 @@ async function sync(){
     entries = [...server.values()];
     persist(); lastSync = new Date(); lastErr = '';
   } catch(err){
-    lastErr = err.name === 'AbortError' ? '連線逾時' : (err.message || '連線失敗');
+    lastErr = err.name === 'AbortError' ? '連線逾時'
+      : (err instanceof TypeError || err instanceof SyntaxError) ? 'NET'
+      : (err.message || '連線失敗');
   } finally {
     syncing = false; badge(); render();
     if (again){ again = false; sync(); }
@@ -537,7 +569,7 @@ function badge(){
 }
 $('syncBadge').addEventListener('click', ()=>{
   if (!cfg.url){ $('setBox').open = true; $('setBox').scrollIntoView({behavior:'smooth'}); return; }
-  if (lastErr) toast(lastErr + '，重試中…');
+  if (lastErr) toast((lastErr === 'NET' ? '連不上試算表' : lastErr) + '，重試中…');
   sync();
 });
 window.addEventListener('online', sync);
@@ -863,7 +895,18 @@ $('cfgSave').addEventListener('click', async()=>{
   // re-upload everything local so a new sheet gets the history
   entries.forEach(e=>{ if (!e.del) e.dirty = true; });
   await sync();
-  if (lastErr){ msg.className = 'msg bad'; msg.textContent = '連不上：' + lastErr + '。檢查網址、通關密語，以及部署時「誰可以存取」是否選「所有人」。'; }
+  if (lastErr === 'NET'){
+    msg.className = 'msg bad';
+    msg.innerHTML = `連不上：瀏覽器拿不到試算表的回應，通常是 Apps Script 的權限或授權沒設好。<br>
+      請用<b>私密／無痕分頁</b>打開你的網址檢查：<br>
+      ・看到 <code>"ok":true</code>「記帳本連線正常」→ 網址沒問題，請回報這個畫面<br>
+      ・看到 <code>"ok":false</code> 和錯誤訊息 → 照訊息處理<br>
+      ・看到 Google 登入頁 → 「誰可以存取」要改成「所有人」，並用「新版本」重新部署<br>
+      ・看到「需要授權」或「無法開啟這個檔案」→ 照下面第 4 步執行 <code>setup</code> 授權，再用「新版本」重新部署<br>
+      <button class="btn sm" type="button" id="openUrl" style="margin-top:8px">打開網址檢查</button>`;
+    $('openUrl').addEventListener('click', ()=> window.open(cfg.url, '_blank', 'noopener'));
+  }
+  else if (lastErr){ msg.className = 'msg bad'; msg.textContent = '連不上：' + lastErr + (lastErr.includes('通關密語') ? '。網頁和 Apps Script 第 2 行的 TOKEN 要一模一樣。' : ''); }
   else { msg.className = 'msg ok'; msg.textContent = `連線成功！試算表目前有 ${live().length} 筆。`; }
 });
 $('cfgLink').addEventListener('click', async()=>{

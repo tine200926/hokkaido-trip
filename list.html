@@ -148,6 +148,43 @@
   .ltoast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:999px;font-size:13px;z-index:50;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
   .ltoast.on{opacity:1}
 
+  /* store filter */
+  .progress{flex-wrap:wrap}
+  .stores{flex-basis:100%;display:flex;gap:6px;overflow-x:auto;padding:2px 0 1px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .stores::-webkit-scrollbar{display:none}
+  .stores button{flex:none;font:inherit;font-size:12.5px;color:var(--ink);background:var(--surface);border:1px solid var(--hair);border-radius:999px;padding:5px 11px;cursor:pointer;white-space:nowrap}
+  .stores button small{color:var(--muted);margin-left:3px}
+  .stores button[aria-pressed="true"]{background:var(--crab);border-color:var(--crab);color:#fff}
+  .stores button[aria-pressed="true"] small{color:#fff;opacity:.85}
+  .card.nomatch,.nomatch{display:none!important}
+  .filtering .day-h,.filtering .maplink,.filtering .pins,.filtering .gempty{display:none!important}
+  .filtering .grid.closed{display:grid}
+  .filtering .section-h .chev{visibility:hidden}
+  .fbanner{margin-top:14px;background:color-mix(in srgb,var(--crab) 9%,var(--surface));border:1px solid color-mix(in srgb,var(--crab) 35%,var(--hair));border-radius:12px;padding:10px 14px;font-size:13px;display:flex;align-items:center;gap:8px}
+  .fbanner button{margin-left:auto;font:inherit;font-size:12px;border:1px solid var(--hair);background:var(--surface);color:var(--ink);border-radius:999px;padding:3px 10px;cursor:pointer}
+  .sheetbadge{display:inline-block;font-size:10px;font-weight:700;color:var(--plum);border:1px solid color-mix(in srgb,var(--plum) 40%,transparent);border-radius:999px;padding:0 6px;margin-left:4px;vertical-align:2px}
+
+  /* google sheet settings */
+  details.gs{margin-top:40px;background:var(--surface);border:1px solid var(--hair);border-radius:14px;padding:0 16px}
+  details.gs summary{cursor:pointer;padding:14px 0;font-weight:700;font-size:14.5px;list-style:none;display:flex;gap:8px;align-items:center}
+  details.gs summary::-webkit-details-marker{display:none}
+  details.gs summary span{font-size:12px;font-weight:500;color:var(--muted);margin-left:auto}
+  .gsb{padding-bottom:16px;font-size:13px}
+  .gsb label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:12px 0 4px}
+  .gsin{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--surface-2);border:1px solid var(--hair);border-radius:10px;padding:9px 12px;outline:none}
+  .gsin:focus{border-color:var(--onsen)}
+  .gsrow{display:flex;gap:8px;margin-top:12px}
+  .gsbtn{font:inherit;font-size:13px;font-weight:700;border:1px solid var(--hair);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px 14px;cursor:pointer}
+  .gsbtn.pri{background:var(--onsen);border-color:var(--onsen);color:#fff}
+  .gsmsg{margin-top:8px;font-size:12.5px;min-height:1em}
+  .gsmsg.ok{color:var(--onsen)} .gsmsg.bad{color:var(--crab)}
+  .gsb h4{font-family:var(--serif);font-size:15px;margin:18px 0 6px}
+  .gsb ol{padding-left:20px;margin:0}
+  .gsb li{margin-bottom:6px}
+  .gsb code{font-size:12px;background:var(--surface-2);border:1px solid var(--hair);border-radius:6px;padding:1px 6px}
+  .gsnote{color:var(--muted);font-size:12px}
+  .gsadd{display:block;text-align:center;margin-top:12px;background:var(--plum);color:#fff;font-weight:700;text-decoration:none;border-radius:12px;padding:12px}
+
   @media (max-width:560px){ .grid{grid-template-columns:1fr} .wrap{padding-block:30px 56px} }
 </style>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -167,6 +204,7 @@
     <span class="bar"><i id="pbar"></i></span>
     <button id="foldAll" type="button">全部收合</button>
     <button id="reset" type="button">清除</button>
+    <div class="stores" id="stores" role="group" aria-label="我現在在哪家店"></div>
   </div>
 
   <div class="cardplan">
@@ -181,7 +219,7 @@
   <div class="day-h"><div class="dn"><small>DAY</small><b>1–2</b></div><div class="tt"><h2>登別・洞爺 溫泉區</h2><div class="dd">11/16–17 · 三餐已含（螃蟹／壽喜燒吃到飽）· Day2 洞爺湖展望台可喝 Bocca 優格飲</div></div></div>
   <div class="section-h"><h3>洞爺湖 必喝</h3><span class="en">Toya</span></div>
   <div class="grid">
-    <div class="card chk" data-id="bocca" data-kind="eat"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%B4%9E%E7%88%BA%E6%B9%96%20%E3%82%B5%E3%82%A4%E3%83%AD%E5%B1%95%E6%9C%9B%E5%8F%B0" target="_blank" rel="noopener">📍地圖</a><img class="thumb" src="img/bocca.jpg" alt="Bocca YOGURT DRINK"><div class="nm">🥛 Bocca 優格飲</div><div class="jp">牧家 Bocca ヨーグルトドリンク（日本冠軍）</div><div class="what">伊達「牧家」優酪乳，Mango 芒果（橘）、MomoBerry 桃莓（粉）等口味；Day2 洞爺湖展望台現場買現喝。</div><div class="buy"><span class="where w-air">展望台・物產</span><div class="loc"><b>哪裡買</b>洞爺湖展望台賣店／道內物產店。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="bocca" data-stores="other" data-kind="eat"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%B4%9E%E7%88%BA%E6%B9%96%20%E3%82%B5%E3%82%A4%E3%83%AD%E5%B1%95%E6%9C%9B%E5%8F%B0" target="_blank" rel="noopener">📍地圖</a><img class="thumb" src="img/bocca.jpg" alt="Bocca YOGURT DRINK"><div class="nm">🥛 Bocca 優格飲</div><div class="jp">牧家 Bocca ヨーグルトドリンク（日本冠軍）</div><div class="what">伊達「牧家」優酪乳，Mango 芒果（橘）、MomoBerry 桃莓（粉）等口味；Day2 洞爺湖展望台現場買現喝。</div><div class="buy"><span class="where w-air">展望台・物產</span><div class="loc"><b>哪裡買</b>洞爺湖展望台賣店／道內物產店。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
   </div>
 
   <!-- DAY 3 -->
@@ -189,7 +227,7 @@
 
   <div class="section-h"><h3>吉伊卡哇・必吃</h3><span class="en">Chiikawa & Eat</span></div>
   <div class="grid">
-    <div class="card chk" data-id="chiikawa-parco" data-kind="buy"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E3%81%A1%E3%81%84%E3%81%8B%E3%82%8F%E3%82%89%E3%82%93%E3%81%A9%20%E6%9C%AD%E5%B9%8CPARCO" target="_blank" rel="noopener">📍地圖</a>
+    <div class="card chk" data-id="chiikawa-parco" data-stores="chiikawa" data-kind="buy"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E3%81%A1%E3%81%84%E3%81%8B%E3%82%8F%E3%82%89%E3%82%93%E3%81%A9%20%E6%9C%AD%E5%B9%8CPARCO" target="_blank" rel="noopener">📍地圖</a>
       <div class="nm">🧸 CHIIKAWA LAND 札幌PARCO店</div>
       <div class="jp">南1西3・PARCO B2F｜10–20 時｜行程 16:00</div>
       <div class="what">平日多可自由入場；人多時店頭發整理券或 LivePocket 事前預約。熱門款常當天售完、部分限購。</div>
@@ -202,14 +240,14 @@
       <div class="chklink">查當日整理券：<a href="https://x.com/chiikawa_land" target="_blank" rel="noopener">X @chiikawa_land</a> · <a href="https://chiikawa-info.jp/" target="_blank" rel="noopener">商品情報站</a></div>
     <div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
 
-    <div class="card chk" data-id="yukijirushi" data-kind="eat"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E9%9B%AA%E5%8D%B0%E3%83%91%E3%83%BC%E3%83%A9%E3%83%BC%20%E6%9C%AD%E5%B9%8C%E6%9C%AC%E5%BA%97" target="_blank" rel="noopener">📍地圖</a>
+    <div class="card chk" data-id="yukijirushi" data-stores="eat" data-kind="eat"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E9%9B%AA%E5%8D%B0%E3%83%91%E3%83%BC%E3%83%A9%E3%83%BC%20%E6%9C%AD%E5%B9%8C%E6%9C%AC%E5%BA%97" target="_blank" rel="noopener">📍地圖</a>
       <div class="nm">🍨 雪印パーラー 本店 聖代</div>
       <div class="jp">北2西3｜–19 時｜行程 17:30</div>
       <div class="what">名物 Snow Royal 聖代，趁打烊前吃；就在 sitatte sapporo 隔壁。</div>
       <div class="buy"><span class="where w-eat">店家內用</span><div class="loc"><b>在哪吃</b>狸小路北側，與 GARAKU 同棟一帶。</div></div>
     <div class="paywith">💳 <span class="cc fubon">富邦 J卡</span><b>6%</b><small>玉山指定餐廳可改刷玉山 7%</small></div></div>
 
-    <div class="card chk" data-id="garaku" data-kind="eat"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E3%82%B9%E3%83%BC%E3%83%97%E3%82%AB%E3%83%AC%E3%83%BC%20GARAKU%20sitatte%20sapporo" target="_blank" rel="noopener">📍地圖</a>
+    <div class="card chk" data-id="garaku" data-stores="eat" data-kind="eat"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E3%82%B9%E3%83%BC%E3%83%97%E3%82%AB%E3%83%AC%E3%83%BC%20GARAKU%20sitatte%20sapporo" target="_blank" rel="noopener">📍地圖</a>
       <div class="nm">🍛 Soup Curry GARAKU sitatte</div>
       <div class="jp">北2西3・B1F｜行程 18:00</div>
       <div class="what">晚餐湯咖哩；不接受訂位、現場排隊（週三營業至 20:30）。想吃壽司可改隔天 Toriton。</div>
@@ -223,7 +261,7 @@
 
   <div class="section-h"><h3>吉伊卡哇・必吃</h3><span class="en">Chiikawa & Eat</span></div>
   <div class="grid">
-    <div class="card chk" data-id="chiikawa-otaru" data-kind="buy"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E3%81%A1%E3%81%84%E3%81%8B%E3%82%8F%E3%82%82%E3%81%90%E3%82%82%E3%81%90%E6%9C%AC%E8%88%97%20%E5%B0%8F%E6%A8%BD%E5%BA%97" target="_blank" rel="noopener">📍地圖</a>
+    <div class="card chk" data-id="chiikawa-otaru" data-stores="chiikawa" data-kind="buy"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E3%81%A1%E3%81%84%E3%81%8B%E3%82%8F%E3%82%82%E3%81%90%E3%82%82%E3%81%90%E6%9C%AC%E8%88%97%20%E5%B0%8F%E6%A8%BD%E5%BA%97" target="_blank" rel="noopener">📍地圖</a>
       <div class="nm">🧸 ちいかわもぐもぐ本舗 小樽店</div>
       <div class="jp">堺町6-1｜9:30–17:30｜行程 10:20</div>
       <div class="what">平日多可直接入場；連休／人多時需 LINE 預約或現場整理券。</div>
@@ -241,28 +279,28 @@
       <div class="chklink">查當日入店／預約：<a href="https://www.chiikawamogumogu.jp/" target="_blank" rel="noopener">官方網站</a> · <a href="https://x.com/chiikawamgmg" target="_blank" rel="noopener">X @chiikawamgmg</a></div>
     <div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
 
-    <div class="card chk" data-id="cafebaal" data-kind="eat"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=cafe%20BAAL%20%E5%B0%8F%E6%A8%BD" target="_blank" rel="noopener">📍地圖</a>
+    <div class="card chk" data-id="cafebaal" data-stores="eat" data-kind="eat"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=cafe%20BAAL%20%E5%B0%8F%E6%A8%BD" target="_blank" rel="noopener">📍地圖</a>
       <div class="nm">🥩 cafe BAAL 牛排丼（午餐）</div>
       <div class="jp">小樽 稲穂3-8-10｜11:30–14:30｜現金</div>
       <div class="what">名物牛排丼；座位少，一開門就到。週一公休（Day4 週四 OK）。</div>
       <div class="buy"><span class="where w-eat">店家內用</span><div class="loc"><b>在哪吃</b>小樽站前一帶。</div></div>
     <div class="paywith">💳 <span class="cc cash">現金</span><small>只收現金</small></div></div>
 
-    <div class="card chk" data-id="toriton" data-kind="eat"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E5%9B%9E%E8%BB%A2%E5%AF%BF%E3%81%97%E3%83%88%E3%83%AA%E3%83%88%E3%83%B3%20%E8%B1%8A%E5%B9%B3%E5%BA%97" target="_blank" rel="noopener">📍地圖</a>
+    <div class="card chk" data-id="toriton" data-stores="eat" data-kind="eat"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E5%9B%9E%E8%BB%A2%E5%AF%BF%E3%81%97%E3%83%88%E3%83%AA%E3%83%88%E3%83%B3%20%E8%B1%8A%E5%B9%B3%E5%BA%97" target="_blank" rel="noopener">📍地圖</a>
       <div class="nm">🍣 回転寿し トリトン 豊平店 <span style="font-size:11px;color:var(--crab)">宵夜</span></div>
       <div class="jp">豊平4条6-1-10｜11:00–22:00（L.O.21:30）｜無休</div>
       <div class="what">改吃這家迴轉壽司。道內漁港直送，招牌炙りとろサーモン、活干貝、鮭魚卵。<b>營業到 22:00（最後點餐 21:30），可留到當宵夜吃。</b></div>
       <div class="buy"><span class="where w-eat">店家內用</span><div class="loc"><b>怎麼去</b>地下鐵東豊線「學園前」站徒步 8 分；電話 011-817-7788。</div></div>
     <div class="paywith">💳 <span class="cc fubon">富邦 J卡</span><b>6%</b><small>玉山指定餐廳可改刷玉山 7%</small></div></div>
 
-    <div class="card chk" data-id="pudding" data-kind="eat"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=ESPRESSO%20D%20WORKS%20COCONO%20SUSUKINO" target="_blank" rel="noopener">📍地圖</a>
+    <div class="card chk" data-id="pudding" data-stores="eat" data-kind="eat"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=ESPRESSO%20D%20WORKS%20COCONO%20SUSUKINO" target="_blank" rel="noopener">📍地圖</a>
       <div class="nm">🍮 ESPRESSO D WORKS 生布丁</div>
       <div class="jp">薄野 COCONO SUSUKINO｜Day3／4 皆可</div>
       <div class="what">濃醇生奶油＋香草莢布丁，絲滑綿密；隱藏吃法抹在吐司上。</div>
       <div class="buy"><span class="where w-eat">店家內用</span><div class="loc"><b>在哪吃</b>すすきの駅 COCONO SUSUKINO。</div></div>
     <div class="paywith">💳 <span class="cc fubon">富邦 J卡</span><b>6%</b><small>玉山指定餐廳可改刷玉山 7%</small></div></div>
 
-    <div class="card chk" data-id="ramen" data-kind="eat"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E5%85%83%E7%A5%96%E3%81%95%E3%81%A3%E3%81%BD%E3%82%8D%E3%83%A9%E3%83%BC%E3%83%A1%E3%83%B3%E6%A8%AA%E4%B8%81" target="_blank" rel="noopener">📍地圖</a>
+    <div class="card chk" data-id="ramen" data-stores="eat" data-kind="eat"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E5%85%83%E7%A5%96%E3%81%95%E3%81%A3%E3%81%BD%E3%82%8D%E3%83%A9%E3%83%BC%E3%83%A1%E3%83%B3%E6%A8%AA%E4%B8%81" target="_blank" rel="noopener">📍地圖</a>
       <div class="nm">🍜 元祖札幌拉麵橫丁（晚餐）</div>
       <div class="jp">南5西3 薄野｜行程 17:30</div>
       <div class="what">梅光軒／龍鳳／一粒庵，味噌拉麵；飯店南北線 1 站到すすきの。</div>
@@ -272,7 +310,7 @@
 
   <div class="section-h"><h3>小樽・當地必買</h3><span class="en">Otaru buy</span></div>
   <div class="grid">
-    <div class="card chk" data-id="melon" data-kind="buy"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E5%B0%8F%E6%A8%BD%20%E5%A0%BA%E7%94%BA%20%E6%9E%9C%E7%89%A9%E5%BA%97%20%E3%83%A1%E3%83%AD%E3%83%B3" target="_blank" rel="noopener">📍地圖</a><img class="thumb" src="img/melon.jpg" alt="雷電哈密瓜 らいでんメロン"><div class="nm">🍈 雷電哈密瓜</div><div class="jp">らいでんメロン（共和町産）</div><div class="what">小樽停車場附近果物店買到、超好吃；1 玉 ¥2,200／2 玉 ¥3,980、5 玉箱 ¥8,980（也有富良野・夕張メロン）。可請店家預約現切。</div><div class="buy"><span class="where w-note">小樽・果物店</span><div class="loc"><b>哪裡買</b>小樽觀光巴士停車場周邊果物店；<b>11 月為產季末、數量有限、售完為止</b>。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>小店常只收現金，可刷再刷</small></div></div>
+    <div class="card chk" data-id="melon" data-stores="other" data-kind="buy"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E5%B0%8F%E6%A8%BD%20%E5%A0%BA%E7%94%BA%20%E6%9E%9C%E7%89%A9%E5%BA%97%20%E3%83%A1%E3%83%AD%E3%83%B3" target="_blank" rel="noopener">📍地圖</a><img class="thumb" src="img/melon.jpg" alt="雷電哈密瓜 らいでんメロン"><div class="nm">🍈 雷電哈密瓜</div><div class="jp">らいでんメロン（共和町産）</div><div class="what">小樽停車場附近果物店買到、超好吃；1 玉 ¥2,200／2 玉 ¥3,980、5 玉箱 ¥8,980（也有富良野・夕張メロン）。可請店家預約現切。</div><div class="buy"><span class="where w-note">小樽・果物店</span><div class="loc"><b>哪裡買</b>小樽觀光巴士停車場周邊果物店；<b>11 月為產季末、數量有限、售完為止</b>。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>小店常只收現金，可刷再刷</small></div></div>
   </div>
 
   <!-- SAPPORO SHOPPING -->
@@ -282,98 +320,98 @@
 
   <div class="section-h"><h3>藥妝・美髮</h3><span class="en">Drug &amp; Hair</span></div>
   <div class="grid">
-    <div class="card chk" data-id="cezanne" data-kind="buy"><img class="thumb" src="img/cezanne.jpg" alt="CEZANNE シームレスカバーパウダー"><div class="nm">CEZANNE 輕羽柔焦蜜粉</div><div class="jp">シームレスカバーパウダー 02</div><div class="what">遮毛孔、修飾膚色不均，開架人氣款常缺貨。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>マツキヨ、ツルハ、唐吉訶德彩妝開架區。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="meme" data-kind="buy"><img class="thumb" src="img/meme.jpg" alt="ロート me me"><div class="nm">ROHTO me・me 眼藥水</div><div class="jp">メメ Moisture Tear Serum（第3類医薬品）</div><div class="what">隱形眼鏡族必囤。紫色滴隱眼上再戴；銀色戴著直接滴。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>各大藥妝眼藥水區。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="cplip" data-kind="buy"><img class="thumb" src="img/cplip.jpg" alt="Cp-Lip 唇紋精華"><div class="nm">Cp-Lip 唇紋精華</div><div class="jp">Cp-Lip lip essence・プラセンタ 6ml</div><div class="what">網稱「唇紋橡皮擦」，胎盤素＋保濕。</div><div class="buy"><span class="where w-donki">唐吉訶德</span><div class="loc"><b>哪裡買</b>狸小路唐吉訶德必買款。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="locobase" data-kind="buy"><img class="thumb" src="img/locobase.jpg" alt="Locobase REPAIR"><div class="nm">Locobase REPAIR 護唇膏</div><div class="jp">ロコベースリペア リップクリーム</div><div class="what">不黏、防水、不用一直補。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>各大藥妝；第一三共。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="zenyaku" data-kind="buy"><img class="thumb" src="img/zenyaku.jpg" alt="アルージェ クレンジング"><div class="nm">全藥工業 卸妝凝膠</div><div class="jp">アルージェ モイストクレンジングミルクジェル</div><div class="what">敏感肌卸妝，溫和好沖、回購多次。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>問「アルージェ」卸妝區。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="pyuora" data-kind="buy"><img class="thumb" src="img/pyuora.jpg" alt="ピュオーラ 泡ウォッシュ"><div class="nm">ピュオーラ 隱適美泡洗</div><div class="jp">マウスピース用泡ウォッシュ（KAO）</div><div class="what">洗隱適美／維持器，99.9% 除菌、免搓。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>藥妝口腔護理區。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="tokio" data-kind="buy"><img class="thumb" src="img/tokio.jpg" alt="TOKIO INKARAMI"><div class="nm">TOKIO INKARAMI PREMIUM</div><div class="jp">京喚羽系列 洗髮・護髮</div><div class="what">沙龍級修護，台灣難買。¥3,872 噴霧／¥6,270 洗或護。</div><div class="buy"><span class="where w-parco">專櫃</span><div class="loc"><b>哪裡買</b>大通 <b>SEAM（シーム）</b>，滿額 Tax free。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="mqure" data-kind="buy"><img class="thumb" src="img/mqure.jpg" alt="MQURE 水素トリートメント"><div class="nm">MQURE 水素護髮</div><div class="jp">エムキュア 水素トリートメント 18g×4</div><div class="what">居家 60 秒沙龍級護髮。¥1,700（未稅）。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>マツモトキヨシ。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="myboostars" data-kind="buy"><img class="thumb" src="img/myboostars.jpg" alt="myBoostars コラーゲンヘアミルク"><div class="nm">myBoostars 護髮系列</div><div class="jp">COLLAGEN 護髮乳／HEMATIN 噴霧</div><div class="what">膠原護髮乳免沖洗；染後補色噴霧。¥1,400／¥680。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>各大藥妝護髮區。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="lasana" data-kind="buy"><img class="thumb" src="img/lasana.jpg" alt="La Sana 海藻 ヘアミルク"><div class="nm">La Sana 海藻髮乳</div><div class="jp">海藻 ヘアミルク 120g</div><div class="what">免沖洗海藻護髮乳，試用一包就回購。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>各大藥妝護髮區。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="ululis_pink" data-kind="buy"><img class="thumb" src="img/ululis_pink.jpg" alt="ululis 護髮油（粉紅瓶）"><div class="nm">ululis 護髮油（粉紅瓶）</div><div class="jp">ウルリス PINKme ヘアオイル</div><div class="what">太妍、TWICE 娜璉、IVE Rei 都推薦。粉紅瓶適合一般偏硬、易毛躁的頭髮。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>藥妝店、唐吉訶德、LOFT 美髮區。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="ululis_black" data-kind="buy"><img class="thumb" src="img/ululis_black.jpg" alt="ululis 護髮油（黑瓶）"><div class="nm">ululis 護髮油（黑瓶）</div><div class="jp">Water conc. Black Serum Hair Oil</div><div class="what">染燙受損髮用。<b>黑瓶比較難買，看到先拿。</b></div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>藥妝店、唐吉訶德、LOFT 美髮區。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="cezanne" data-stores="drug donki" data-kind="buy"><img class="thumb" src="img/cezanne.jpg" alt="CEZANNE シームレスカバーパウダー"><div class="nm">CEZANNE 輕羽柔焦蜜粉</div><div class="jp">シームレスカバーパウダー 02</div><div class="what">遮毛孔、修飾膚色不均，開架人氣款常缺貨。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>マツキヨ、ツルハ、唐吉訶德彩妝開架區。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="meme" data-stores="drug donki" data-kind="buy"><img class="thumb" src="img/meme.jpg" alt="ロート me me"><div class="nm">ROHTO me・me 眼藥水</div><div class="jp">メメ Moisture Tear Serum（第3類医薬品）</div><div class="what">隱形眼鏡族必囤。紫色滴隱眼上再戴；銀色戴著直接滴。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>各大藥妝眼藥水區。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="cplip" data-stores="donki" data-kind="buy"><img class="thumb" src="img/cplip.jpg" alt="Cp-Lip 唇紋精華"><div class="nm">Cp-Lip 唇紋精華</div><div class="jp">Cp-Lip lip essence・プラセンタ 6ml</div><div class="what">網稱「唇紋橡皮擦」，胎盤素＋保濕。</div><div class="buy"><span class="where w-donki">唐吉訶德</span><div class="loc"><b>哪裡買</b>狸小路唐吉訶德必買款。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="locobase" data-stores="drug donki" data-kind="buy"><img class="thumb" src="img/locobase.jpg" alt="Locobase REPAIR"><div class="nm">Locobase REPAIR 護唇膏</div><div class="jp">ロコベースリペア リップクリーム</div><div class="what">不黏、防水、不用一直補。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>各大藥妝；第一三共。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="zenyaku" data-stores="drug" data-kind="buy"><img class="thumb" src="img/zenyaku.jpg" alt="アルージェ クレンジング"><div class="nm">全藥工業 卸妝凝膠</div><div class="jp">アルージェ モイストクレンジングミルクジェル</div><div class="what">敏感肌卸妝，溫和好沖、回購多次。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>問「アルージェ」卸妝區。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="pyuora" data-stores="drug" data-kind="buy"><img class="thumb" src="img/pyuora.jpg" alt="ピュオーラ 泡ウォッシュ"><div class="nm">ピュオーラ 隱適美泡洗</div><div class="jp">マウスピース用泡ウォッシュ（KAO）</div><div class="what">洗隱適美／維持器，99.9% 除菌、免搓。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>藥妝口腔護理區。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="tokio" data-stores="other" data-kind="buy"><img class="thumb" src="img/tokio.jpg" alt="TOKIO INKARAMI"><div class="nm">TOKIO INKARAMI PREMIUM</div><div class="jp">京喚羽系列 洗髮・護髮</div><div class="what">沙龍級修護，台灣難買。¥3,872 噴霧／¥6,270 洗或護。</div><div class="buy"><span class="where w-parco">專櫃</span><div class="loc"><b>哪裡買</b>大通 <b>SEAM（シーム）</b>，滿額 Tax free。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="mqure" data-stores="drug" data-kind="buy"><img class="thumb" src="img/mqure.jpg" alt="MQURE 水素トリートメント"><div class="nm">MQURE 水素護髮</div><div class="jp">エムキュア 水素トリートメント 18g×4</div><div class="what">居家 60 秒沙龍級護髮。¥1,700（未稅）。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>マツモトキヨシ。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="myboostars" data-stores="drug donki" data-kind="buy"><img class="thumb" src="img/myboostars.jpg" alt="myBoostars コラーゲンヘアミルク"><div class="nm">myBoostars 護髮系列</div><div class="jp">COLLAGEN 護髮乳／HEMATIN 噴霧</div><div class="what">膠原護髮乳免沖洗；染後補色噴霧。¥1,400／¥680。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>各大藥妝護髮區。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="lasana" data-stores="drug donki" data-kind="buy"><img class="thumb" src="img/lasana.jpg" alt="La Sana 海藻 ヘアミルク"><div class="nm">La Sana 海藻髮乳</div><div class="jp">海藻 ヘアミルク 120g</div><div class="what">免沖洗海藻護髮乳，試用一包就回購。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>各大藥妝護髮區。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="ululis_pink" data-stores="drug donki loft" data-kind="buy"><img class="thumb" src="img/ululis_pink.jpg" alt="ululis 護髮油（粉紅瓶）"><div class="nm">ululis 護髮油（粉紅瓶）</div><div class="jp">ウルリス PINKme ヘアオイル</div><div class="what">太妍、TWICE 娜璉、IVE Rei 都推薦。粉紅瓶適合一般偏硬、易毛躁的頭髮。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>藥妝店、唐吉訶德、LOFT 美髮區。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="ululis_black" data-stores="drug donki loft" data-kind="buy"><img class="thumb" src="img/ululis_black.jpg" alt="ululis 護髮油（黑瓶）"><div class="nm">ululis 護髮油（黑瓶）</div><div class="jp">Water conc. Black Serum Hair Oil</div><div class="what">染燙受損髮用。<b>黑瓶比較難買，看到先拿。</b></div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>藥妝店、唐吉訶德、LOFT 美髮區。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
   </div>
 
   <div class="section-h"><h3>日系彩妝</h3><span class="en">Makeup</span></div>
   <div class="grid">
-    <div class="card chk" data-id="by365" data-kind="buy"><img class="thumb" src="img/by365.jpg" alt="by365"><div class="brand">by365</div><div class="pn">Powdery UV Cream</div><div class="jp">パウダリUVクリーム・防曬</div><div class="foot-row"><span class="price">¥990 <small>/ NT$198</small></span><span class="where w-variety">LOFT・開架</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="cushion" data-kind="buy"><img class="thumb" src="img/cushion.jpg" alt="TWO SLASH FOUR cushion"><div class="brand">TWO SLASH FOUR</div><div class="pn">Angelic Satin Cushion</div><div class="jp">氣墊粉餅</div><div class="shades"><span class="sh">#N21</span></div><div class="foot-row"><span class="price">—</span><span class="where w-variety">LOFT・@cosme</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="cz_shading" data-kind="buy"><img class="thumb" src="img/cz_shading.jpg" alt="CEZANNE Blend Color Shading"><div class="brand">CEZANNE 塞尚</div><div class="pn">Blend Color Shading</div><div class="jp">ブレンドカラーシェーディング・修容</div><div class="shades"><span class="sh">#02 Cool Tone</span></div><div class="foot-row"><span class="price">¥710 <small>/ NT$142</small></span><span class="where w-drug">開架藥妝</span></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="brow" data-kind="buy"><img class="thumb" src="img/brow.jpg" alt="CANMAKE Styling Edge Eyebrow"><div class="brand">CANMAKE</div><div class="pn">Styling Edge Eyebrow</div><div class="jp">スタイリングエッジアイブロウ・眉筆</div><div class="shades"><span class="sh">#01 Natural Brown</span></div><div class="foot-row"><span class="price">¥700 <small>/ NT$140</small></span><span class="where w-drug">開架藥妝</span></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="ombre" data-kind="buy"><img class="thumb" src="img/ombre.jpg" alt="blanche etoile Ombre Amour"><div class="brand">blanche etoile</div><div class="pn">Ombre Amour -ecla/soie-</div><div class="jp">オンブル アムール・眼影</div><div class="shades"><span class="sh">#203 Sophie</span><span class="sh">#301 Romy</span></div><div class="foot-row"><span class="price">¥2,500 <small>/ NT$500</small></span><span class="where w-variety">@cosme・LOFT</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="etvos" data-kind="buy"><img class="thumb" src="img/etvos.jpg" alt="ETVOS Mineral Classy Eyeshadow"><div class="brand">ETVOS</div><div class="pn">Mineral Classy Eyeshadow</div><div class="jp">ミネラルクラッシィシャドー</div><div class="shades"><span class="sh">#Chiffon Ensemble</span></div><div class="foot-row"><span class="price">¥4,200 <small>/ NT$840</small></span><span class="where w-variety">直營・LOFT</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="andbe_eye" data-kind="buy"><img class="thumb" src="img/andbe_eye.jpg" alt="&amp;be Eyeshadow Palette"><div class="brand">&amp;be</div><div class="pn">Eyeshadow Palette</div><div class="jp">パレットアイシャドウ</div><div class="shades"><span class="sh">#Amber Rose</span></div><div class="foot-row"><span class="price">¥3,000 <small>/ NT$600</small></span><span class="where w-variety">LOFT・PLAZA</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="cz_pale" data-kind="buy"><img class="thumb" src="img/cz_pale.jpg" alt="CEZANNE Pale Tone Eye Shadow"><div class="brand">CEZANNE 塞尚</div><div class="pn">Pale Tone Eye Shadow</div><div class="jp">ペールトーンアイシャドウ</div><div class="shades"><span class="sh">#01 Cotton Beige</span></div><div class="foot-row"><span class="price">¥680 <small>/ NT$136</small></span><span class="where w-drug">開架藥妝</span></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="silky" data-kind="buy"><img class="thumb" src="img/silky.jpg" alt="CANMAKE Silky Souffle Eyes"><div class="brand">CANMAKE</div><div class="pn">Silky Souffle Eyes（Matte）</div><div class="jp">シルキースフレアイズ マット</div><div class="shades"><span class="sh">#M06 Lima Greige</span></div><div class="foot-row"><span class="price">¥750 <small>/ NT$150</small></span><span class="where w-drug">開架藥妝</span></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="loveliner" data-kind="buy"><img class="thumb" src="img/loveliner.jpg" alt="Love Liner Pom Pom Curl Mascara"><div class="brand">Love Liner</div><div class="pn">Pom Pom Curl Mascara</div><div class="jp">ポンポンカールマスカラ</div><div class="shades"><span class="sh">#Sheer Black</span></div><div class="foot-row"><span class="price">¥1,600 <small>/ NT$320</small></span><span class="where w-drug">開架・LOFT</span></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="pyt" data-kind="buy"><img class="thumb" src="img/pyt.jpg" alt="Pyt Genba Liquid Cheek"><div class="brand">Pyt</div><div class="pn">Genba Liquid Cheek</div><div class="jp">リキッドチーク・腮紅液</div><div class="shades"><span class="sh">#01 Earl Grey</span><span class="sh">#03 Ballerina</span></div><div class="foot-row"><span class="price">¥1,800 <small>/ NT$360</small></span><span class="where w-variety">LOFT・@cosme</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="decorte" data-kind="buy"><img class="thumb" src="img/decorte.jpg" alt="DECORTÉ AQ Blush"><div class="brand">DECORTÉ 黛珂</div><div class="pn">AQ Blush</div><div class="jp">ＡＱブラッシュ</div><div class="shades"><span class="sh">#4</span><span class="sh">#6</span></div><div class="foot-row"><span class="price">¥6,800 <small>/ NT$1,360</small></span><span class="where w-counter">百貨專櫃</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="enamor" data-kind="buy"><img class="thumb" src="img/enamor.jpg" alt="Enamor Mellow Melting Cheek"><div class="brand">Enamor</div><div class="pn">Mellow Melting Cheek</div><div class="jp">メロウメルティングチーク</div><div class="shades"><span class="sh">#01 You</span><span class="sh">#03 My Temperature</span><span class="sh">#06 Eternal Nude</span></div><div class="foot-row"><span class="price">¥2,200 <small>/ NT$440</small></span><span class="where w-variety">LOFT・@cosme</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="cz_faceglow" data-kind="buy"><img class="thumb" src="img/cz_faceglow.jpg" alt="CEZANNE Face Glow Color"><div class="brand">CEZANNE 塞尚</div><div class="pn">Face Glow Color</div><div class="jp">フェイスグロウカラー</div><div class="shades"><span class="sh">#01 Apricot Glow</span><span class="sh">#02 Rose Glow</span></div><div class="foot-row"><span class="price">¥600 <small>/ NT$120</small></span><span class="where w-drug">開架藥妝</span></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="suqqu_blush" data-kind="buy"><img class="thumb" src="img/suqqu_blush.jpg" alt="SUQQU Blurring Color Blush"><div class="brand">SUQQU</div><div class="pn">Blurring Color Blush</div><div class="jp">ブラーリング カラー ブラッシュ</div><div class="shades"><span class="sh">#01 淡音</span><span class="sh">#07 彩望</span><span class="sh">#08 透眺</span></div><div class="foot-row"><span class="price">¥6,000 <small>/ NT$1,200</small></span><span class="where w-counter">百貨專櫃</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="laserbalm" data-kind="buy"><img class="thumb" src="img/laserbalm.jpg" alt="blanche etoile Laser Balm"><div class="brand">blanche etoile</div><div class="pn">Laser Balm｜薄紗水光膏</div><div class="jp">レーザー バーム・打亮膏</div><div class="shades"><span class="sh">#01 Purebeat</span></div><div class="foot-row"><span class="price">¥4,000 <small>/ NT$800</small></span><span class="where w-variety">@cosme・LOFT</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="whomee" data-kind="buy"><img class="thumb" src="img/whomee.jpg" alt="WHOMEE Highlight Powder W"><div class="brand">WHOMEE フーミー</div><div class="pn">Highlight Powder W</div><div class="jp">ハイライトパウダーW</div><div class="shades"><span class="sh">#Yellow Chiffon</span></div><div class="foot-row"><span class="price">¥2,000 <small>/ NT$400</small></span><span class="where w-variety">LOFT・@cosme</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="suqqu_hl" data-kind="buy"><img class="thumb" src="img/suqqu_hl.jpg" alt="SUQQU Blurring Color Highlighter"><div class="brand">SUQQU</div><div class="pn">Blurring Color Highlighter</div><div class="jp">ブラーリング カラー ハイライター</div><div class="shades"><span class="sh">#101 夢見艷</span></div><div class="foot-row"><span class="price">¥6,000 <small>/ NT$1,200</small></span><span class="where w-counter">百貨專櫃</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="cz_tonefilter" data-kind="buy"><img class="thumb" src="img/cz_tonefilter.jpg" alt="CEZANNE Tone Filter Highlight"><div class="brand">CEZANNE 塞尚</div><div class="pn">Tone Filter Highlight</div><div class="jp">トーンフィルターハイライト</div><div class="shades"><span class="sh">#01 Filter Beige</span><span class="sh">#02 Filter Pink</span></div><div class="foot-row"><span class="price">¥630 <small>/ NT$126</small></span><span class="where w-drug">開架藥妝</span></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="andbe_reflect" data-kind="buy"><img class="thumb" src="img/andbe_reflect.jpg" alt="&amp;be Pure Reflector"><div class="brand">&amp;be</div><div class="pn">Pure Reflector</div><div class="jp">ピュアリフレクター・提亮</div><div class="shades"><span class="sh">#01</span><span class="sh">#03</span></div><div class="foot-row"><span class="price">¥1,800 <small>/ NT$360</small></span><span class="where w-variety">LOFT・PLAZA</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="cz_pearl" data-kind="buy"><img class="thumb" src="img/cz_pearl.jpg" alt="CEZANNE Pearl Glow Highlight"><div class="brand">CEZANNE 塞尚</div><div class="pn">Pearl Glow Highlight</div><div class="jp">パールグロウハイライト</div><div class="shades"><span class="sh">#01 Champagne Beige</span></div><div class="foot-row"><span class="price">¥600 <small>/ NT$120</small></span><span class="where w-drug">開架藥妝</span></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="three" data-kind="buy"><img class="thumb" src="img/three.jpg" alt="THREE Loose Powder"><div class="brand">THREE</div><div class="pn">Ultimate Diaphanous Loose Powder</div><div class="jp">ルースパウダー・蜜粉</div><div class="shades"><span class="sh">#Glow 01</span></div><div class="foot-row"><span class="price">¥5,000 <small>/ NT$1,000</small></span><span class="where w-counter">百貨專櫃</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="lipscrub" data-kind="buy"><img class="thumb" src="img/lipscrub.jpg" alt="CANMAKE Plump Lip Care Scrub"><div class="brand">CANMAKE</div><div class="pn">Plump Lip Care Scrub</div><div class="jp">プランプリップケアスクラブ・護唇磨砂</div><div class="foot-row"><span class="price">¥540 <small>/ NT$108</small></span><span class="where w-drug">開架藥妝</span></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="narisup" data-kind="buy"><img class="thumb" src="img/narisup.jpg" alt="NARISUP Nude Lip Muter"><div class="brand">NARISUP ナリスアップ</div><div class="pn">Nude Lip Muter</div><div class="jp">ヌードリップミューター・唇彩</div><div class="foot-row"><span class="price">¥1,320 <small>/ NT$264</small></span><span class="where w-drug">開架藥妝</span></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="kiss" data-kind="buy"><img class="thumb" src="img/kiss.jpg" alt="KISS 4D Lip"><div class="brand">KISS</div><div class="pn">4D Lip</div><div class="jp">4Dリップ</div><div class="shades"><span class="sh">#01 Antique Rosé</span><span class="sh">#02 Sensual Nude</span></div><div class="foot-row"><span class="price">¥1,400 <small>/ NT$280</small></span><span class="where w-drug">開架藥妝</span></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="calypso" data-kind="buy"><img class="thumb" src="img/calypso.jpg" alt="CALYPSO 遮瑕液"><div class="nm">CALYPSO 遮瑕液</div><div class="jp">ほうれい線・くま・毛穴・シミ・ニキビ跡 コンシーラー</div><div class="what">LDK 等評比第 1 名。法令紋、黑眼圈、毛孔、斑點、痘疤都能遮。<b>包裝上的數字是生產批號，看色號名稱就好。</b></div><div class="shades"><span class="sh">Glossy Beige</span><span class="sh">Pink Beige</span><span class="sh">Salmon Beige 鮭魚米（影片用）</span></div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>藥妝店、唐吉訶德彩妝區找找。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="inoui" data-kind="buy"><img class="thumb" src="img/inoui.jpg" alt="資生堂 INOUI 粉底"><div class="nm">資生堂 INOUI 粉底</div><div class="jp">インウイ リキッドファンデーション 30mL・SPF50+ PA++++</div><div class="what">液態粉底 ¥8,800（未稅），色號 00–04；粉餅盒 ¥2,530（含稅）。先試色再買。</div><div class="shades"><span class="sh">00</span><span class="sh">01</span><span class="sh">02</span><span class="sh">03</span><span class="sh">04</span></div><div class="buy"><span class="where w-parco">專櫃</span><div class="loc"><b>哪裡買</b>百貨資生堂櫃位（大丸、三越等），以現場為準。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="kate_namida" data-kind="buy"><img class="thumb" src="img/kate_namida.jpg" alt="KATE 氣墊臥蠶筆"><div class="nm">KATE 氣墊臥蠶筆</div><div class="jp">さらピタ涙袋ボリューマー</div><div class="what">大家試畫都很自然，期待畫在自己眼睛上。</div><div class="shades"><span class="sh">EX-1 マットホワイト</span><span class="sh">EX-2</span><span class="sh">EX-3</span></div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>藥妝店、唐吉訶德、LOFT 彩妝開架。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="cm_clearveil" data-kind="buy"><img class="thumb" src="img/cm_clearveil.jpg" alt="CANMAKE 定妝粉餅"><div class="nm">CANMAKE 定妝粉餅</div><div class="jp">クリアヴェールセッティングパウダー</div><div class="what">最近很紅：細緻＋珠光，網稱 NARS 小白餅平替。新品常缺貨。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>藥妝店、唐吉訶德、LOFT 開架。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="cpb_veil" data-kind="buy"><img class="thumb" src="img/cpb_veil.jpg" alt="肌膚之鑰 妝前凝霜"><div class="nm">肌膚之鑰 妝前凝霜</div><div class="jp">Clé de Peau ヴォワールコレクチュール</div><div class="what">回購再回購的妝前乳，提亮又服貼。</div><div class="buy"><span class="where w-parco">專櫃</span><div class="loc"><b>哪裡買</b>百貨 Clé de Peau 櫃位（大丸、三越等）。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="by365" data-stores="loft drug" data-kind="buy"><img class="thumb" src="img/by365.jpg" alt="by365"><div class="brand">by365</div><div class="pn">Powdery UV Cream</div><div class="jp">パウダリUVクリーム・防曬</div><div class="foot-row"><span class="price">¥990 <small>/ NT$198</small></span><span class="where w-variety">LOFT・開架</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="cushion" data-stores="loft cosme" data-kind="buy"><img class="thumb" src="img/cushion.jpg" alt="TWO SLASH FOUR cushion"><div class="brand">TWO SLASH FOUR</div><div class="pn">Angelic Satin Cushion</div><div class="jp">氣墊粉餅</div><div class="shades"><span class="sh">#N21</span></div><div class="foot-row"><span class="price">—</span><span class="where w-variety">LOFT・@cosme</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="cz_shading" data-stores="drug donki" data-kind="buy"><img class="thumb" src="img/cz_shading.jpg" alt="CEZANNE Blend Color Shading"><div class="brand">CEZANNE 塞尚</div><div class="pn">Blend Color Shading</div><div class="jp">ブレンドカラーシェーディング・修容</div><div class="shades"><span class="sh">#02 Cool Tone</span></div><div class="foot-row"><span class="price">¥710 <small>/ NT$142</small></span><span class="where w-drug">開架藥妝</span></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="brow" data-stores="drug donki loft" data-kind="buy"><img class="thumb" src="img/brow.jpg" alt="CANMAKE Styling Edge Eyebrow"><div class="brand">CANMAKE</div><div class="pn">Styling Edge Eyebrow</div><div class="jp">スタイリングエッジアイブロウ・眉筆</div><div class="shades"><span class="sh">#01 Natural Brown</span></div><div class="foot-row"><span class="price">¥700 <small>/ NT$140</small></span><span class="where w-drug">開架藥妝</span></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="ombre" data-stores="cosme loft" data-kind="buy"><img class="thumb" src="img/ombre.jpg" alt="blanche etoile Ombre Amour"><div class="brand">blanche etoile</div><div class="pn">Ombre Amour -ecla/soie-</div><div class="jp">オンブル アムール・眼影</div><div class="shades"><span class="sh">#203 Sophie</span><span class="sh">#301 Romy</span></div><div class="foot-row"><span class="price">¥2,500 <small>/ NT$500</small></span><span class="where w-variety">@cosme・LOFT</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="etvos" data-stores="loft" data-kind="buy"><img class="thumb" src="img/etvos.jpg" alt="ETVOS Mineral Classy Eyeshadow"><div class="brand">ETVOS</div><div class="pn">Mineral Classy Eyeshadow</div><div class="jp">ミネラルクラッシィシャドー</div><div class="shades"><span class="sh">#Chiffon Ensemble</span></div><div class="foot-row"><span class="price">¥4,200 <small>/ NT$840</small></span><span class="where w-variety">直營・LOFT</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="andbe_eye" data-stores="loft" data-kind="buy"><img class="thumb" src="img/andbe_eye.jpg" alt="&amp;be Eyeshadow Palette"><div class="brand">&amp;be</div><div class="pn">Eyeshadow Palette</div><div class="jp">パレットアイシャドウ</div><div class="shades"><span class="sh">#Amber Rose</span></div><div class="foot-row"><span class="price">¥3,000 <small>/ NT$600</small></span><span class="where w-variety">LOFT・PLAZA</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="cz_pale" data-stores="drug donki" data-kind="buy"><img class="thumb" src="img/cz_pale.jpg" alt="CEZANNE Pale Tone Eye Shadow"><div class="brand">CEZANNE 塞尚</div><div class="pn">Pale Tone Eye Shadow</div><div class="jp">ペールトーンアイシャドウ</div><div class="shades"><span class="sh">#01 Cotton Beige</span></div><div class="foot-row"><span class="price">¥680 <small>/ NT$136</small></span><span class="where w-drug">開架藥妝</span></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="silky" data-stores="drug donki loft" data-kind="buy"><img class="thumb" src="img/silky.jpg" alt="CANMAKE Silky Souffle Eyes"><div class="brand">CANMAKE</div><div class="pn">Silky Souffle Eyes（Matte）</div><div class="jp">シルキースフレアイズ マット</div><div class="shades"><span class="sh">#M06 Lima Greige</span></div><div class="foot-row"><span class="price">¥750 <small>/ NT$150</small></span><span class="where w-drug">開架藥妝</span></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="loveliner" data-stores="drug loft" data-kind="buy"><img class="thumb" src="img/loveliner.jpg" alt="Love Liner Pom Pom Curl Mascara"><div class="brand">Love Liner</div><div class="pn">Pom Pom Curl Mascara</div><div class="jp">ポンポンカールマスカラ</div><div class="shades"><span class="sh">#Sheer Black</span></div><div class="foot-row"><span class="price">¥1,600 <small>/ NT$320</small></span><span class="where w-drug">開架・LOFT</span></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="pyt" data-stores="loft cosme" data-kind="buy"><img class="thumb" src="img/pyt.jpg" alt="Pyt Genba Liquid Cheek"><div class="brand">Pyt</div><div class="pn">Genba Liquid Cheek</div><div class="jp">リキッドチーク・腮紅液</div><div class="shades"><span class="sh">#01 Earl Grey</span><span class="sh">#03 Ballerina</span></div><div class="foot-row"><span class="price">¥1,800 <small>/ NT$360</small></span><span class="where w-variety">LOFT・@cosme</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="decorte" data-stores="dept" data-kind="buy"><img class="thumb" src="img/decorte.jpg" alt="DECORTÉ AQ Blush"><div class="brand">DECORTÉ 黛珂</div><div class="pn">AQ Blush</div><div class="jp">ＡＱブラッシュ</div><div class="shades"><span class="sh">#4</span><span class="sh">#6</span></div><div class="foot-row"><span class="price">¥6,800 <small>/ NT$1,360</small></span><span class="where w-counter">百貨專櫃</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="enamor" data-stores="loft cosme" data-kind="buy"><img class="thumb" src="img/enamor.jpg" alt="Enamor Mellow Melting Cheek"><div class="brand">Enamor</div><div class="pn">Mellow Melting Cheek</div><div class="jp">メロウメルティングチーク</div><div class="shades"><span class="sh">#01 You</span><span class="sh">#03 My Temperature</span><span class="sh">#06 Eternal Nude</span></div><div class="foot-row"><span class="price">¥2,200 <small>/ NT$440</small></span><span class="where w-variety">LOFT・@cosme</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="cz_faceglow" data-stores="drug donki" data-kind="buy"><img class="thumb" src="img/cz_faceglow.jpg" alt="CEZANNE Face Glow Color"><div class="brand">CEZANNE 塞尚</div><div class="pn">Face Glow Color</div><div class="jp">フェイスグロウカラー</div><div class="shades"><span class="sh">#01 Apricot Glow</span><span class="sh">#02 Rose Glow</span></div><div class="foot-row"><span class="price">¥600 <small>/ NT$120</small></span><span class="where w-drug">開架藥妝</span></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="suqqu_blush" data-stores="dept" data-kind="buy"><img class="thumb" src="img/suqqu_blush.jpg" alt="SUQQU Blurring Color Blush"><div class="brand">SUQQU</div><div class="pn">Blurring Color Blush</div><div class="jp">ブラーリング カラー ブラッシュ</div><div class="shades"><span class="sh">#01 淡音</span><span class="sh">#07 彩望</span><span class="sh">#08 透眺</span></div><div class="foot-row"><span class="price">¥6,000 <small>/ NT$1,200</small></span><span class="where w-counter">百貨專櫃</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="laserbalm" data-stores="cosme loft" data-kind="buy"><img class="thumb" src="img/laserbalm.jpg" alt="blanche etoile Laser Balm"><div class="brand">blanche etoile</div><div class="pn">Laser Balm｜薄紗水光膏</div><div class="jp">レーザー バーム・打亮膏</div><div class="shades"><span class="sh">#01 Purebeat</span></div><div class="foot-row"><span class="price">¥4,000 <small>/ NT$800</small></span><span class="where w-variety">@cosme・LOFT</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="whomee" data-stores="loft cosme" data-kind="buy"><img class="thumb" src="img/whomee.jpg" alt="WHOMEE Highlight Powder W"><div class="brand">WHOMEE フーミー</div><div class="pn">Highlight Powder W</div><div class="jp">ハイライトパウダーW</div><div class="shades"><span class="sh">#Yellow Chiffon</span></div><div class="foot-row"><span class="price">¥2,000 <small>/ NT$400</small></span><span class="where w-variety">LOFT・@cosme</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="suqqu_hl" data-stores="dept" data-kind="buy"><img class="thumb" src="img/suqqu_hl.jpg" alt="SUQQU Blurring Color Highlighter"><div class="brand">SUQQU</div><div class="pn">Blurring Color Highlighter</div><div class="jp">ブラーリング カラー ハイライター</div><div class="shades"><span class="sh">#101 夢見艷</span></div><div class="foot-row"><span class="price">¥6,000 <small>/ NT$1,200</small></span><span class="where w-counter">百貨專櫃</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="cz_tonefilter" data-stores="drug donki" data-kind="buy"><img class="thumb" src="img/cz_tonefilter.jpg" alt="CEZANNE Tone Filter Highlight"><div class="brand">CEZANNE 塞尚</div><div class="pn">Tone Filter Highlight</div><div class="jp">トーンフィルターハイライト</div><div class="shades"><span class="sh">#01 Filter Beige</span><span class="sh">#02 Filter Pink</span></div><div class="foot-row"><span class="price">¥630 <small>/ NT$126</small></span><span class="where w-drug">開架藥妝</span></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="andbe_reflect" data-stores="loft" data-kind="buy"><img class="thumb" src="img/andbe_reflect.jpg" alt="&amp;be Pure Reflector"><div class="brand">&amp;be</div><div class="pn">Pure Reflector</div><div class="jp">ピュアリフレクター・提亮</div><div class="shades"><span class="sh">#01</span><span class="sh">#03</span></div><div class="foot-row"><span class="price">¥1,800 <small>/ NT$360</small></span><span class="where w-variety">LOFT・PLAZA</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="cz_pearl" data-stores="drug donki" data-kind="buy"><img class="thumb" src="img/cz_pearl.jpg" alt="CEZANNE Pearl Glow Highlight"><div class="brand">CEZANNE 塞尚</div><div class="pn">Pearl Glow Highlight</div><div class="jp">パールグロウハイライト</div><div class="shades"><span class="sh">#01 Champagne Beige</span></div><div class="foot-row"><span class="price">¥600 <small>/ NT$120</small></span><span class="where w-drug">開架藥妝</span></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="three" data-stores="dept" data-kind="buy"><img class="thumb" src="img/three.jpg" alt="THREE Loose Powder"><div class="brand">THREE</div><div class="pn">Ultimate Diaphanous Loose Powder</div><div class="jp">ルースパウダー・蜜粉</div><div class="shades"><span class="sh">#Glow 01</span></div><div class="foot-row"><span class="price">¥5,000 <small>/ NT$1,000</small></span><span class="where w-counter">百貨專櫃</span></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="lipscrub" data-stores="drug donki loft" data-kind="buy"><img class="thumb" src="img/lipscrub.jpg" alt="CANMAKE Plump Lip Care Scrub"><div class="brand">CANMAKE</div><div class="pn">Plump Lip Care Scrub</div><div class="jp">プランプリップケアスクラブ・護唇磨砂</div><div class="foot-row"><span class="price">¥540 <small>/ NT$108</small></span><span class="where w-drug">開架藥妝</span></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="narisup" data-stores="drug donki" data-kind="buy"><img class="thumb" src="img/narisup.jpg" alt="NARISUP Nude Lip Muter"><div class="brand">NARISUP ナリスアップ</div><div class="pn">Nude Lip Muter</div><div class="jp">ヌードリップミューター・唇彩</div><div class="foot-row"><span class="price">¥1,320 <small>/ NT$264</small></span><span class="where w-drug">開架藥妝</span></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="kiss" data-stores="drug donki" data-kind="buy"><img class="thumb" src="img/kiss.jpg" alt="KISS 4D Lip"><div class="brand">KISS</div><div class="pn">4D Lip</div><div class="jp">4Dリップ</div><div class="shades"><span class="sh">#01 Antique Rosé</span><span class="sh">#02 Sensual Nude</span></div><div class="foot-row"><span class="price">¥1,400 <small>/ NT$280</small></span><span class="where w-drug">開架藥妝</span></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="calypso" data-stores="drug donki" data-kind="buy"><img class="thumb" src="img/calypso.jpg" alt="CALYPSO 遮瑕液"><div class="nm">CALYPSO 遮瑕液</div><div class="jp">ほうれい線・くま・毛穴・シミ・ニキビ跡 コンシーラー</div><div class="what">LDK 等評比第 1 名。法令紋、黑眼圈、毛孔、斑點、痘疤都能遮。<b>包裝上的數字是生產批號，看色號名稱就好。</b></div><div class="shades"><span class="sh">Glossy Beige</span><span class="sh">Pink Beige</span><span class="sh">Salmon Beige 鮭魚米（影片用）</span></div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>藥妝店、唐吉訶德彩妝區找找。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="inoui" data-stores="dept" data-kind="buy"><img class="thumb" src="img/inoui.jpg" alt="資生堂 INOUI 粉底"><div class="nm">資生堂 INOUI 粉底</div><div class="jp">インウイ リキッドファンデーション 30mL・SPF50+ PA++++</div><div class="what">液態粉底 ¥8,800（未稅），色號 00–04；粉餅盒 ¥2,530（含稅）。先試色再買。</div><div class="shades"><span class="sh">00</span><span class="sh">01</span><span class="sh">02</span><span class="sh">03</span><span class="sh">04</span></div><div class="buy"><span class="where w-parco">專櫃</span><div class="loc"><b>哪裡買</b>百貨資生堂櫃位（大丸、三越等），以現場為準。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="kate_namida" data-stores="drug donki loft" data-kind="buy"><img class="thumb" src="img/kate_namida.jpg" alt="KATE 氣墊臥蠶筆"><div class="nm">KATE 氣墊臥蠶筆</div><div class="jp">さらピタ涙袋ボリューマー</div><div class="what">大家試畫都很自然，期待畫在自己眼睛上。</div><div class="shades"><span class="sh">EX-1 マットホワイト</span><span class="sh">EX-2</span><span class="sh">EX-3</span></div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>藥妝店、唐吉訶德、LOFT 彩妝開架。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="cm_clearveil" data-stores="drug donki loft" data-kind="buy"><img class="thumb" src="img/cm_clearveil.jpg" alt="CANMAKE 定妝粉餅"><div class="nm">CANMAKE 定妝粉餅</div><div class="jp">クリアヴェールセッティングパウダー</div><div class="what">最近很紅：細緻＋珠光，網稱 NARS 小白餅平替。新品常缺貨。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>藥妝店、唐吉訶德、LOFT 開架。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="cpb_veil" data-stores="dept" data-kind="buy"><img class="thumb" src="img/cpb_veil.jpg" alt="肌膚之鑰 妝前凝霜"><div class="nm">肌膚之鑰 妝前凝霜</div><div class="jp">Clé de Peau ヴォワールコレクチュール</div><div class="what">回購再回購的妝前乳，提亮又服貼。</div><div class="buy"><span class="where w-parco">專櫃</span><div class="loc"><b>哪裡買</b>百貨 Clé de Peau 櫃位（大丸、三越等）。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
   </div>
 
   <!-- SKINCARE -->
   <div class="section-h"><h3>保養・身體</h3><span class="en">Skin &amp; Body</span></div>
   <div class="grid">
-    <div class="card chk" data-id="royalcream" data-kind="buy"><img class="thumb" src="img/royalcream.jpg" alt="金罐保濕乳霜"><div class="nm">金罐保濕乳霜</div><div class="jp">ローヤル モイストリッチクリーム</div><div class="what">聽說是藥妝店員愛推的好物，解決換季脫皮乾燥。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>藥妝店保養區。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="curel_bath" data-kind="buy"><img class="thumb" src="img/curel_bath.jpg" alt="Curel 浴室吊掛式乳液"><div class="nm">Curel 浴室吊掛式乳液</div><div class="jp">キュレル バスタイム モイストバリアクリーム</div><div class="what">洗完澡在浴室直接擦，可以吊掛，超方便。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>各大藥妝店、唐吉訶德。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="unlabel_c" data-kind="buy"><img class="thumb" src="img/unlabel_c.jpg" alt="unlabel LAB 維他命C 潤唇膏"><div class="nm">unlabel LAB 維他命C 潤唇膏</div><div class="jp">ビタミンC 美容液リップクリーム（SPF24）</div><div class="what">高保濕、改善暗沉，LDK 第 1 名；網稱肌膚之鑰嫩唇霜平替。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>各大藥妝店、唐吉訶德。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="elixir_mizu" data-kind="buy"><img class="thumb" src="img/elixir_mizu.jpg" alt="ELIXIR 保濕小藍瓶"><div class="nm">ELIXIR 保濕小藍瓶</div><div class="jp">バランシング みずクリーム</div><div class="what">膏狀一推就化成水，好吸收、保濕度高。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>藥妝店 ELIXIR 櫃位。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="cpb_lip" data-kind="buy"><img class="thumb" src="img/cpb_lip.jpg" alt="肌膚之鑰 嫩唇霜"><div class="nm">肌膚之鑰 嫩唇霜</div><div class="jp">Clé de Peau le sérum pour les lèvres</div><div class="what">想試試看嘴唇能不能變得水嘟嘟。</div><div class="buy"><span class="where w-parco">專櫃</span><div class="loc"><b>哪裡買</b>百貨 Clé de Peau 櫃位。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="sui_hand" data-kind="buy"><img class="thumb" src="img/sui_hand.jpg" alt="首里石鹼 護手凝霜"><div class="nm">首里石鹼 護手凝霜</div><div class="jp">SuiSavon Essence Hand Cream・Plumeria &amp; Lily</div><div class="what">滋潤不黏膩，去沖繩的人都會扛好幾條。</div><div class="buy"><span class="where w-note">品牌門市</span><div class="loc"><b>哪裡買</b><b>沖繩品牌</b>，北海道不一定有門市，出發前查官網店鋪。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="sui_clay" data-kind="buy"><img class="thumb" src="img/sui_clay.jpg" alt="首里石鹼 泥洗面乳"><div class="nm">首里石鹼 泥洗面乳</div><div class="jp">SuiSavon Marine Clay・Bergamot</div><div class="what">可以厚敷當面膜再洗掉，毛孔乾淨、洗完不乾澀。</div><div class="buy"><span class="where w-note">品牌門市</span><div class="loc"><b>哪裡買</b><b>沖繩品牌</b>，北海道不一定有門市，出發前查官網店鋪。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="royalcream" data-stores="drug" data-kind="buy"><img class="thumb" src="img/royalcream.jpg" alt="金罐保濕乳霜"><div class="nm">金罐保濕乳霜</div><div class="jp">ローヤル モイストリッチクリーム</div><div class="what">聽說是藥妝店員愛推的好物，解決換季脫皮乾燥。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>藥妝店保養區。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="curel_bath" data-stores="drug donki" data-kind="buy"><img class="thumb" src="img/curel_bath.jpg" alt="Curel 浴室吊掛式乳液"><div class="nm">Curel 浴室吊掛式乳液</div><div class="jp">キュレル バスタイム モイストバリアクリーム</div><div class="what">洗完澡在浴室直接擦，可以吊掛，超方便。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>各大藥妝店、唐吉訶德。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="unlabel_c" data-stores="drug donki" data-kind="buy"><img class="thumb" src="img/unlabel_c.jpg" alt="unlabel LAB 維他命C 潤唇膏"><div class="nm">unlabel LAB 維他命C 潤唇膏</div><div class="jp">ビタミンC 美容液リップクリーム（SPF24）</div><div class="what">高保濕、改善暗沉，LDK 第 1 名；網稱肌膚之鑰嫩唇霜平替。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>各大藥妝店、唐吉訶德。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="elixir_mizu" data-stores="drug" data-kind="buy"><img class="thumb" src="img/elixir_mizu.jpg" alt="ELIXIR 保濕小藍瓶"><div class="nm">ELIXIR 保濕小藍瓶</div><div class="jp">バランシング みずクリーム</div><div class="what">膏狀一推就化成水，好吸收、保濕度高。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>藥妝店 ELIXIR 櫃位。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="cpb_lip" data-stores="dept" data-kind="buy"><img class="thumb" src="img/cpb_lip.jpg" alt="肌膚之鑰 嫩唇霜"><div class="nm">肌膚之鑰 嫩唇霜</div><div class="jp">Clé de Peau le sérum pour les lèvres</div><div class="what">想試試看嘴唇能不能變得水嘟嘟。</div><div class="buy"><span class="where w-parco">專櫃</span><div class="loc"><b>哪裡買</b>百貨 Clé de Peau 櫃位。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="sui_hand" data-stores="other" data-kind="buy"><img class="thumb" src="img/sui_hand.jpg" alt="首里石鹼 護手凝霜"><div class="nm">首里石鹼 護手凝霜</div><div class="jp">SuiSavon Essence Hand Cream・Plumeria &amp; Lily</div><div class="what">滋潤不黏膩，去沖繩的人都會扛好幾條。</div><div class="buy"><span class="where w-note">品牌門市</span><div class="loc"><b>哪裡買</b><b>沖繩品牌</b>，北海道不一定有門市，出發前查官網店鋪。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="sui_clay" data-stores="other" data-kind="buy"><img class="thumb" src="img/sui_clay.jpg" alt="首里石鹼 泥洗面乳"><div class="nm">首里石鹼 泥洗面乳</div><div class="jp">SuiSavon Marine Clay・Bergamot</div><div class="what">可以厚敷當面膜再洗掉，毛孔乾淨、洗完不乾澀。</div><div class="buy"><span class="where w-note">品牌門市</span><div class="loc"><b>哪裡買</b><b>沖繩品牌</b>，北海道不一定有門市，出發前查官網店鋪。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
   </div>
 
   <!-- MEDICINE -->
   <div class="section-h"><h3>藥品・止癢</h3><span class="en">Medicine</span></div>
   <div class="grid">
-    <div class="card chk" data-id="santen_med" data-kind="buy"><img class="thumb" src="img/santen_med.jpg" alt="參天 抗菌眼藥水（單支）"><div class="nm">參天 抗菌眼藥水（單支）</div><div class="jp">サンテ メディカル抗菌 0.3mL×20本・第2類医薬品</div><div class="what">針眼（麥粒腫）、結膜炎用；單次使用、無防腐劑。容易長針眼的人必備。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>藥妝店眼藥水區。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="acnes" data-kind="buy"><img class="thumb" src="img/acnes.jpg" alt="曼秀雷敦 Acnes 抗痘霜"><div class="nm">曼秀雷敦 Acnes 抗痘霜</div><div class="jp">メンソレータム アクネス 大人ニキビ治療薬</div><div class="what">網友說小痘隔天消、大痘約 3 天。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>各大藥妝店、唐吉訶德。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="muhi_ex" data-kind="buy"><img class="thumb" src="img/muhi_ex.jpg" alt="液體無比滴 EX 止癢液"><div class="nm">液體無比滴 EX 止癢液</div><div class="jp">液体ムヒアルファEX・第②類医薬品</div><div class="what">蚊蟲、蟎、跳蚤咬傷止癢，癢癢人的救命藥水，無限回購。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>各大藥妝店、唐吉訶德。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="muhi_patch" data-kind="buy"><img class="thumb" src="img/muhi_patch.jpg" alt="麵包超人止癢貼"><div class="nm">麵包超人止癢貼</div><div class="jp">ムヒパッチA 76枚・第3類医薬品</div><div class="what">蚊蟲咬直接貼，防止抓破；含植物精油，小孩也好用。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>各大藥妝店、唐吉訶德。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="muhi_baby" data-kind="buy"><img class="thumb" src="img/muhi_baby.jpg" alt="無比滴 寶寶藥膏"><div class="nm">無比滴 寶寶藥膏</div><div class="jp">ムヒ・ベビーb 15g クリーム・第3類医薬品</div><div class="what">寶寶萬用藥膏：蚊蟲叮咬、尿布疹、濕疹、皮膚炎。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>各大藥妝店、唐吉訶德。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="polybaby" data-kind="buy"><img class="thumb" src="img/polybaby.jpg" alt="sato 寶寶萬用藥膏"><div class="nm">sato 寶寶萬用藥膏</div><div class="jp">ポリベビー 30g・第3類医薬品</div><div class="what">尿布疹、濕疹、痱子；<b>不含類固醇</b>。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>各大藥妝店、唐吉訶德。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="toe_cushion" data-kind="buy"><img class="thumb" src="img/toe_cushion.jpg" alt="前腳掌護足趾套"><div class="nm">前腳掌護足趾套</div><div class="jp">歩行らくらくサポーター 足裏クッション（5本指）</div><div class="what">減輕腳底負擔、抗菌防臭；網友說走一整天迪士尼腳底也不痛。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>各大藥妝店、唐吉訶德。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="santen_med" data-stores="drug donki" data-kind="buy"><img class="thumb" src="img/santen_med.jpg" alt="參天 抗菌眼藥水（單支）"><div class="nm">參天 抗菌眼藥水（單支）</div><div class="jp">サンテ メディカル抗菌 0.3mL×20本・第2類医薬品</div><div class="what">針眼（麥粒腫）、結膜炎用；單次使用、無防腐劑。容易長針眼的人必備。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>藥妝店眼藥水區。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="acnes" data-stores="drug donki" data-kind="buy"><img class="thumb" src="img/acnes.jpg" alt="曼秀雷敦 Acnes 抗痘霜"><div class="nm">曼秀雷敦 Acnes 抗痘霜</div><div class="jp">メンソレータム アクネス 大人ニキビ治療薬</div><div class="what">網友說小痘隔天消、大痘約 3 天。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>各大藥妝店、唐吉訶德。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="muhi_ex" data-stores="drug donki" data-kind="buy"><img class="thumb" src="img/muhi_ex.jpg" alt="液體無比滴 EX 止癢液"><div class="nm">液體無比滴 EX 止癢液</div><div class="jp">液体ムヒアルファEX・第②類医薬品</div><div class="what">蚊蟲、蟎、跳蚤咬傷止癢，癢癢人的救命藥水，無限回購。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>各大藥妝店、唐吉訶德。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="muhi_patch" data-stores="drug donki" data-kind="buy"><img class="thumb" src="img/muhi_patch.jpg" alt="麵包超人止癢貼"><div class="nm">麵包超人止癢貼</div><div class="jp">ムヒパッチA 76枚・第3類医薬品</div><div class="what">蚊蟲咬直接貼，防止抓破；含植物精油，小孩也好用。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>各大藥妝店、唐吉訶德。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="muhi_baby" data-stores="drug donki" data-kind="buy"><img class="thumb" src="img/muhi_baby.jpg" alt="無比滴 寶寶藥膏"><div class="nm">無比滴 寶寶藥膏</div><div class="jp">ムヒ・ベビーb 15g クリーム・第3類医薬品</div><div class="what">寶寶萬用藥膏：蚊蟲叮咬、尿布疹、濕疹、皮膚炎。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>各大藥妝店、唐吉訶德。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="polybaby" data-stores="drug donki" data-kind="buy"><img class="thumb" src="img/polybaby.jpg" alt="sato 寶寶萬用藥膏"><div class="nm">sato 寶寶萬用藥膏</div><div class="jp">ポリベビー 30g・第3類医薬品</div><div class="what">尿布疹、濕疹、痱子；<b>不含類固醇</b>。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>各大藥妝店、唐吉訶德。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="toe_cushion" data-stores="drug donki" data-kind="buy"><img class="thumb" src="img/toe_cushion.jpg" alt="前腳掌護足趾套"><div class="nm">前腳掌護足趾套</div><div class="jp">歩行らくらくサポーター 足裏クッション（5本指）</div><div class="what">減輕腳底負擔、抗菌防臭；網友說走一整天迪士尼腳底也不痛。</div><div class="buy"><span class="where w-drug">藥妝店</span><div class="loc"><b>哪裡買</b>各大藥妝店、唐吉訶德。</div></div><div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div></div>
   </div>
 
   <!-- LIVING -->
   <div class="section-h"><h3>無印・3COINS 生活小物</h3><span class="en">Muji &amp; 3COINS</span></div>
   <div class="grid">
-    <div class="card chk" data-id="muji_hairess" data-kind="buy"><img class="thumb" src="img/muji_hairess.jpg" alt="無印 植物發酵液 育髮精華"><div class="nm">無印 植物發酵液 育髮精華</div><div class="jp">植物発酵液 薬用エイジングケアエッセンス</div><div class="what">強健髮根，頭髮看起來更蓬。</div><div class="buy"><span class="where w-variety">無印良品</span><div class="loc"><b>哪裡買</b>札幌無印門市（大通、札幌站周邊）。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="muji_scalp" data-kind="buy"><img class="thumb" src="img/muji_scalp.jpg" alt="無印 植物發酵液 頭皮噴霧"><div class="nm">無印 植物發酵液 頭皮噴霧</div><div class="jp">植物発酵液 薬用スカルプローション</div><div class="what">調理乾燥敏感頭皮，乾癢、泛紅時舒緩，換季很需要。</div><div class="buy"><span class="where w-variety">無印良品</span><div class="loc"><b>哪裡買</b>札幌無印門市。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="muji_brush" data-kind="buy"><img class="thumb" src="img/muji_brush.jpg" alt="無印 矽膠頭皮按摩刷"><div class="nm">無印 矽膠頭皮按摩刷</div><div class="jp">シリコーン頭皮ブラシ</div><div class="what">洗頭按摩用；大家說無印這款不會卡頭髮。</div><div class="buy"><span class="where w-variety">無印良品</span><div class="loc"><b>哪裡買</b>札幌無印門市。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="muji_hook" data-kind="buy"><img class="thumb" src="img/muji_hook.jpg" alt="萬用掛勾（承重 5kg）"><div class="nm">萬用掛勾（承重 5kg）</div><div class="jp">桌邊・包包掛勾</div><div class="what">掛在桌邊放包包，也能把雨傘、水壺外掛在包包上。</div><div class="buy"><span class="where w-variety">無印良品</span><div class="loc"><b>哪裡買</b>無印良品生活雜貨區（以現場為準）。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="muji_bagin" data-kind="buy"><img class="thumb" src="img/muji_bagin.jpg" alt="無印 包中包"><div class="nm">無印 包中包</div><div class="jp">バッグインバッグ</div><div class="what">公認無印最實用：放進帆布袋讓袋子挺起來，東西也好找。</div><div class="buy"><span class="where w-variety">無印良品</span><div class="loc"><b>哪裡買</b>札幌無印門市。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="tc_comb" data-kind="buy"><img class="thumb" src="img/tc_comb.jpg" alt="3COINS 靜電梳"><div class="nm">3COINS 靜電梳</div><div class="jp">and us METAL COMB</div><div class="what">最近很紅，聽說好用，拿起來比 ReFa 順手。</div><div class="buy"><span class="where w-variety">3COINS</span><div class="loc"><b>哪裡買</b>札幌 3COINS 門市。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="muji_hairess" data-stores="muji" data-kind="buy"><img class="thumb" src="img/muji_hairess.jpg" alt="無印 植物發酵液 育髮精華"><div class="nm">無印 植物發酵液 育髮精華</div><div class="jp">植物発酵液 薬用エイジングケアエッセンス</div><div class="what">強健髮根，頭髮看起來更蓬。</div><div class="buy"><span class="where w-variety">無印良品</span><div class="loc"><b>哪裡買</b>札幌無印門市（大通、札幌站周邊）。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="muji_scalp" data-stores="muji" data-kind="buy"><img class="thumb" src="img/muji_scalp.jpg" alt="無印 植物發酵液 頭皮噴霧"><div class="nm">無印 植物發酵液 頭皮噴霧</div><div class="jp">植物発酵液 薬用スカルプローション</div><div class="what">調理乾燥敏感頭皮，乾癢、泛紅時舒緩，換季很需要。</div><div class="buy"><span class="where w-variety">無印良品</span><div class="loc"><b>哪裡買</b>札幌無印門市。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="muji_brush" data-stores="muji" data-kind="buy"><img class="thumb" src="img/muji_brush.jpg" alt="無印 矽膠頭皮按摩刷"><div class="nm">無印 矽膠頭皮按摩刷</div><div class="jp">シリコーン頭皮ブラシ</div><div class="what">洗頭按摩用；大家說無印這款不會卡頭髮。</div><div class="buy"><span class="where w-variety">無印良品</span><div class="loc"><b>哪裡買</b>札幌無印門市。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="muji_hook" data-stores="muji" data-kind="buy"><img class="thumb" src="img/muji_hook.jpg" alt="萬用掛勾（承重 5kg）"><div class="nm">萬用掛勾（承重 5kg）</div><div class="jp">桌邊・包包掛勾</div><div class="what">掛在桌邊放包包，也能把雨傘、水壺外掛在包包上。</div><div class="buy"><span class="where w-variety">無印良品</span><div class="loc"><b>哪裡買</b>無印良品生活雜貨區（以現場為準）。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="muji_bagin" data-stores="muji" data-kind="buy"><img class="thumb" src="img/muji_bagin.jpg" alt="無印 包中包"><div class="nm">無印 包中包</div><div class="jp">バッグインバッグ</div><div class="what">公認無印最實用：放進帆布袋讓袋子挺起來，東西也好找。</div><div class="buy"><span class="where w-variety">無印良品</span><div class="loc"><b>哪裡買</b>札幌無印門市。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="tc_comb" data-stores="3coins" data-kind="buy"><img class="thumb" src="img/tc_comb.jpg" alt="3COINS 靜電梳"><div class="nm">3COINS 靜電梳</div><div class="jp">and us METAL COMB</div><div class="what">最近很紅，聽說好用，拿起來比 ReFa 順手。</div><div class="buy"><span class="where w-variety">3COINS</span><div class="loc"><b>哪裡買</b>札幌 3COINS 門市。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
   </div>
 
   <!-- FASHION -->
   <div class="section-h"><h3>服飾・鞋包</h3><span class="en">Fashion</span></div>
   <div class="grid">
-    <div class="card chk" data-id="uq_henley" data-kind="buy"><img class="thumb" src="img/uq_henley.jpg" alt="Uniqlo 亨利領發熱衣"><div class="nm">Uniqlo 亨利領發熱衣</div><div class="jp">HEATTECH 極暖・PRINCESSE tam.tam 聯名</div><div class="what">非常想要包色！</div><div class="buy"><span class="where w-variety">Uniqlo</span><div class="loc"><b>哪裡買</b>札幌 Uniqlo 門市。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="uq_jacket" data-kind="buy"><img class="thumb" src="img/uq_jacket.jpg" alt="Uniqlo 新款風衣"><div class="nm">Uniqlo 新款風衣</div><div class="jp">Uniqlo 秋冬新品</div><div class="what">剛出的風衣，版型很好看。</div><div class="buy"><span class="where w-variety">Uniqlo</span><div class="loc"><b>哪裡買</b>札幌 Uniqlo 門市。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="mb_base" data-kind="buy"><img class="thumb" src="img/mb_base.jpg" alt="mont-bell 厚手發熱衣"><div class="nm">mont-bell 厚手發熱衣</div><div class="jp">モンベル 厚手ベースレイヤー</div><div class="what">保暖排汗，迎接北海道冬天。</div><div class="buy"><span class="where w-variety">mont-bell</span><div class="loc"><b>哪裡買</b>札幌 mont-bell 門市。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="mb_pack" data-kind="buy"><img class="thumb" src="img/mb_pack.jpg" alt="mont-bell 收納後背包"><div class="nm">mont-bell 收納後背包</div><div class="jp">ポケッタブル デイパック 15</div><div class="what">可以收成超迷你一包，旅行帶著很方便。</div><div class="buy"><span class="where w-variety">mont-bell</span><div class="loc"><b>哪裡買</b>札幌 mont-bell 門市。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="hoka" data-kind="buy"><img class="thumb" src="img/hoka.jpg" alt="HOKA QQ 烏龍麵鞋"><div class="nm">HOKA QQ 烏龍麵鞋</div><div class="jp">HOKA</div><div class="what">也想來一雙！尺寸最好現場試穿。</div><div class="buy"><span class="where w-variety">運動用品店</span><div class="loc"><b>哪裡買</b>HOKA 取扱的運動／戶外用品店。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="oofos" data-kind="buy"><img class="thumb" src="img/oofos.jpg" alt="OOFOS 夾腳拖"><div class="nm">OOFOS 夾腳拖</div><div class="jp">OOFOS OOriginal</div><div class="what">超好穿，後悔在美國沒買。</div><div class="buy"><span class="where w-variety">運動用品店</span><div class="loc"><b>哪裡買</b>運動／戶外用品店找找，日本價格可能和美國不同。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="uq_henley" data-stores="uniqlo" data-kind="buy"><img class="thumb" src="img/uq_henley.jpg" alt="Uniqlo 亨利領發熱衣"><div class="nm">Uniqlo 亨利領發熱衣</div><div class="jp">HEATTECH 極暖・PRINCESSE tam.tam 聯名</div><div class="what">非常想要包色！</div><div class="buy"><span class="where w-variety">Uniqlo</span><div class="loc"><b>哪裡買</b>札幌 Uniqlo 門市。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="uq_jacket" data-stores="uniqlo" data-kind="buy"><img class="thumb" src="img/uq_jacket.jpg" alt="Uniqlo 新款風衣"><div class="nm">Uniqlo 新款風衣</div><div class="jp">Uniqlo 秋冬新品</div><div class="what">剛出的風衣，版型很好看。</div><div class="buy"><span class="where w-variety">Uniqlo</span><div class="loc"><b>哪裡買</b>札幌 Uniqlo 門市。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="mb_base" data-stores="montbell" data-kind="buy"><img class="thumb" src="img/mb_base.jpg" alt="mont-bell 厚手發熱衣"><div class="nm">mont-bell 厚手發熱衣</div><div class="jp">モンベル 厚手ベースレイヤー</div><div class="what">保暖排汗，迎接北海道冬天。</div><div class="buy"><span class="where w-variety">mont-bell</span><div class="loc"><b>哪裡買</b>札幌 mont-bell 門市。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="mb_pack" data-stores="montbell" data-kind="buy"><img class="thumb" src="img/mb_pack.jpg" alt="mont-bell 收納後背包"><div class="nm">mont-bell 收納後背包</div><div class="jp">ポケッタブル デイパック 15</div><div class="what">可以收成超迷你一包，旅行帶著很方便。</div><div class="buy"><span class="where w-variety">mont-bell</span><div class="loc"><b>哪裡買</b>札幌 mont-bell 門市。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="hoka" data-stores="sports" data-kind="buy"><img class="thumb" src="img/hoka.jpg" alt="HOKA QQ 烏龍麵鞋"><div class="nm">HOKA QQ 烏龍麵鞋</div><div class="jp">HOKA</div><div class="what">也想來一雙！尺寸最好現場試穿。</div><div class="buy"><span class="where w-variety">運動用品店</span><div class="loc"><b>哪裡買</b>HOKA 取扱的運動／戶外用品店。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="oofos" data-stores="sports" data-kind="buy"><img class="thumb" src="img/oofos.jpg" alt="OOFOS 夾腳拖"><div class="nm">OOFOS 夾腳拖</div><div class="jp">OOFOS OOriginal</div><div class="what">超好穿，後悔在美國沒買。</div><div class="buy"><span class="where w-variety">運動用品店</span><div class="loc"><b>哪裡買</b>運動／戶外用品店找找，日本價格可能和美國不同。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
   </div>
 
   <!-- DAY 5 -->
@@ -381,24 +419,52 @@
 
   <div class="section-h"><h3>機場必買零食</h3><span class="en">Airport</span><span class="ct">需冷藏的最後買</span></div>
   <div class="grid">
-    <div class="card chk" data-id="merucheese" data-kind="buy"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%96%B0%E5%8D%83%E6%AD%B3%E7%A9%BA%E6%B8%AF%20%E5%87%BD%E9%A4%A8%20%E3%83%97%E3%83%86%E3%82%A3%E3%83%A1%E3%83%AB%E3%83%B4%E3%82%A3%E3%83%BC%E3%83%A6" target="_blank" rel="noopener">📍地圖</a><img class="thumb" src="img/merucheese.jpg" alt="函館メルチーズ"><div class="nm">函館メルチーズ</div><div class="jp">プティ・メルヴィーユ 一口起司蛋糕</div><div class="what">北海道人氣起司小點，需冷藏、登機前最後買並索保冷袋。</div><div class="buy"><span class="where w-air">機場・物產</span><div class="loc"><b>哪裡買</b>新千歲機場、函館本店。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="shiroi" data-kind="buy"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%96%B0%E5%8D%83%E6%AD%B3%E7%A9%BA%E6%B8%AF%20%E7%9F%B3%E5%B1%8B%E8%A3%BD%E8%8F%93" target="_blank" rel="noopener">📍地圖</a><div class="nm">白色戀人</div><div class="jp">石屋製菓</div><div class="what">薄片奶油夾心餅乾，北海道第一伴手禮。</div><div class="buy"><span class="where w-air">機場・物產</span><div class="loc"><b>哪裡買</b>2F 商店街。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="royce" data-kind="buy"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%96%B0%E5%8D%83%E6%AD%B3%E7%A9%BA%E6%B8%AF%20%E3%83%AD%E3%82%A4%E3%82%BA" target="_blank" rel="noopener">📍地圖</a><div class="nm">生巧克力</div><div class="jp">Royce’</div><div class="what">生巧、洋芋片巧克力；需冷藏、最後再買。</div><div class="buy"><span class="where w-air">機場・物產</span><div class="loc"><b>哪裡買</b>2F 商店街。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="rokkatei" data-kind="buy"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%96%B0%E5%8D%83%E6%AD%B3%E7%A9%BA%E6%B8%AF%20%E5%85%AD%E8%8A%B1%E4%BA%AD" target="_blank" rel="noopener">📍地圖</a><div class="nm">マルセイ葡萄奶油夾心</div><div class="jp">六花亭</div><div class="what">北海道必買經典，也有蛋捲、酥餅。</div><div class="buy"><span class="where w-air">機場・物產</span><div class="loc"><b>哪裡買</b>2F 商店街。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="kitakaro" data-kind="buy"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%96%B0%E5%8D%83%E6%AD%B3%E7%A9%BA%E6%B8%AF%20%E5%8C%97%E8%8F%93%E6%A5%BC" target="_blank" rel="noopener">📍地圖</a><div class="nm">妖精之森年輪蛋糕</div><div class="jp">北菓樓</div><div class="what">年輪蛋糕、開心果泡芙，人氣款。</div><div class="buy"><span class="where w-air">機場・物產</span><div class="loc"><b>哪裡買</b>2F 商店街。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="calbee" data-kind="buy"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%96%B0%E5%8D%83%E6%AD%B3%E7%A9%BA%E6%B8%AF%20%E3%82%AB%E3%83%AB%E3%83%93%E3%83%BC%E3%83%97%E3%83%A9%E3%82%B9" target="_blank" rel="noopener">📍地圖</a><div class="nm">薯條三兄弟</div><div class="jp">Calbee+</div><div class="what">馬鈴薯薯條，鹹香不膩、好分送。</div><div class="buy"><span class="where w-air">機場・物產</span><div class="loc"><b>哪裡買</b>2F 商店街。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="letao" data-kind="buy"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%96%B0%E5%8D%83%E6%AD%B3%E7%A9%BA%E6%B8%AF%20%E3%83%AB%E3%82%BF%E3%82%AA" target="_blank" rel="noopener">📍地圖</a><div class="nm">生起司蛋糕</div><div class="jp">LeTAO</div><div class="what">雙層起司，機場設專櫃與保冷包裝。</div><div class="buy"><span class="where w-air">機場・物產</span><div class="loc"><b>哪裡買</b>機場專櫃。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="cheesetart" data-kind="buy"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%96%B0%E5%8D%83%E6%AD%B3%E7%A9%BA%E6%B8%AF%20%E3%81%8D%E3%81%AE%E3%81%A8%E3%82%84" target="_blank" rel="noopener">📍地圖</a><div class="nm">現烤起司塔</div><div class="jp">味の時時刻刻</div><div class="what">機場排隊名店，熱熱吃最好。</div><div class="buy"><span class="where w-air">機場・物產</span><div class="loc"><b>哪裡買</b>2F 商店街。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="snowcheese" data-kind="buy"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E5%A4%A7%E4%B8%B8%E6%9C%AD%E5%B9%8C%E5%BA%97" target="_blank" rel="noopener">📍地圖</a><img class="thumb" src="img/snowcheese.jpg" alt="SNOW CHEESE 起司餅乾"><div class="nm">SNOW CHEESE 起司餅乾</div><div class="jp">スノーチーズ・推 Snow Gold Cheese</div><div class="what">網友說比 N.Y. 好吃很多。Snow Gold Cheese 口感偏硬，吃前先把裡面的餅乾壓碎更香。<b>全日本只有北海道 2 間直營。</b></div><div class="buy"><span class="where w-air">大丸・機場</span><div class="loc"><b>哪裡買</b><b>大丸札幌 B1</b>（10:00 開門；開門前在地下 1 樓西地下通路口旁排隊，JR 札幌站西改札口方向，約 9:50 到、10:20 前可結完帳，隔壁是 BLUE POND）；<b>新千歲機場國內線 2F</b>。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
-    <div class="card chk" data-id="garaku_pack" data-kind="buy"><img class="thumb" src="img/garaku_pack.jpg" alt="GARAKU 湯咖哩調理包"><div class="nm">GARAKU 湯咖哩調理包</div><div class="jp">札幌スープカレー チキン／豚角煮</div><div class="what">名店 GARAKU 的湯咖哩帶回家煮；雞肉 ¥990（含稅 ¥1,070）。</div><div class="buy"><span class="where w-air">伴手禮店</span><div class="loc"><b>哪裡買</b>照片是在「不二屋本店」貨架拍的；機場、札幌站伴手禮店也可以找找。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="merucheese" data-stores="air" data-kind="buy"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%96%B0%E5%8D%83%E6%AD%B3%E7%A9%BA%E6%B8%AF%20%E5%87%BD%E9%A4%A8%20%E3%83%97%E3%83%86%E3%82%A3%E3%83%A1%E3%83%AB%E3%83%B4%E3%82%A3%E3%83%BC%E3%83%A6" target="_blank" rel="noopener">📍地圖</a><img class="thumb" src="img/merucheese.jpg" alt="函館メルチーズ"><div class="nm">函館メルチーズ</div><div class="jp">プティ・メルヴィーユ 一口起司蛋糕</div><div class="what">北海道人氣起司小點，需冷藏、登機前最後買並索保冷袋。</div><div class="buy"><span class="where w-air">機場・物產</span><div class="loc"><b>哪裡買</b>新千歲機場、函館本店。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="shiroi" data-stores="air souvenir" data-kind="buy"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%96%B0%E5%8D%83%E6%AD%B3%E7%A9%BA%E6%B8%AF%20%E7%9F%B3%E5%B1%8B%E8%A3%BD%E8%8F%93" target="_blank" rel="noopener">📍地圖</a><div class="nm">白色戀人</div><div class="jp">石屋製菓</div><div class="what">薄片奶油夾心餅乾，北海道第一伴手禮。</div><div class="buy"><span class="where w-air">機場・物產</span><div class="loc"><b>哪裡買</b>2F 商店街。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="royce" data-stores="air souvenir" data-kind="buy"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%96%B0%E5%8D%83%E6%AD%B3%E7%A9%BA%E6%B8%AF%20%E3%83%AD%E3%82%A4%E3%82%BA" target="_blank" rel="noopener">📍地圖</a><div class="nm">生巧克力</div><div class="jp">Royce’</div><div class="what">生巧、洋芋片巧克力；需冷藏、最後再買。</div><div class="buy"><span class="where w-air">機場・物產</span><div class="loc"><b>哪裡買</b>2F 商店街。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="rokkatei" data-stores="air souvenir" data-kind="buy"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%96%B0%E5%8D%83%E6%AD%B3%E7%A9%BA%E6%B8%AF%20%E5%85%AD%E8%8A%B1%E4%BA%AD" target="_blank" rel="noopener">📍地圖</a><div class="nm">マルセイ葡萄奶油夾心</div><div class="jp">六花亭</div><div class="what">北海道必買經典，也有蛋捲、酥餅。</div><div class="buy"><span class="where w-air">機場・物產</span><div class="loc"><b>哪裡買</b>2F 商店街。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="kitakaro" data-stores="air souvenir" data-kind="buy"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%96%B0%E5%8D%83%E6%AD%B3%E7%A9%BA%E6%B8%AF%20%E5%8C%97%E8%8F%93%E6%A5%BC" target="_blank" rel="noopener">📍地圖</a><div class="nm">妖精之森年輪蛋糕</div><div class="jp">北菓樓</div><div class="what">年輪蛋糕、開心果泡芙，人氣款。</div><div class="buy"><span class="where w-air">機場・物產</span><div class="loc"><b>哪裡買</b>2F 商店街。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="calbee" data-stores="air souvenir" data-kind="buy"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%96%B0%E5%8D%83%E6%AD%B3%E7%A9%BA%E6%B8%AF%20%E3%82%AB%E3%83%AB%E3%83%93%E3%83%BC%E3%83%97%E3%83%A9%E3%82%B9" target="_blank" rel="noopener">📍地圖</a><div class="nm">薯條三兄弟</div><div class="jp">Calbee+</div><div class="what">馬鈴薯薯條，鹹香不膩、好分送。</div><div class="buy"><span class="where w-air">機場・物產</span><div class="loc"><b>哪裡買</b>2F 商店街。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="letao" data-stores="air souvenir" data-kind="buy"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%96%B0%E5%8D%83%E6%AD%B3%E7%A9%BA%E6%B8%AF%20%E3%83%AB%E3%82%BF%E3%82%AA" target="_blank" rel="noopener">📍地圖</a><div class="nm">生起司蛋糕</div><div class="jp">LeTAO</div><div class="what">雙層起司，機場設專櫃與保冷包裝。</div><div class="buy"><span class="where w-air">機場・物產</span><div class="loc"><b>哪裡買</b>機場專櫃。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="cheesetart" data-stores="air" data-kind="buy"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E6%96%B0%E5%8D%83%E6%AD%B3%E7%A9%BA%E6%B8%AF%20%E3%81%8D%E3%81%AE%E3%81%A8%E3%82%84" target="_blank" rel="noopener">📍地圖</a><div class="nm">現烤起司塔</div><div class="jp">味の時時刻刻</div><div class="what">機場排隊名店，熱熱吃最好。</div><div class="buy"><span class="where w-air">機場・物產</span><div class="loc"><b>哪裡買</b>2F 商店街。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="snowcheese" data-stores="dept air" data-kind="buy"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E5%A4%A7%E4%B8%B8%E6%9C%AD%E5%B9%8C%E5%BA%97" target="_blank" rel="noopener">📍地圖</a><img class="thumb" src="img/snowcheese.jpg" alt="SNOW CHEESE 起司餅乾"><div class="nm">SNOW CHEESE 起司餅乾</div><div class="jp">スノーチーズ・推 Snow Gold Cheese</div><div class="what">網友說比 N.Y. 好吃很多。Snow Gold Cheese 口感偏硬，吃前先把裡面的餅乾壓碎更香。<b>全日本只有北海道 2 間直營。</b></div><div class="buy"><span class="where w-air">大丸・機場</span><div class="loc"><b>哪裡買</b><b>大丸札幌 B1</b>（10:00 開門；開門前在地下 1 樓西地下通路口旁排隊，JR 札幌站西改札口方向，約 9:50 到、10:20 前可結完帳，隔壁是 BLUE POND）；<b>新千歲機場國內線 2F</b>。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
+    <div class="card chk" data-id="garaku_pack" data-stores="souvenir air" data-kind="buy"><img class="thumb" src="img/garaku_pack.jpg" alt="GARAKU 湯咖哩調理包"><div class="nm">GARAKU 湯咖哩調理包</div><div class="jp">札幌スープカレー チキン／豚角煮</div><div class="what">名店 GARAKU 的湯咖哩帶回家煮；雞肉 ¥990（含稅 ¥1,070）。</div><div class="buy"><span class="where w-air">伴手禮店</span><div class="loc"><b>哪裡買</b>照片是在「不二屋本店」貨架拍的；機場、札幌站伴手禮店也可以找找。</div></div><div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div></div>
   </div>
 
   <!-- MISC -->
   <div class="section-h"><h3>隨手買・參考</h3><span class="en">Others</span></div>
   <div class="grid">
-    <div class="card chk" data-id="canele" data-kind="buy"><img class="thumb" src="img/canele.jpg" alt="生可麗露棒蛋糕"><div class="nm">生可麗露棒蛋糕</div><div class="jp">sweet time 生カヌレ スティックケーキ</div><div class="what">外觀焦黑但超好吃，奶油夾心；要冷藏。約 ¥221。</div><div class="buy"><span class="where w-conv">超商</span><div class="loc"><b>哪裡買</b>便利商店冷藏甜點櫃，沿途隨手買。</div></div><div class="paywith">💳 <span class="cc suica">Suica</span><b>10%</b><small>先用富邦 J 綁 Apple Pay 儲值 Suica，超商嗶卡</small></div></div>
-    <div class="card chk" data-id="hiruzen" data-kind="buy"><img class="thumb" src="img/hiruzen.jpg" alt="蒜山焦糖脆"><div class="nm">蒜山焦糖脆 <span style="font-size:11px;color:var(--muted)">（參考）</span></div><div class="jp">蒜山ジャージー キャラメルザックル</div><div class="what">牧場手工焦糖牛奶脆；岡山縣特產，<b>此趟北海道買不到</b>，列作參考。</div><div class="buy"><span class="where w-note">非北海道</span><div class="loc"><b>產地</b>岡山縣蒜山高原。</div></div></div>
+    <div class="card chk" data-id="canele" data-stores="conv" data-kind="buy"><img class="thumb" src="img/canele.jpg" alt="生可麗露棒蛋糕"><div class="nm">生可麗露棒蛋糕</div><div class="jp">sweet time 生カヌレ スティックケーキ</div><div class="what">外觀焦黑但超好吃，奶油夾心；要冷藏。約 ¥221。</div><div class="buy"><span class="where w-conv">超商</span><div class="loc"><b>哪裡買</b>便利商店冷藏甜點櫃，沿途隨手買。</div></div><div class="paywith">💳 <span class="cc suica">Suica</span><b>10%</b><small>先用富邦 J 綁 Apple Pay 儲值 Suica，超商嗶卡</small></div></div>
+    <div class="card chk" data-id="hiruzen" data-stores="other" data-kind="buy"><img class="thumb" src="img/hiruzen.jpg" alt="蒜山焦糖脆"><div class="nm">蒜山焦糖脆 <span style="font-size:11px;color:var(--muted)">（參考）</span></div><div class="jp">蒜山ジャージー キャラメルザックル</div><div class="what">牧場手工焦糖牛奶脆；岡山縣特產，<b>此趟北海道買不到</b>，列作參考。</div><div class="buy"><span class="where w-note">非北海道</span><div class="loc"><b>產地</b>岡山縣蒜山高原。</div></div></div>
   </div>
+
+  <!-- FROM GOOGLE SHEET (filled by script) -->
+  <div id="sheetSec" hidden>
+    <div class="section-h" data-key="sheet"><h3>📝 自己加的</h3><span class="en">Google Sheet</span></div>
+    <div class="grid" id="sheetGrid"></div>
+  </div>
+
+  <details class="gs" id="gsBox">
+    <summary>📝 用 Google 試算表／表單加商品 <span id="gsState"></span></summary>
+    <div class="gsb">
+      <p>在 Google 試算表新增一列，這裡就會自動出現，<b>不用重新發布網站</b>。有填「分類」會放進對應分類，沒填就放在「📝 自己加的」。</p>
+      <label for="gsUrl">試算表連結</label>
+      <input id="gsUrl" class="gsin" placeholder="https://docs.google.com/spreadsheets/d/…" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <label for="gsForm">Google 表單連結（選填，用來從手機新增）</label>
+      <input id="gsForm" class="gsin" placeholder="https://docs.google.com/forms/…" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <div class="gsrow"><button type="button" id="gsSave" class="gsbtn pri">儲存並讀取</button><button type="button" id="gsReload" class="gsbtn">↻ 重新讀取</button></div>
+      <div class="gsmsg" id="gsMsg"></div>
+      <h4>第一次設定</h4>
+      <ol>
+        <li>建一個 Google 試算表，第一列填這些欄位名稱（可以只填需要的）：<br><code>名稱｜日文｜分類｜商店｜說明｜價格｜圖片網址</code></li>
+        <li><b>分類</b>可填：藥妝・美髮、日系彩妝、保養・身體、藥品・止癢、無印・3COINS、服飾・鞋包、零食伴手禮。<br><b>商店</b>可填多個（用「、」分開）：藥妝店、唐吉訶德、LOFT、@cosme、百貨專櫃、無印良品、3COINS、Uniqlo、mont-bell、運動用品店、超商、機場、伴手禮店、吉伊卡哇。</li>
+        <li>右上 <b>共用</b> → 一般存取權改成「<b>知道連結的任何人</b>」（檢視者）→ 複製連結，貼到上面。</li>
+        <li><b>想用表單新增（手機比較好填）：</b>建 Google 表單，題目名稱用上面的欄位名稱（商店用核取方塊）→「回覆」分頁 → 連結到試算表 → 把那份回覆試算表的連結貼到上面，表單連結貼到第二格。</li>
+      </ol>
+      <p class="gsnote">讀到的商品會存在這支手機，沒網路時也看得到。試算表裡改的內容，按「↻ 重新讀取」或重開頁面就會更新。</p>
+    </div>
+  </details>
+  <a class="gsadd" id="gsAdd" href="#" target="_blank" rel="noopener" hidden>＋ 新增商品（Google 表單）</a>
 
   <!-- HIDDEN (filled by script) -->
   <div id="hidSec" hidden>
@@ -416,31 +482,56 @@
 
 <script>
 (function(){
-  var KEY='hok-checklist-v1', HKEY='hok-hidden-v1', CKEY='hok-collapsed-v1';
-  function load(k){try{return JSON.parse(localStorage.getItem(k)||'{}')||{};}catch(e){return {};}}
+  var KEY='hok-checklist-v1', HKEY='hok-hidden-v1', CKEY='hok-collapsed-v1', SKEY='hok-store-v1', GKEY='hok-sheet-cfg-v1', GDATA='hok-sheet-data-v1';
+  function load(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch(e){return d;}}
   function store(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
-  var done=load(KEY), hidden=load(HKEY), closed=load(CKEY);
-  var cards=[].slice.call(document.querySelectorAll('.card.chk'));
-  var pcount=document.getElementById('pcount'),ptotal=document.getElementById('ptotal'),pbar=document.getElementById('pbar');
-  var hidSec=document.getElementById('hidSec'), hidGrid=document.getElementById('hidGrid');
+  function $(id){return document.getElementById(id);}
+  function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  var done=load(KEY,{}), hidden=load(HKEY,{}), closed=load(CKEY,{}), cur=load(SKEY,''), gcfg=load(GKEY,{url:'',form:''});
+  var wrap=document.querySelector('.wrap');
+  var pcount=$('pcount'),ptotal=$('ptotal'),pbar=$('pbar');
+  var hidSec=$('hidSec'), hidGrid=$('hidGrid'), sheetSec=$('sheetSec'), sheetGrid=$('sheetGrid');
   var toastEl=document.createElement('div'); toastEl.className='ltoast'; document.body.appendChild(toastEl);
   function toast(t){toastEl.textContent=t;toastEl.classList.add('on');clearTimeout(toast._t);toast._t=setTimeout(function(){toastEl.classList.remove('on');},1800);}
 
-  // ----- cards: tick, hide button, remember home position -----
-  cards.forEach(function(c){
+  // ----- stores -----
+  var STORES=[
+    {id:'drug',name:'💊 藥妝店',re:/藥妝|药妆|マツキヨ|松本清|ツルハ|サツドラ|コクミン|drug/i},
+    {id:'donki',name:'🐧 唐吉訶德',re:/唐吉|驚安|ドン|donki|don quijote/i},
+    {id:'loft',name:'LOFT',re:/loft|ロフト/i},
+    {id:'cosme',name:'@cosme',re:/cosme/i},
+    {id:'dept',name:'🏬 百貨專櫃',re:/百貨|大丸|三越|專櫃|专柜|丸井|parco/i},
+    {id:'muji',name:'無印良品',re:/無印|muji/i},
+    {id:'3coins',name:'3COINS',re:/3\s*coins/i},
+    {id:'uniqlo',name:'Uniqlo',re:/uniqlo|ユニクロ|優衣庫/i},
+    {id:'montbell',name:'mont-bell',re:/mont.?bell|モンベル/i},
+    {id:'sports',name:'運動用品店',re:/運動|戶外|sports|アウトドア/i},
+    {id:'conv',name:'🏪 超商',re:/超商|便利|コンビニ|セブン|ローソン|ファミ|全家|7-?11/i},
+    {id:'air',name:'✈️ 機場',re:/機場|机场|空港|airport/i},
+    {id:'souvenir',name:'🎁 伴手禮店',re:/伴手|物產|物产|土産|みやげ/i},
+    {id:'chiikawa',name:'🧸 吉伊卡哇',re:/吉伊|ちいかわ|chiikawa/i},
+    {id:'eat',name:'🍽 餐廳',re:/餐廳|餐厅|食堂|レストラン/i},
+    {id:'other',name:'其他',re:/^$/}
+  ];
+  function storesOf(c){return (c.dataset.stores||'').split(/\s+/).filter(Boolean);}
+
+  // ----- cards -----
+  var cards=[];
+  function initCard(c){
     var slot=document.createElement('i'); slot.hidden=true; c.parentNode.insertBefore(slot,c); c._slot=slot;
     var t=document.createElement('span');t.className='tick';c.appendChild(t);
     var hb=document.createElement('button'); hb.type='button'; hb.className='hidebtn'; c.appendChild(hb); c._hb=hb;
     hb.addEventListener('click',function(ev){ev.stopPropagation();toggleHide(c);});
     if(done[c.dataset.id])c.classList.add('done');
     c.addEventListener('click',function(ev){
-      if(ev.target.closest('a,button'))return; // let links/buttons work
+      if(ev.target.closest('a,button'))return;
       var id=c.dataset.id;
       if(done[id]){delete done[id];c.classList.remove('done');}
       else{done[id]=1;c.classList.add('done');}
       store(KEY,done);refresh();
     });
-  });
+    cards.push(c);
+  }
   function place(c){
     var id=c.dataset.id, eat=c.dataset.kind==='eat';
     if(hidden[id]){ hidGrid.appendChild(c); c._hb.textContent='↩︎ 移回清單'; }
@@ -452,7 +543,6 @@
     else{hidden[id]=Date.now();toast('已移到最下面「不想買」');}
     store(HKEY,hidden);place(c);refresh();
   }
-  cards.slice().sort(function(a,b){return (hidden[a.dataset.id]||0)-(hidden[b.dataset.id]||0);}).forEach(place);
 
   // ----- collapsible category headers -----
   var seen={};
@@ -464,8 +554,8 @@
     var cnt=document.createElement('span'); cnt.className='cnt'; h.appendChild(cnt);
     var empty=document.createElement('div'); empty.className='gempty'; empty.textContent='這一類都隱藏了'; g.appendChild(empty);
     h.classList.add('tog'); h.setAttribute('role','button'); h.tabIndex=0;
-    var sec={h:h,g:g,cnt:cnt,empty:empty,key:key};
-    function toggle(){ if(closed[key])delete closed[key]; else closed[key]=1; store(CKEY,closed); paint(sec); syncFold(); }
+    var sec={h:h,g:g,cnt:cnt,empty:empty,key:key,name:name};
+    function toggle(){ if(cur)return; if(closed[key])delete closed[key]; else closed[key]=1; store(CKEY,closed); paint(sec); syncFold(); }
     h.addEventListener('click',function(ev){ if(ev.target.closest('a'))return; toggle(); });
     h.addEventListener('keydown',function(ev){ if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();toggle();} });
     return sec;
@@ -474,7 +564,7 @@
     var c=!!closed[sec.key];
     sec.h.classList.toggle('closed',c); sec.g.classList.toggle('closed',c); sec.h.setAttribute('aria-expanded',!c);
   }
-  var foldBtn=document.getElementById('foldAll');
+  var foldBtn=$('foldAll');
   function syncFold(){ foldBtn.textContent = secs.some(function(x){return !closed[x.key];}) ? '全部收合' : '全部展開'; }
   foldBtn.addEventListener('click',function(){
     var close = secs.some(function(x){return !closed[x.key];});
@@ -482,27 +572,167 @@
     store(CKEY,closed); syncFold();
     if(close) window.scrollTo({top:0,behavior:'smooth'});
   });
-  secs.forEach(paint); syncFold();
+
+  // ----- store filter -----
+  var bar=$('stores');
+  var banner=document.createElement('div'); banner.className='fbanner'; banner.hidden=true;
+  document.querySelector('.progress').insertAdjacentElement('afterend',banner);
+  function buildStoreChips(){
+    bar.innerHTML='';
+    var all=document.createElement('button'); all.type='button'; all.dataset.id=''; all.innerHTML='📍 全部'; bar.appendChild(all);
+    STORES.forEach(function(st){
+      var n=cards.filter(function(c){return storesOf(c).indexOf(st.id)>=0;}).length;
+      if(!n)return;
+      var b=document.createElement('button'); b.type='button'; b.dataset.id=st.id;
+      b.innerHTML=esc(st.name)+'<small>'+n+'</small>'; bar.appendChild(b);
+    });
+    [].forEach.call(bar.children,function(b){
+      b.setAttribute('aria-pressed',b.dataset.id===cur);
+      b.addEventListener('click',function(){ cur=b.dataset.id; store(SKEY,cur); applyFilter(); window.scrollTo({top:0}); });
+    });
+  }
+  function applyFilter(){
+    [].forEach.call(bar.children,function(b){b.setAttribute('aria-pressed',b.dataset.id===cur);});
+    wrap.classList.toggle('filtering',!!cur);
+    cards.forEach(function(c){ c.classList.toggle('nomatch', !!cur && storesOf(c).indexOf(cur)<0); });
+    var st=STORES.filter(function(x){return x.id===cur;})[0];
+    banner.hidden=!cur;
+    if(cur){ banner.innerHTML='<span>📍 在 <b>'+esc(st?st.name:cur)+'</b>，只顯示這家店買得到的</span>'; var x=document.createElement('button'); x.type='button'; x.textContent='看全部'; x.onclick=function(){cur='';store(SKEY,cur);applyFilter();}; banner.appendChild(x); }
+    refresh();
+  }
 
   // ----- counts & progress -----
   function refresh(){
-    var vis=cards.filter(function(c){return !hidden[c.dataset.id];});
+    var vis=cards.filter(function(c){return !hidden[c.dataset.id] && !c.classList.contains('nomatch');});
     var n=vis.filter(function(c){return done[c.dataset.id];}).length;
     ptotal.textContent=vis.length; pcount.textContent=n;
     pbar.style.width=vis.length?(n/vis.length*100).toFixed(1)+'%':'0%';
     secs.forEach(function(x){
-      var cs=[].slice.call(x.g.querySelectorAll('.card.chk'));
+      var cs=[].slice.call(x.g.querySelectorAll('.card.chk')).filter(function(c){return !c.classList.contains('nomatch');});
       var d=cs.filter(function(c){return done[c.dataset.id];}).length;
       x.cnt.textContent = !cs.length ? '0 樣' : (d ? d+' / '+cs.length+' 已勾' : cs.length+' 樣');
       x.cnt.classList.toggle('all', cs.length>0 && d===cs.length);
-      x.empty.hidden = cs.length>0 || x.g===hidGrid;
+      x.empty.hidden = cs.length>0 || x.g===hidGrid || x.g===sheetGrid;
+      var none = !!cur && !cs.length;
+      x.h.classList.toggle('nomatch',none); x.g.classList.toggle('nomatch',none);
     });
     hidSec.hidden = !hidGrid.querySelector('.card.chk');
+    sheetSec.hidden = !sheetGrid.querySelector('.card.chk');
   }
-  document.getElementById('reset').addEventListener('click',function(){
+  $('reset').addEventListener('click',function(){
     done={};cards.forEach(function(c){c.classList.remove('done');});store(KEY,done);refresh();
   });
-  refresh();
+
+  // ----- items from a Google Sheet (no republish needed) -----
+  var ESUN='<div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div>';
+  var CTBC='<div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div>';
+  var FUBON='<div class="paywith">💳 <span class="cc fubon">富邦 J卡</span><b>6%</b><small>玉山指定餐廳可改刷玉山 7%</small></div>';
+  var SUICA='<div class="paywith">💳 <span class="cc suica">Suica</span><b>10%</b><small>先用富邦 J 綁 Apple Pay 儲值 Suica，超商嗶卡</small></div>';
+  var CATS=[
+    [/藥妝|美髮|護髮|洗髮|髮/, '藥妝・美髮'],
+    [/彩妝|化妝|makeup/i, '日系彩妝'],
+    [/保養|身體|護膚|skin/i, '保養・身體'],
+    [/藥|止癢|醫/, '藥品・止癢'],
+    [/無印|3\s*coins|生活|雜貨/i, '無印・3COINS 生活小物'],
+    [/服|鞋|包|衣|fashion/i, '服飾・鞋包'],
+    [/零食|伴手|食|甜|點心|餅|機場/, '機場必買零食'],
+    [/隨手|其他|參考/, '隨手買・參考']
+  ];
+  function gridFor(cat){
+    for(var i=0;i<CATS.length;i++){ if(CATS[i][0].test(cat||'')){ var nm=CATS[i][1]; var s=secs.filter(function(x){return x.name===nm;})[0]; if(s)return s.g; } }
+    return sheetGrid;
+  }
+  function parseCSV(t){
+    var rows=[],row=[],f='',q=false;
+    for(var i=0;i<t.length;i++){var ch=t[i];
+      if(q){ if(ch==='"'){ if(t[i+1]==='"'){f+='"';i++;} else q=false; } else f+=ch; }
+      else if(ch==='"')q=true; else if(ch===','){row.push(f);f='';}
+      else if(ch==='\n'){row.push(f);rows.push(row);row=[];f='';} else if(ch!=='\r')f+=ch;
+    }
+    if(f!==''||row.length){row.push(f);rows.push(row);}
+    return rows;
+  }
+  function csvUrl(u){
+    u=(u||'').trim(); if(!u)return '';
+    if(/\/spreadsheets\/d\/e\//.test(u)){ return u.replace(/\/pubhtml.*$/,'/pub?output=csv').replace(/output=[a-z]+/,'output=csv'); }
+    var m=u.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/); if(!m)return u;
+    var g=u.match(/[#&?]gid=(\d+)/);
+    return 'https://docs.google.com/spreadsheets/d/'+m[1]+'/gviz/tq?tqx=out:csv'+(g?'&gid='+g[1]:'');
+  }
+  function imgUrl(u){
+    u=(u||'').trim(); if(!/^https?:\/\//.test(u))return '';
+    var m=u.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)([a-zA-Z0-9_-]+)/);
+    return m?'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w600':u;
+  }
+  function col(head,re){ for(var i=0;i<head.length;i++){ if(re.test(head[i]))return i; } return -1; }
+  function rowsToItems(rows){
+    if(!rows.length)return [];
+    var h=rows[0].map(function(x){return x.trim();});
+    var C={name:col(h,/名稱|品名|商品名|^商品$|name/i), jp:col(h,/日文|日本名|japanese/i), cat:col(h,/分類|類別|category/i),
+      store:col(h,/商店|店家|哪裡買|在哪買|store|shop/i), what:col(h,/說明|備註|心得|note|desc/i), price:col(h,/價格|價錢|金額|price/i), img:col(h,/圖|照片|image|photo/i)};
+    if(C.name<0)return [];
+    var seenN={};
+    return rows.slice(1).map(function(r){
+      function g(k){return C[k]>=0?(r[C[k]]||'').trim():'';}
+      return {name:g('name'),jp:g('jp'),cat:g('cat'),store:g('store'),what:g('what'),price:g('price'),img:g('img')};
+    }).filter(function(x){ if(!x.name||seenN[x.name])return false; seenN[x.name]=1; return true; });
+  }
+  function renderSheet(items){
+    // remove previous sheet cards
+    cards=cards.filter(function(c){ if(c.dataset.sheet){ if(c._slot)c._slot.remove(); c.remove(); return false; } return true; });
+    items.forEach(function(it){
+      var ids=[]; STORES.forEach(function(st){ if(st.id!=='other' && st.re.test(it.store)) ids.push(st.id); });
+      if(!ids.length) ids.push('other');
+      var pay = ids.indexOf('drug')>=0||ids.indexOf('donki')>=0 ? ESUN : ids.indexOf('eat')>=0 ? FUBON : ids.length===1&&ids[0]==='conv' ? SUICA : CTBC;
+      var im=imgUrl(it.img);
+      var c=document.createElement('div');
+      c.className='card chk'; c.dataset.id='g:'+it.name; c.dataset.kind=ids.indexOf('eat')>=0?'eat':'buy'; c.dataset.stores=ids.join(' '); c.dataset.sheet='1';
+      c.innerHTML=(im?'<img class="thumb" src="'+esc(im)+'" alt="'+esc(it.name)+'" loading="lazy" referrerpolicy="no-referrer">':'')+
+        '<div class="nm">'+esc(it.name)+'<span class="sheetbadge">📝 自己加</span></div>'+
+        (it.jp?'<div class="jp">'+esc(it.jp)+'</div>':'')+
+        (it.what?'<div class="what">'+esc(it.what)+'</div>':'')+
+        (it.price?'<div class="price">'+esc(it.price)+'</div>':'')+
+        '<div class="buy"><span class="where w-note">'+esc(ids.map(function(id){return STORES.filter(function(s){return s.id===id;})[0].name.replace(/^\S+\s/,'');}).join('・'))+'</span>'+
+        '<div class="loc"><b>哪裡買</b>'+esc(it.store||'未填')+'</div></div>'+pay;
+      var g=gridFor(it.cat); g.insertBefore(c, g.querySelector('.gempty'));
+      initCard(c); place(c);
+    });
+    buildStoreChips(); applyFilter();
+  }
+  function setMsg(t,cls){ var m=$('gsMsg'); m.className='gsmsg'+(cls?' '+cls:''); m.textContent=t; }
+  function setState(t){ $('gsState').textContent=t; }
+  function fetchSheet(manual){
+    var u=csvUrl(gcfg.url); if(!u){ setState('未設定'); return; }
+    if(manual) setMsg('讀取中…');
+    var ctl=window.AbortController?new AbortController():null; var tm=setTimeout(function(){ctl&&ctl.abort();},20000);
+    fetch(u,{cache:'no-store',signal:ctl&&ctl.signal}).then(function(r){ if(!r.ok)throw new Error('HTTP '+r.status); return r.text(); })
+    .then(function(t){
+      clearTimeout(tm);
+      if(/^\s*</.test(t)) throw new Error('拿到的不是表格資料（可能沒開「知道連結的任何人」）');
+      var items=rowsToItems(parseCSV(t));
+      store(GDATA,{items:items,at:Date.now()}); renderSheet(items);
+      setState(items.length+' 樣'); setMsg('已讀取 '+items.length+' 樣商品。','ok');
+      if(manual) toast('已更新試算表商品');
+    }).catch(function(e){
+      clearTimeout(tm);
+      var cached=load(GDATA,null);
+      setState(cached?cached.items.length+' 樣（離線存檔）':'讀取失敗');
+      setMsg((navigator.onLine?'讀不到試算表：'+(e.name==='AbortError'?'逾時':e.message)+'。請確認共用設定是「知道連結的任何人」。':'目前離線，先顯示上次存的商品。'),'bad');
+    });
+  }
+  $('gsUrl').value=gcfg.url||''; $('gsForm').value=gcfg.form||'';
+  function syncAdd(){ var a=$('gsAdd'); a.hidden=!/^https:\/\//.test(gcfg.form||''); if(!a.hidden)a.href=gcfg.form; }
+  $('gsSave').addEventListener('click',function(){ gcfg.url=$('gsUrl').value.trim(); gcfg.form=$('gsForm').value.trim(); store(GKEY,gcfg); syncAdd(); if(!gcfg.url){ renderSheet([]); store(GDATA,null); setState('未設定'); setMsg('已清除試算表設定。'); return; } fetchSheet(true); });
+  $('gsReload').addEventListener('click',function(){ fetchSheet(true); });
+
+  // ----- start -----
+  [].slice.call(document.querySelectorAll('.card.chk')).forEach(initCard);
+  cards.slice().sort(function(a,b){return (hidden[a.dataset.id]||0)-(hidden[b.dataset.id]||0);}).forEach(place);
+  secs.forEach(paint); syncFold();
+  var cached=load(GDATA,null);
+  if(cached&&cached.items&&gcfg.url){ renderSheet(cached.items); setState(cached.items.length+' 樣'); } else { buildStoreChips(); applyFilter(); }
+  syncAdd();
+  if(gcfg.url) fetchSheet(false); else setState('未設定');
 })();
 </script>
 <script>if("serviceWorker" in navigator){addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>

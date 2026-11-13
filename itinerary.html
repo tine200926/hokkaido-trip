@@ -151,6 +151,18 @@
     .slot{grid-template-columns:46px 1fr;gap:10px}
     .wrap{padding-block:36px 56px}
   }
+  .itsrc{margin:8px 0 4px;font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}
+  .itsrc a{color:var(--onsen);font-weight:700;text-decoration:none}
+  .itsrc.ok{color:var(--onsen)}
+  .itsrc.bad{color:var(--crab)}
+  details.itset{margin-top:28px;background:var(--surface);border:1px solid var(--hair);border-radius:14px;padding:0 16px;font-size:13px}
+  details.itset summary{cursor:pointer;padding:13px 0;font-weight:700;list-style:none}
+  details.itset summary::-webkit-details-marker{display:none}
+  details.itset .b{padding-bottom:14px}
+  details.itset input{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--surface-2);border:1px solid var(--hair);border-radius:10px;padding:9px 12px;margin-top:6px}
+  details.itset button{font:inherit;font-size:13px;font-weight:700;border:1px solid var(--hair);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px 14px;margin:10px 8px 0 0;cursor:pointer}
+  details.itset ul{padding-left:18px;margin:8px 0}
+  details.itset code{font-size:12px}
 </style>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700;900&display=swap">
@@ -211,6 +223,7 @@
   </div>
 
   <div class="section-h"><h2>每日時刻表</h2><span class="en">Daily schedule</span></div>
+  <div class="itsrc" id="itSrc">📄 行程可以直接在 Google 試算表修改</div>
 
   <!-- DAY 1 -->
   <div class="day" id="d1" data-date="2026-11-16">
@@ -367,12 +380,101 @@
     <div class="tip"><b>行動電源</b>　每人限帶 2 顆，飛行全程禁用、禁充電。</div>
   </div>
 
+  <details class="itset" id="itSet">
+    <summary>✏️ 怎麼改行程（Google 試算表）</summary>
+    <div class="b">
+      <p>行程內容來自一份 Google 試算表，<b>在試算表改完，重開這頁就更新</b>，不用重新發布網站。沒網路時會顯示上次讀到的版本。</p>
+      <ul>
+        <li>一列＝一個行程：<code>天｜時間｜標題｜說明｜地圖｜下一站｜距離｜標記｜連結</code></li>
+        <li><b>天</b>填 1–5；<b>地圖</b>填地點名稱（會變成 📍地圖 按鈕）；<b>標記</b>填 ★（必去）或 ✈（航班）；<b>連結</b>可放官網網址。</li>
+        <li>同一天的行程會照時間排序；某一天在試算表裡沒有任何一列，就顯示網站原本的內容。</li>
+        <li>天數標題、餐食、住宿仍是網站原本的內容。</li>
+      </ul>
+      <label for="itUrl">試算表連結（要設成「知道連結的任何人」可檢視）</label>
+      <input id="itUrl" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <button type="button" id="itSave">儲存並讀取</button><button type="button" id="itReset">改回預設試算表</button><button type="button" id="itOff">不用試算表（顯示原本行程）</button>
+    </div>
+  </details>
+
   <div class="foot">
     資料來源：雄獅旅遊 26JHN02JXD-T 行程與你提供的 11/16–11/20 星宇航班；店家營業時間取自 Google，實際以當天為準。
   </div>
 
 </div>
 
+<script>
+(function(){
+  var DEFAULT='https://docs.google.com/spreadsheets/d/1bu23ZLck3L1DPx6wjHIzhfHxve1vSToL3TiZHFfDiR0/edit';
+  var CK='hok-itin-cfg-v1', DK='hok-itin-data-v1';
+  function load(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch(e){return d;}}
+  function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+  function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  var cfg=load(CK,{url:DEFAULT,off:false}); if(!cfg.url&&!cfg.off)cfg.url=DEFAULT;
+  var src=document.getElementById('itSrc');
+  var orig={}; [].forEach.call(document.querySelectorAll('.day'),function(d){var s=d.querySelector('.sched'); if(s)orig[d.id]=s.innerHTML;});
+  function status(html,cls){src.className='itsrc'+(cls?' '+cls:''); src.innerHTML=html;}
+  function editLink(){return cfg.url?' <a href="'+esc(cfg.url)+'" target="_blank" rel="noopener">✏️ 去試算表改</a>':'';}
+  function csvUrl(u){var m=(u||'').match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/); if(!m)return ''; var g=u.match(/[#&?]gid=(\d+)/);
+    return 'https://docs.google.com/spreadsheets/d/'+m[1]+'/gviz/tq?tqx=out:csv'+(g?'&gid='+g[1]:'');}
+  function parseCSV(t){var rows=[],row=[],f='',q=false;for(var i=0;i<t.length;i++){var ch=t[i];
+    if(q){if(ch==='"'){if(t[i+1]==='"'){f+='"';i++;}else q=false;}else f+=ch;}
+    else if(ch==='"')q=true;else if(ch===','){row.push(f);f='';}else if(ch==='\n'){row.push(f);rows.push(row);row=[];f='';}else if(ch!=='\r')f+=ch;}
+    if(f!==''||row.length){row.push(f);rows.push(row);}return rows;}
+  function hhmm(t){t=(t||'').trim(); var m=t.match(/(\d{1,2})[:：](\d{2})/); if(!m)return t;
+    var h=+m[1]; if(/下午|PM/i.test(t)&&h<12)h+=12; if(/上午|AM/i.test(t)&&h===12)h=0; return (h<10?'0':'')+h+':'+m[2];}
+  function toItems(rows){
+    if(!rows.length)return [];
+    var h=rows[0].map(function(x){return x.trim();});
+    function c(re){for(var i=0;i<h.length;i++)if(re.test(h[i]))return i;return -1;}
+    var C={day:c(/^天|第幾天|day/i),t:c(/時間|time/i),nm:c(/標題|行程|名稱|地點名/),sub:c(/說明|備註|note/i),map:c(/地圖|map/i),nx:c(/下一站|交通/),km:c(/距離|時長|km/i),mk:c(/標記|mark/i),ln:c(/連結|網址|link|url/i)};
+    if(C.day<0||C.nm<0)return [];
+    return rows.slice(1).map(function(r){function g(k){return C[k]>=0?(r[C[k]]||'').trim():'';}
+      return {day:(g('day').match(/\d/)||[''])[0],t:hhmm(g('t')),nm:g('nm'),sub:g('sub'),map:g('map'),nx:g('nx'),km:g('km'),mk:g('mk'),ln:g('ln')};
+    }).filter(function(x){return x.day&&x.nm;});
+  }
+  function slotHTML(x){
+    var fly=/✈|航班|飛/.test(x.mk), pick=/★|必|☆/.test(x.mk);
+    var h='<div class="slot'+(fly?' fly':'')+(pick?' pick':'')+'"><div class="t">'+esc(x.t)+'</div><div class="c">';
+    if(x.map)h+='<a class="pin" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(x.map)+'" target="_blank" rel="noopener">📍地圖</a>';
+    h+='<div class="nm">'+(pick?'<span class="pk">★</span> ':'')+(fly?'<span class="fl">✈</span> ':'')+esc(x.nm)+'</div>';
+    if(x.sub)h+='<div class="sub">'+esc(x.sub)+'</div>';
+    if(/^https?:\/\//.test(x.ln))h+='<div class="chk"><a href="'+esc(x.ln)+'" target="_blank" rel="noopener">🔗 相關連結</a></div>';
+    if(x.nx||x.km)h+='<div class="hop">'+esc(x.nx)+(x.km?' <span class="km">'+esc(x.km)+'</span>':'')+'</div>';
+    return h+'</div></div>';
+  }
+  function render(items){
+    var by={}; items.forEach(function(x){(by[x.day]=by[x.day]||[]).push(x);});
+    Object.keys(orig).forEach(function(id){
+      var d=document.getElementById(id), s=d.querySelector('.sched'), n=id.replace(/\D/g,'');
+      var list=by[n];
+      if(list&&list.length){ list.sort(function(a,b){return a.t<b.t?-1:a.t>b.t?1:0;}); s.innerHTML=list.map(slotHTML).join(''); }
+      else s.innerHTML=orig[id];
+    });
+  }
+  function fmt(ts){var d=new Date(ts);return (d.getMonth()+1)+'/'+d.getDate()+' '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);}
+  function fetchSheet(){
+    var u=csvUrl(cfg.url); if(!u){status('⚠️ 試算表連結格式不對'+editLink(),'bad');return;}
+    var ctl=window.AbortController?new AbortController():null; var tm=setTimeout(function(){ctl&&ctl.abort();},15000);
+    fetch(u,{cache:'no-store',signal:ctl&&ctl.signal}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text();})
+    .then(function(t){clearTimeout(tm);
+      if(/^\s*</.test(t))throw new Error('試算表沒有開放「知道連結的任何人」');
+      var items=toItems(parseCSV(t)); if(!items.length)throw new Error('試算表第一列要有「天」「標題」欄位');
+      save(DK,{items:items,at:Date.now()}); render(items);
+      status('📄 行程來自 Google 試算表（'+fmt(Date.now())+' 讀取）'+editLink(),'ok');
+    }).catch(function(e){clearTimeout(tm);
+      var c=load(DK,null);
+      status((c?'📴 顯示上次讀到的行程（'+fmt(c.at)+'）':'📄 顯示網站內建行程')+(navigator.onLine?'；讀不到試算表：'+esc(e.name==='AbortError'?'逾時':e.message):'')+editLink(),c?'':'bad');
+    });
+  }
+  var inp=document.getElementById('itUrl'); inp.value=cfg.off?'':cfg.url;
+  document.getElementById('itSave').onclick=function(){cfg={url:inp.value.trim()||DEFAULT,off:false};save(CK,cfg);inp.value=cfg.url;fetchSheet();};
+  document.getElementById('itReset').onclick=function(){cfg={url:DEFAULT,off:false};save(CK,cfg);inp.value=DEFAULT;fetchSheet();};
+  document.getElementById('itOff').onclick=function(){cfg={url:'',off:true};save(CK,cfg);inp.value='';render([]);status('📄 顯示網站內建行程（已關閉試算表）');};
+  if(cfg.off){status('📄 顯示網站內建行程（已關閉試算表）');return;}
+  var cached=load(DK,null); if(cached&&cached.items){render(cached.items);status('📄 試算表行程（'+fmt(cached.at)+'）更新中…'+editLink());}
+  fetchSheet();
+})();
+</script>
 <script>
 (function(){
   try{

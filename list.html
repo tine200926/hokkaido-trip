@@ -179,7 +179,7 @@
   .gsmsg{margin-top:8px;font-size:12.5px;min-height:1em}
   .gsmsg.ok{color:var(--onsen)} .gsmsg.bad{color:var(--crab)}
   .gsb h4{font-family:var(--serif);font-size:15px;margin:18px 0 6px}
-  .gsb ol{padding-left:20px;margin:0}
+  .gsb ol,.gsb ul{padding-left:20px;margin:8px 0 0}
   .gsb li{margin-bottom:6px}
   .gsb code{font-size:12px;background:var(--surface-2);border:1px solid var(--hair);border-radius:6px;padding:1px 6px}
   .gsnote{color:var(--muted);font-size:12px}
@@ -225,7 +225,7 @@
   <!-- DAY 3 -->
   <div class="day-h"><div class="dn"><small>DAY</small><b>3</b></div><div class="tt"><h2>札幌市區</h2><div class="dd">11/18（三）· 大通 PARCO → 狸小路 → 薄野</div></div></div>
 
-  <div class="section-h"><h3>吉伊卡哇・必吃</h3><span class="en">Chiikawa & Eat</span></div>
+  <div class="section-h" data-key="Day3 吉伊卡哇・必吃"><h3>吉伊卡哇・必吃</h3><span class="en">Chiikawa & Eat</span></div>
   <div class="grid">
     <div class="card chk" data-id="chiikawa-parco" data-stores="chiikawa" data-kind="buy"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E3%81%A1%E3%81%84%E3%81%8B%E3%82%8F%E3%82%89%E3%82%93%E3%81%A9%20%E6%9C%AD%E5%B9%8CPARCO" target="_blank" rel="noopener">📍地圖</a>
       <div class="nm">🧸 CHIIKAWA LAND 札幌PARCO店</div>
@@ -259,7 +259,7 @@
   <div class="day-h"><div class="dn"><small>DAY</small><b>4</b></div><div class="tt"><h2>小樽漫遊 → 札幌</h2><div class="dd">11/19（四）· 堺町通 → 回札幌補貨 → 薄野</div></div></div>
   <a class="maplink" href="https://www.google.com/maps/dir/%E5%B0%8F%E6%A8%BD%E9%81%8B%E6%B2%B3/%E3%81%A1%E3%81%84%E3%81%8B%E3%82%8F%E3%82%82%E3%81%90%E3%82%82%E3%81%90%E6%9C%AC%E8%88%97%E5%B0%8F%E6%A8%BD%E5%BA%97/%E5%8C%97%E4%B8%80%E7%A1%9D%E5%AD%90%E4%B8%89%E5%8F%B7%E9%A4%A8/%E3%83%AB%E3%82%BF%E3%82%AA%E6%9C%AC%E5%BA%97/%E5%B0%8F%E6%A8%BD%E9%A7%85/?travelmode=walking" target="_blank" rel="noopener">小樽漫遊步行路線</a>
 
-  <div class="section-h"><h3>吉伊卡哇・必吃</h3><span class="en">Chiikawa & Eat</span></div>
+  <div class="section-h" data-key="Day4 吉伊卡哇・必吃"><h3>吉伊卡哇・必吃</h3><span class="en">Chiikawa & Eat</span></div>
   <div class="grid">
     <div class="card chk" data-id="chiikawa-otaru" data-stores="chiikawa" data-kind="buy"><a class="pin" href="https://www.google.com/maps/search/?api=1&query=%E3%81%A1%E3%81%84%E3%81%8B%E3%82%8F%E3%82%82%E3%81%90%E3%82%82%E3%81%90%E6%9C%AC%E8%88%97%20%E5%B0%8F%E6%A8%BD%E5%BA%97" target="_blank" rel="noopener">📍地圖</a>
       <div class="nm">🧸 ちいかわもぐもぐ本舗 小樽店</div>
@@ -445,23 +445,25 @@
   </div>
 
   <details class="gs" id="gsBox">
-    <summary>📝 用 Google 試算表／表單加商品 <span id="gsState"></span></summary>
+    <summary>📝 用 Google 試算表改商品 <span id="gsState"></span></summary>
     <div class="gsb">
-      <p>在 Google 試算表新增一列，這裡就會自動出現，<b>不用重新發布網站</b>。有填「分類」會放進對應分類，沒填就放在「📝 自己加的」。</p>
-      <label for="gsUrl">試算表連結</label>
-      <input id="gsUrl" class="gsin" placeholder="https://docs.google.com/spreadsheets/d/…" autocomplete="off" autocapitalize="off" spellcheck="false">
-      <label for="gsForm">Google 表單連結（選填，用來從手機新增）</label>
-      <input id="gsForm" class="gsin" placeholder="https://docs.google.com/forms/…" autocomplete="off" autocapitalize="off" spellcheck="false">
-      <div class="gsrow"><button type="button" id="gsSave" class="gsbtn pri">儲存並讀取</button><button type="button" id="gsReload" class="gsbtn">↻ 重新讀取</button></div>
+      <p>清單上的商品都來自 Google 試算表的「必買商品」分頁。<b>在試算表改、加、刪一列，重開這頁就更新</b>，不用重新發布網站。沒網路時顯示上次讀到的版本。</p>
+      <div class="gsrow"><a class="gsbtn pri" id="gsEdit" href="#" target="_blank" rel="noopener" style="text-decoration:none">✏️ 打開試算表</a><button type="button" id="gsReload" class="gsbtn">↻ 重新讀取</button></div>
       <div class="gsmsg" id="gsMsg"></div>
-      <h4>第一次設定</h4>
-      <ol>
-        <li>建一個 Google 試算表，第一列填這些欄位名稱（可以只填需要的）：<br><code>名稱｜日文｜分類｜商店｜說明｜價格｜圖片網址</code></li>
-        <li><b>分類</b>可填：藥妝・美髮、日系彩妝、保養・身體、藥品・止癢、無印・3COINS、服飾・鞋包、零食伴手禮。<br><b>商店</b>可填多個（用「、」分開）：藥妝店、唐吉訶德、LOFT、@cosme、百貨專櫃、無印良品、3COINS、Uniqlo、mont-bell、運動用品店、超商、機場、伴手禮店、吉伊卡哇。</li>
-        <li>右上 <b>共用</b> → 一般存取權改成「<b>知道連結的任何人</b>」（檢視者）→ 複製連結，貼到上面。</li>
-        <li><b>想用表單新增（手機比較好填）：</b>建 Google 表單，題目名稱用上面的欄位名稱（商店用核取方塊）→「回覆」分頁 → 連結到試算表 → 把那份回覆試算表的連結貼到上面，表單連結貼到第二格。</li>
-      </ol>
-      <p class="gsnote">讀到的商品會存在這支手機，沒網路時也看得到。試算表裡改的內容，按「↻ 重新讀取」或重開頁面就會更新。</p>
+      <ul>
+        <li>欄位：<code>分類｜名稱｜品牌｜日文｜說明｜色號｜價格｜商店｜哪裡買｜刷卡｜地圖｜圖片｜代號</code>，填法寫在試算表的「說明」分頁。</li>
+        <li><b>新增商品：</b>加一列，「代號」留空。「分類」填現有分類會放進去，其他會放在「📝 自己加的」。</li>
+        <li><b>刪除商品：</b>把那一列整列刪掉。<b>修改：</b>直接改那一列，「代號」不要動（勾選進度靠它對應）。</li>
+        <li><b>商店</b>用「、」分開，上面的「我在哪家店」篩選就是看這一欄。</li>
+      </ul>
+      <h4>進階設定</h4>
+      <label for="gsUrl">試算表連結（要設成「知道連結的任何人」可檢視）</label>
+      <input id="gsUrl" class="gsin" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <label for="gsExtra">另一份試算表（選填，例如 Google 表單的回覆）</label>
+      <input id="gsExtra" class="gsin" placeholder="https://docs.google.com/spreadsheets/d/…" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <label for="gsForm">Google 表單連結（選填，會顯示「＋ 新增商品」按鈕）</label>
+      <input id="gsForm" class="gsin" placeholder="https://docs.google.com/forms/…" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <div class="gsrow"><button type="button" id="gsSave" class="gsbtn">儲存並讀取</button></div>
     </div>
   </details>
   <a class="gsadd" id="gsAdd" href="#" target="_blank" rel="noopener" hidden>＋ 新增商品（Google 表單）</a>
@@ -516,10 +518,13 @@
   function storesOf(c){return (c.dataset.stores||'').split(/\s+/).filter(Boolean);}
 
   // ----- cards -----
-  var cards=[];
+  var cards=[], builtin=[];
   function initCard(c){
     var slot=document.createElement('i'); slot.hidden=true; c.parentNode.insertBefore(slot,c); c._slot=slot;
-    var t=document.createElement('span');t.className='tick';c.appendChild(t);
+    if(!c.dataset.sheet){ var home=document.createElement('i'); home.hidden=true; c.parentNode.insertBefore(home,slot); c._home=home;
+      c._orig=c.innerHTML; c._origStores=c.dataset.stores||''; c._origKind=c.dataset.kind; builtin.push(c);
+      var hs=secs.filter(function(x){return x.g===c.parentNode;})[0]; c._homeKey=hs?hs.key:''; }
+    var t=document.createElement('span');t.className='tick';c.appendChild(t); c._tick=t;
     var hb=document.createElement('button'); hb.type='button'; hb.className='hidebtn'; c.appendChild(hb); c._hb=hb;
     hb.addEventListener('click',function(ev){ev.stopPropagation();toggleHide(c);});
     if(done[c.dataset.id])c.classList.add('done');
@@ -624,10 +629,22 @@
   });
 
   // ----- items from a Google Sheet (no republish needed) -----
-  var ESUN='<div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div>';
-  var CTBC='<div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div>';
-  var FUBON='<div class="paywith">💳 <span class="cc fubon">富邦 J卡</span><b>6%</b><small>玉山指定餐廳可改刷玉山 7%</small></div>';
-  var SUICA='<div class="paywith">💳 <span class="cc suica">Suica</span><b>10%</b><small>先用富邦 J 綁 Apple Pay 儲值 Suica，超商嗶卡</small></div>';
+  var DEFAULT='https://docs.google.com/spreadsheets/d/1AB9Q065om6VjiTHescRzBj3UwZpTkSq9RDh24rjw3Qs/edit', TAB='必買商品';
+  if(!gcfg.v2){ gcfg={url:DEFAULT,extra:(gcfg.url&&gcfg.url!==DEFAULT)?gcfg.url:'',form:gcfg.form||'',v2:1}; store(GKEY,gcfg); }
+  if(!gcfg.url) gcfg.url=DEFAULT;
+  var PAYS={
+    '玉山':'<div class="paywith">💳 <span class="cc esun">玉山 熊本熊</span><b>7%</b><small>藥妝指定通路；玉山用完 → 中信 9.5%／富邦 J 6%</small></div>',
+    '中信':'<div class="paywith">💳 <span class="cc ctbc">中信 uniopen</span><b>9.5%</b><small>中信額度用完 → 富邦 J 6%</small></div>',
+    '富邦':'<div class="paywith">💳 <span class="cc fubon">富邦 J卡</span><b>6%</b><small>玉山指定餐廳可改刷玉山 7%</small></div>',
+    'suica':'<div class="paywith">💳 <span class="cc suica">Suica</span><b>10%</b><small>先用富邦 J 綁 Apple Pay 儲值 Suica，超商嗶卡</small></div>',
+    '現金':'<div class="paywith">💳 <span class="cc cash">現金</span><small>只收現金</small></div>'
+  };
+  function payHTML(t,ids,isNew){
+    t=(t||'').trim(); var k=/玉山/.test(t)?'玉山':/中信/.test(t)?'中信':/富邦/.test(t)?'富邦':/suica/i.test(t)?'suica':/現金/.test(t)?'現金':'';
+    if(!k&&isNew) k = ids.indexOf('drug')>=0||ids.indexOf('donki')>=0 ? '玉山' : ids.indexOf('eat')>=0 ? '富邦' : ids.length===1&&ids[0]==='conv' ? 'suica' : '中信';
+    return k?PAYS[k]:'';
+  }
+  var WCLS={drug:'w-drug',donki:'w-donki',conv:'w-conv',dept:'w-parco',air:'w-air',souvenir:'w-air',eat:'w-eat',other:'w-note'};
   var CATS=[
     [/藥妝|美髮|護髮|洗髮|髮/, '藥妝・美髮'],
     [/彩妝|化妝|makeup/i, '日系彩妝'],
@@ -639,7 +656,9 @@
     [/隨手|其他|參考/, '隨手買・參考']
   ];
   function gridFor(cat){
-    for(var i=0;i<CATS.length;i++){ if(CATS[i][0].test(cat||'')){ var nm=CATS[i][1]; var s=secs.filter(function(x){return x.name===nm;})[0]; if(s)return s.g; } }
+    cat=(cat||'').trim();
+    var ex=secs.filter(function(x){return x.key===cat||x.name===cat;})[0]; if(ex&&ex.g!==hidGrid)return ex.g;
+    for(var i=0;i<CATS.length;i++){ if(CATS[i][0].test(cat)){ var nm=CATS[i][1]; var s=secs.filter(function(x){return x.name===nm;})[0]; if(s)return s.g; } }
     return sheetGrid;
   }
   function parseCSV(t){
@@ -652,15 +671,15 @@
     if(f!==''||row.length){row.push(f);rows.push(row);}
     return rows;
   }
-  function csvUrl(u){
+  function csvUrl(u,tab){
     u=(u||'').trim(); if(!u)return '';
     if(/\/spreadsheets\/d\/e\//.test(u)){ return u.replace(/\/pubhtml.*$/,'/pub?output=csv').replace(/output=[a-z]+/,'output=csv'); }
     var m=u.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/); if(!m)return u;
     var g=u.match(/[#&?]gid=(\d+)/);
-    return 'https://docs.google.com/spreadsheets/d/'+m[1]+'/gviz/tq?tqx=out:csv'+(g?'&gid='+g[1]:'');
+    return 'https://docs.google.com/spreadsheets/d/'+m[1]+'/gviz/tq?tqx=out:csv&headers=1'+(g?'&gid='+g[1]:(tab?'&sheet='+encodeURIComponent(tab):''));
   }
   function imgUrl(u){
-    u=(u||'').trim(); if(!/^https?:\/\//.test(u))return '';
+    u=(u||'').trim(); if(/^img\/[\w.\-]+$/.test(u))return u; if(!/^https?:\/\//.test(u))return '';
     var m=u.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)([a-zA-Z0-9_-]+)/);
     return m?'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w600':u;
   }
@@ -668,61 +687,90 @@
   function rowsToItems(rows){
     if(!rows.length)return [];
     var h=rows[0].map(function(x){return x.trim();});
-    var C={name:col(h,/名稱|品名|商品名|^商品$|name/i), jp:col(h,/日文|日本名|japanese/i), cat:col(h,/分類|類別|category/i),
-      store:col(h,/商店|店家|哪裡買|在哪買|store|shop/i), what:col(h,/說明|備註|心得|note|desc/i), price:col(h,/價格|價錢|金額|price/i), img:col(h,/圖|照片|image|photo/i)};
+    var C={name:col(h,/名稱|品名|商品名|^商品$|name/i), brand:col(h,/品牌|brand/i), jp:col(h,/日文|日本名|japanese/i), cat:col(h,/分類|類別|category/i),
+      store:col(h,/^商店|店家|store|shop/i), loc:col(h,/哪裡買|在哪買|where/i), what:col(h,/說明|備註|心得|note|desc/i), shades:col(h,/色號|顏色|shade/i),
+      price:col(h,/價格|價錢|金額|price/i), pay:col(h,/刷卡|付款|pay/i), map:col(h,/地圖|map/i), img:col(h,/^圖|圖片|照片|image|photo/i), id:col(h,/代號|^id$/i)};
     if(C.name<0)return [];
-    var seenN={};
+    if(C.store<0)C.store=C.loc;
     return rows.slice(1).map(function(r){
-      function g(k){return C[k]>=0?(r[C[k]]||'').trim():'';}
-      return {name:g('name'),jp:g('jp'),cat:g('cat'),store:g('store'),what:g('what'),price:g('price'),img:g('img')};
-    }).filter(function(x){ if(!x.name||seenN[x.name])return false; seenN[x.name]=1; return true; });
+      var o={}; Object.keys(C).forEach(function(k){o[k]=C[k]>=0?(r[C[k]]||'').trim():'';}); return o;
+    }).filter(function(x){return x.name;});
   }
+  function cardHTML(it,ids,isNew,origEl){
+    var im=imgUrl(it.img), h='';
+    if(it.map)h+='<a class="pin" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(it.map)+'" target="_blank" rel="noopener">📍地圖</a>';
+    if(im)h+='<img class="thumb" src="'+esc(im)+'" alt="'+esc(it.name)+'" loading="lazy" referrerpolicy="no-referrer">';
+    var badge=isNew?'<span class="sheetbadge">📝 自己加</span>':'';
+    if(it.brand)h+='<div class="brand">'+esc(it.brand)+'</div><div class="pn">'+esc(it.name)+badge+'</div>';
+    else h+='<div class="nm">'+esc(it.name)+badge+'</div>';
+    if(it.jp)h+='<div class="jp">'+esc(it.jp)+'</div>';
+    if(it.what)h+='<div class="what">'+esc(it.what)+'</div>';
+    if(it.shades)h+='<div class="shades">'+it.shades.split(/[、,，]/).map(function(x){x=x.trim();return x?'<span class="sh">'+esc(x)+'</span>':'';}).join('')+'</div>';
+    if(it.price)h+='<div class="price">'+esc(it.price)+'</div>';
+    var label=ids.map(function(id){return STORES.filter(function(s){return s.id===id;})[0].name.replace(/^[^\w@一-鿿]+\s*/,'');}).join('・');
+    h+='<div class="buy"><span class="where '+(WCLS[ids[0]]||'w-variety')+'">'+esc(label)+'</span>'+(it.loc?'<div class="loc"><b>哪裡買</b>'+esc(it.loc)+'</div>':'')+'</div>';
+    if(origEl){ [].forEach.call(origEl.querySelectorAll('.lim,.chklink'),function(x){h+=x.outerHTML;}); }
+    return h+payHTML(it.pay,ids,isNew);
+  }
+  function storeIds(t){ var ids=[]; STORES.forEach(function(st){ if(st.id!=='other' && st.re.test(t||'')) ids.push(st.id); }); if(!ids.length)ids.push('other'); return ids; }
+  function setContent(c,html){ c.innerHTML=html; c.appendChild(c._tick); c.appendChild(c._hb); }
   function renderSheet(items){
-    // remove previous sheet cards
-    cards=cards.filter(function(c){ if(c.dataset.sheet){ if(c._slot)c._slot.remove(); c.remove(); return false; } return true; });
-    items.forEach(function(it){
-      var ids=[]; STORES.forEach(function(st){ if(st.id!=='other' && st.re.test(it.store)) ids.push(st.id); });
-      if(!ids.length) ids.push('other');
-      var pay = ids.indexOf('drug')>=0||ids.indexOf('donki')>=0 ? ESUN : ids.indexOf('eat')>=0 ? FUBON : ids.length===1&&ids[0]==='conv' ? SUICA : CTBC;
-      var im=imgUrl(it.img);
-      var c=document.createElement('div');
-      c.className='card chk'; c.dataset.id='g:'+it.name; c.dataset.kind=ids.indexOf('eat')>=0?'eat':'buy'; c.dataset.stores=ids.join(' '); c.dataset.sheet='1';
-      c.innerHTML=(im?'<img class="thumb" src="'+esc(im)+'" alt="'+esc(it.name)+'" loading="lazy" referrerpolicy="no-referrer">':'')+
-        '<div class="nm">'+esc(it.name)+'<span class="sheetbadge">📝 自己加</span></div>'+
-        (it.jp?'<div class="jp">'+esc(it.jp)+'</div>':'')+
-        (it.what?'<div class="what">'+esc(it.what)+'</div>':'')+
-        (it.price?'<div class="price">'+esc(it.price)+'</div>':'')+
-        '<div class="buy"><span class="where w-note">'+esc(ids.map(function(id){return STORES.filter(function(s){return s.id===id;})[0].name.replace(/^\S+\s/,'');}).join('・'))+'</span>'+
-        '<div class="loc"><b>哪裡買</b>'+esc(it.store||'未填')+'</div></div>'+pay;
-      var g=gridFor(it.cat); g.insertBefore(c, g.querySelector('.gempty'));
-      initCard(c); place(c);
+    // drop cards added from the sheet, put built-in cards back as they were
+    cards.forEach(function(c){ if(c.dataset.sheet){ if(c._slot)c._slot.remove(); c.remove(); } });
+    builtin.forEach(function(c){
+      setContent(c,c._orig); c.dataset.stores=c._origStores; c.dataset.kind=c._origKind;
+      c._home.parentNode.insertBefore(c._slot,c._home.nextSibling);
     });
+    var byId={}; builtin.forEach(function(c){byId[c.dataset.id]=c;});
+    var managed=items.some(function(it){return it.id&&byId[it.id];});
+    var used={}, added=[], seenNew={}, tmp=document.createElement('div');
+    items.forEach(function(it){
+      var ids=storeIds(it.store), c=it.id&&byId[it.id]&&!used[it.id]?byId[it.id]:null;
+      if(c){
+        used[it.id]=1; tmp.innerHTML=c._orig;
+        setContent(c,cardHTML(it,ids,false,tmp)); c.dataset.stores=ids.join(' '); c.dataset.kind=ids.indexOf('eat')>=0?'eat':'buy';
+        if(it.cat&&it.cat!==c._homeKey){ var g=gridFor(it.cat); if(g!==c._home.parentNode) g.insertBefore(c._slot,g.querySelector('.gempty')); }
+      }else{
+        if(seenNew[it.name])return; seenNew[it.name]=1;
+        c=document.createElement('div'); c.className='card chk'; c.dataset.id='g:'+it.name; c.dataset.kind=ids.indexOf('eat')>=0?'eat':'buy'; c.dataset.stores=ids.join(' '); c.dataset.sheet='1';
+        c.innerHTML=cardHTML(it,ids,true,null);
+        var g2=gridFor(it.cat); g2.insertBefore(c,g2.querySelector('.gempty'));
+        added.push(c);
+      }
+    });
+    cards=[];
+    builtin.forEach(function(c){ if(managed&&!used[c.dataset.id]){ c.remove(); } else cards.push(c); });
+    added.forEach(initCard);
+    cards.slice().sort(function(a,b){return (hidden[a.dataset.id]||0)-(hidden[b.dataset.id]||0);}).forEach(place);
     buildStoreChips(); applyFilter();
   }
   function setMsg(t,cls){ var m=$('gsMsg'); m.className='gsmsg'+(cls?' '+cls:''); m.textContent=t; }
   function setState(t){ $('gsState').textContent=t; }
-  function fetchSheet(manual){
-    var u=csvUrl(gcfg.url); if(!u){ setState('未設定'); return; }
-    if(manual) setMsg('讀取中…');
+  function getCSV(u){
     var ctl=window.AbortController?new AbortController():null; var tm=setTimeout(function(){ctl&&ctl.abort();},20000);
-    fetch(u,{cache:'no-store',signal:ctl&&ctl.signal}).then(function(r){ if(!r.ok)throw new Error('HTTP '+r.status); return r.text(); })
-    .then(function(t){
-      clearTimeout(tm);
-      if(/^\s*</.test(t)) throw new Error('拿到的不是表格資料（可能沒開「知道連結的任何人」）');
-      var items=rowsToItems(parseCSV(t));
+    return fetch(u,{cache:'no-store',signal:ctl&&ctl.signal}).then(function(r){ clearTimeout(tm); if(!r.ok)throw new Error('HTTP '+r.status); return r.text(); })
+      .then(function(t){ if(/^\s*</.test(t)) throw new Error('拿到的不是表格資料（可能沒開「知道連結的任何人」）'); return rowsToItems(parseCSV(t)); },
+            function(e){ clearTimeout(tm); throw (e.name==='AbortError'?new Error('逾時'):e); });
+  }
+  function fetchSheet(manual){
+    if(manual) setMsg('讀取中…');
+    var main=getCSV(csvUrl(gcfg.url,TAB));
+    var extra=gcfg.extra?getCSV(csvUrl(gcfg.extra,'')).catch(function(){return null;}):Promise.resolve([]);
+    Promise.all([main,extra]).then(function(r){
+      if(!r[0].length) throw new Error('「'+TAB+'」分頁第一列要有「名稱」欄位');
+      var items=r[0].concat(r[1]||[]);
       store(GDATA,{items:items,at:Date.now()}); renderSheet(items);
-      setState(items.length+' 樣'); setMsg('已讀取 '+items.length+' 樣商品。','ok');
+      setState(items.length+' 樣'); setMsg('已讀取 '+items.length+' 樣商品。'+(r[1]===null?'（表單回覆試算表讀不到）':''),r[1]===null?'bad':'ok');
       if(manual) toast('已更新試算表商品');
     }).catch(function(e){
-      clearTimeout(tm);
       var cached=load(GDATA,null);
-      setState(cached?cached.items.length+' 樣（離線存檔）':'讀取失敗');
-      setMsg((navigator.onLine?'讀不到試算表：'+(e.name==='AbortError'?'逾時':e.message)+'。請確認共用設定是「知道連結的任何人」。':'目前離線，先顯示上次存的商品。'),'bad');
+      setState(cached?cached.items.length+' 樣（上次存檔）':'內建清單');
+      setMsg((navigator.onLine?'讀不到試算表：'+e.message+'。':'目前離線，')+(cached?'先顯示上次讀到的商品。':'先顯示網站內建的清單。'),'bad');
     });
   }
-  $('gsUrl').value=gcfg.url||''; $('gsForm').value=gcfg.form||'';
-  function syncAdd(){ var a=$('gsAdd'); a.hidden=!/^https:\/\//.test(gcfg.form||''); if(!a.hidden)a.href=gcfg.form; }
-  $('gsSave').addEventListener('click',function(){ gcfg.url=$('gsUrl').value.trim(); gcfg.form=$('gsForm').value.trim(); store(GKEY,gcfg); syncAdd(); if(!gcfg.url){ renderSheet([]); store(GDATA,null); setState('未設定'); setMsg('已清除試算表設定。'); return; } fetchSheet(true); });
+  $('gsUrl').value=gcfg.url||''; $('gsExtra').value=gcfg.extra||''; $('gsForm').value=gcfg.form||'';
+  function syncAdd(){ var a=$('gsAdd'); a.hidden=!/^https:\/\//.test(gcfg.form||''); if(!a.hidden)a.href=gcfg.form; $('gsEdit').href=gcfg.url; }
+  $('gsSave').addEventListener('click',function(){ gcfg.url=$('gsUrl').value.trim()||DEFAULT; gcfg.extra=$('gsExtra').value.trim(); gcfg.form=$('gsForm').value.trim(); $('gsUrl').value=gcfg.url; store(GKEY,gcfg); syncAdd(); fetchSheet(true); });
   $('gsReload').addEventListener('click',function(){ fetchSheet(true); });
 
   // ----- start -----
@@ -730,9 +778,9 @@
   cards.slice().sort(function(a,b){return (hidden[a.dataset.id]||0)-(hidden[b.dataset.id]||0);}).forEach(place);
   secs.forEach(paint); syncFold();
   var cached=load(GDATA,null);
-  if(cached&&cached.items&&gcfg.url){ renderSheet(cached.items); setState(cached.items.length+' 樣'); } else { buildStoreChips(); applyFilter(); }
+  if(cached&&cached.items){ renderSheet(cached.items); setState(cached.items.length+' 樣'); } else { buildStoreChips(); applyFilter(); }
   syncAdd();
-  if(gcfg.url) fetchSheet(false); else setState('未設定');
+  fetchSheet(false);
 })();
 </script>
 <script>if("serviceWorker" in navigator){addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>

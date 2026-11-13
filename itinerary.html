@@ -386,6 +386,7 @@
       <p>行程內容來自一份 Google 試算表，<b>在試算表改完，重開這頁就更新</b>，不用重新發布網站。沒網路時會顯示上次讀到的版本。</p>
       <ul>
         <li>一列＝一個行程：<code>天｜時間｜標題｜說明｜地圖｜下一站｜距離｜標記｜連結</code></li>
+        <li>試算表裡有「行程」「必買商品」「說明」三個分頁，行程改「行程」分頁。綠色的 DAY 標題列只是方便看。</li>
         <li><b>天</b>填 1–5；<b>地圖</b>填地點名稱（會變成 📍地圖 按鈕）；<b>標記</b>填 ★（必去）或 ✈（航班）；<b>連結</b>可放官網網址。</li>
         <li>同一天的行程會照時間排序；某一天在試算表裡沒有任何一列，就顯示網站原本的內容。</li>
         <li>天數標題、餐食、住宿仍是網站原本的內容。</li>
@@ -404,18 +405,19 @@
 
 <script>
 (function(){
-  var DEFAULT='https://docs.google.com/spreadsheets/d/1bu23ZLck3L1DPx6wjHIzhfHxve1vSToL3TiZHFfDiR0/edit';
+  var DEFAULT='https://docs.google.com/spreadsheets/d/1AB9Q065om6VjiTHescRzBj3UwZpTkSq9RDh24rjw3Qs/edit';
+  var OLD=/1bu23ZLck3L1DPx6wjHIzhfHxve1vSToL3TiZHFfDiR0/;
   var CK='hok-itin-cfg-v1', DK='hok-itin-data-v1';
   function load(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch(e){return d;}}
   function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
   function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-  var cfg=load(CK,{url:DEFAULT,off:false}); if(!cfg.url&&!cfg.off)cfg.url=DEFAULT;
+  var cfg=load(CK,{url:DEFAULT,off:false}); if(!cfg.url&&!cfg.off)cfg.url=DEFAULT; if(OLD.test(cfg.url))cfg.url=DEFAULT;
   var src=document.getElementById('itSrc');
   var orig={}; [].forEach.call(document.querySelectorAll('.day'),function(d){var s=d.querySelector('.sched'); if(s)orig[d.id]=s.innerHTML;});
   function status(html,cls){src.className='itsrc'+(cls?' '+cls:''); src.innerHTML=html;}
   function editLink(){return cfg.url?' <a href="'+esc(cfg.url)+'" target="_blank" rel="noopener">✏️ 去試算表改</a>':'';}
   function csvUrl(u){var m=(u||'').match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/); if(!m)return ''; var g=u.match(/[#&?]gid=(\d+)/);
-    return 'https://docs.google.com/spreadsheets/d/'+m[1]+'/gviz/tq?tqx=out:csv'+(g?'&gid='+g[1]:'');}
+    return 'https://docs.google.com/spreadsheets/d/'+m[1]+'/gviz/tq?tqx=out:csv&headers=1'+(g?'&gid='+g[1]:'&sheet='+encodeURIComponent('行程'));}
   function parseCSV(t){var rows=[],row=[],f='',q=false;for(var i=0;i<t.length;i++){var ch=t[i];
     if(q){if(ch==='"'){if(t[i+1]==='"'){f+='"';i++;}else q=false;}else f+=ch;}
     else if(ch==='"')q=true;else if(ch===','){row.push(f);f='';}else if(ch==='\n'){row.push(f);rows.push(row);row=[];f='';}else if(ch!=='\r')f+=ch;}

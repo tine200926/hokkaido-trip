@@ -405,13 +405,13 @@
 
 <script>
 (function(){
-  var DEFAULT='https://docs.google.com/spreadsheets/d/1AB9Q065om6VjiTHescRzBj3UwZpTkSq9RDh24rjw3Qs/edit';
-  var OLD=/1bu23ZLck3L1DPx6wjHIzhfHxve1vSToL3TiZHFfDiR0/;
+  var DEFAULT='https://docs.google.com/spreadsheets/d/1aKZXxvbmSfS79SFhw__z2mcJ833BzjLnuevrLViUS08/edit';
+  var OLD=/1bu23ZLck3L1DPx6wjHIzhfHxve1vSToL3TiZHFfDiR0|1AB9Q065om6VjiTHescRzBj3UwZpTkSq9RDh24rjw3Qs/;
   var CK='hok-itin-cfg-v1', DK='hok-itin-data-v1';
   function load(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch(e){return d;}}
   function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
   function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-  var cfg=load(CK,{url:DEFAULT,off:false}); if(!cfg.url&&!cfg.off)cfg.url=DEFAULT; if(OLD.test(cfg.url))cfg.url=DEFAULT;
+  var cfg=load(CK,{url:DEFAULT,off:false}); if(!cfg.url&&!cfg.off)cfg.url=DEFAULT; if(OLD.test(cfg.url)){cfg.url=DEFAULT;save(CK,cfg);}
   var src=document.getElementById('itSrc');
   var orig={}; [].forEach.call(document.querySelectorAll('.day'),function(d){var s=d.querySelector('.sched'); if(s)orig[d.id]=s.innerHTML;});
   function status(html,cls){src.className='itsrc'+(cls?' '+cls:''); src.innerHTML=html;}

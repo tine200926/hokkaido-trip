@@ -650,7 +650,7 @@
   });
 
   // ----- items from a Google Sheet (no republish needed) -----
-  var DEFAULT='https://docs.google.com/spreadsheets/d/1aKZXxvbmSfS79SFhw__z2mcJ833BzjLnuevrLViUS08/edit', TAB='必買商品', OLD=/1AB9Q065om6VjiTHescRzBj3UwZpTkSq9RDh24rjw3Qs/;
+  var DEFAULT='https://docs.google.com/spreadsheets/d/1dTV-EyoUrDu2mcMqTUZnFPbTWiqIZbelORT8FJMgM3U/edit', TAB='必買商品', OLD=/1AB9Q065om6VjiTHescRzBj3UwZpTkSq9RDh24rjw3Qs|1aKZXxvbmSfS79SFhw__z2mcJ833BzjLnuevrLViUS08/;
   if(!gcfg.v2){ gcfg={url:DEFAULT,extra:(gcfg.url&&gcfg.url!==DEFAULT)?gcfg.url:'',form:gcfg.form||'',v2:1}; store(GKEY,gcfg); }
   if(!gcfg.url||OLD.test(gcfg.url)){ gcfg.url=DEFAULT; store(GKEY,gcfg); try{localStorage.removeItem(GDATA);}catch(e){} }
   var PAYS={
